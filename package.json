@@ -1,0 +1,22 @@
+{
+  "name": "ch6_Bang",
+  "version": "1.0.0",
+  "main": "server.js",
+  "author": "ohyudan <ohyudan86@gmail.com>",
+  "license": "MIT",
+  "type": "module",
+  "script": {
+    "dev": "",
+    "migrate": "",
+    "format": "prettier --write *.js **/.js"
+  },
+  "dependencies": {
+    "proto": "^1.0.19",
+    "protobufjs": "^7.4.0",
+    "protocol-buffers": "^5.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7",
+    "prettier": "^3.3.3"
+  }
+}
