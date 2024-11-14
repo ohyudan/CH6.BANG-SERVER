@@ -1,18 +1,21 @@
-import { getProtoMessages } from "../../init/loadProtos.js"
+import { getProtoMessages } from '../../init/loadProtos.js';
+import { serialize } from '../Packet/serialize.js';
 
-export const createResponse = (packetType, data) => {
-    const protoMessages = getProtoMessages();
+/**
+ * 응답 패킷을 생성하는 함수
+ * @param {number} packetType - Config.PackType 참조
+ * @param {number} sequence - 패킷 순서
+ * @param {GamePacket} gamePacket - 객체{ 객체:{ 데이터 ...}}
+ * @returns {Buffer}
+ */
+export const createResponse = (packetType, version, sequence, gamePacket) => {
+  const protoMessages = getProtoMessages();
 
-    const responseStructure = protoMessages.GamePacket;
+  const Response = protoMessages.packets.GamePacket;
 
-    const packetTypeName = PACKET_TYPE_NAMES[packetType];
+  const payload = Response.encode(gamePacket).finish();
 
-    const responsePayload = {};
-    responsePayload[packetTypeName] = data;
+  const result_Buffer = serialize(packetType, version, sequence, payload);
 
-    const payloadBuffer = responseStructure.encode(responsePayload).finish();
-
-    const headerBuffer = createHeader(packetType, payloadBuffer, 1);
-
-    return Buffer.concat([headerBuffer, payloadBuffer]);
-}
+  return result_Buffer;
+};
