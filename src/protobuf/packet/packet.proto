@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package packets;
+
+message C2SRegisterRequest {
+    string id = 1;
+    string password = 2;
+    string email = 3;
+}
+
+
+message GamePacket{
+    oneof payload
+    {
+        C2SRegisterRequest registerRequest = 1;
+    }
+}

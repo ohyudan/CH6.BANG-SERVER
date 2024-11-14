@@ -1,6 +1,6 @@
-export const RESPONSE_SUCCESS_CODE = 0;
 
-export const HANDLER_IDS = {
-  REGISTER: 1,
-  LOGIN: 3,
+const HANDLER_IDS = {
+  //회원 가입 및 로그인
+  REGISTER_REQUEST: 1,
 };
+export default HANDLER_IDS;

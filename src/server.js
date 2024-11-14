@@ -1,15 +1,22 @@
 import net from 'net';
-import { config } from './config/config.js';
-import initServer from './init/index.js';
-import { onConnection } from './events/onConnection.js';
+
+import Config from './config/config.js';
+import initServer from './init/initServer.js';
+import onConnection from './events/onConnection.js';
 
 const server = net.createServer(onConnection);
 
-initServer().then(() => {
-    server.listen(config.server.port, config.server.host, () => {
-        console.log(`서버가 ${config.server.host}:${config.server.port}에서 실행`);
-    })
-}). catch((err) => {
-    console.error(err);
+const startServer = async () => {
+  try {
+    await initServer();
+
+    server.listen(Config.SERVER.PORT, Config.SERVER.HOST, () => {
+      console.log(`${Config.SERVER.HOST}:${Config.SERVER.PORT}로 서버가 열렸습니다.`);
+    });
+  } catch (e) {
+   console.error(err);
     process.exit(1);
-});
+ }};
+
+startServer();
+

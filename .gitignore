@@ -1,4 +1,4 @@
 node_modules
 *.env
-.vs_code/
+.vscode/
 .Ds_Store/

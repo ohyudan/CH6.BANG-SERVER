@@ -9,7 +9,6 @@ import packetNames from '../protobuf/packetNames.js';
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 const protoFolder = path.join(dirname, '../protobuf');
-
 /**
  * .proto 파일들을 전부 가져오는 함수
  * @param {*} protoFolder

@@ -38,3 +38,5 @@ export const config = {
     port: DB_PORT,
   },
 };
+
+export default Config;
