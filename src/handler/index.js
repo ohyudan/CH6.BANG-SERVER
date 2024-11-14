@@ -1,8 +1,10 @@
 import HANDLER_IDS from '../constants/handlerIds.js';
+
 const packetTypes = {
   [HANDLER_IDS.REGISTER_REQUEST]: {
-    packetType: undefined,
-    protoType: 'C2SRegisterRequest',
+    handler: registerHandler,
+    protoType: 'GamePacket',
+    protoPayloadType: PACKET_TYPE_NAMES[HANDLER_IDS.REGISTER],
   },
 };
 
