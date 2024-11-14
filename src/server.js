@@ -1,4 +1,5 @@
 import net from 'net';
+
 import Config from './config/config.js';
 import initServer from './init/initServer.js';
 import onConnection from './events/onConnection.js';
@@ -12,7 +13,10 @@ const startServer = async () => {
     server.listen(Config.SERVER.PORT, Config.SERVER.HOST, () => {
       console.log(`${Config.SERVER.HOST}:${Config.SERVER.PORT}로 서버가 열렸습니다.`);
     });
-  } catch (e) {}
-};
+  } catch (e) {
+   console.error(err);
+    process.exit(1);
+ }};
 
 startServer();
+

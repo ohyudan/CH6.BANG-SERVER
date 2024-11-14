@@ -5,6 +5,7 @@ import onData from './onData.js';
  */
 const onConnection = (socket) => {
   try {
+    console.log(`새로운 클라이언트가 연결: ${socket.remoteAddress}:${socket.remotePort}`);
     socket.buffer = Buffer.alloc(0);
 
     socket.on('data', onData(socket));
@@ -17,3 +18,4 @@ const onConnection = (socket) => {
 };
 
 export default onConnection;
+
