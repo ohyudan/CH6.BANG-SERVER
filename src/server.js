@@ -9,8 +9,8 @@ const startServer = async () => {
   try {
     await initServer();
 
-    server.listen(Config.SERVER.PORT, Config.SERVER.HOST, () => {
-      console.log(`${Config.SERVER.HOST}:${Config.SERVER.PORT}로 서버가 열렸습니다.`);
+    server.listen(Config.server.port, Config.server.host, () => {
+      console.log(`${Config.server.port}:${Config.server.host}로 서버가 열렸습니다.`);
     });
   } catch (e) {
     console.error(e);

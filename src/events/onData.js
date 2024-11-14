@@ -5,7 +5,7 @@ import { validateSequence } from '../utils/validate/validateSequence.js';
 import packetParser from '../utils/Packet/packetParser.js';
 import { handlerError } from '../error/errorHandler.js';
 import { CustomError } from '../error/customError.js';
-
+import { ErrorCodes } from '../error/errorCodes.js';
 const onData = (socket) => async (data) => {
   // data는 클라이언트가 전송한 버퍼+패킷
   // socket.buffer는 <Buffer > 의 형태인 빈 버퍼 깡통
