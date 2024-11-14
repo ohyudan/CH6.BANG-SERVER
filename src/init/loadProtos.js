@@ -2,7 +2,7 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import protobuf from 'protobufjs';
-import packetNames from '../protobuf/packetNames.js';
+import { packetNames } from '../protobuf/packetNames.js';
 // import CustomError from '../utils/error/customError.js';
 // import { ErrorCodes } from '../utils/error/errorCodes.js';
 
@@ -51,7 +51,7 @@ export const loadProtos = async () => {
     );
     // proto 파일들의 리스트에서 하나 하나 root 형식에 맞춰 map 함수를 사용해 객체를 반환
     // console.log(root); //모든 proto 파일들에 있는 데이터를 root 형식으로 저장한 객체
-    for ( const typeName of Object.values(packetNames)){
+    for (const typeName of Object.values(packetNames)) {
       protoMessages[typeName] = root.lookupType(typeName);
     }
 
