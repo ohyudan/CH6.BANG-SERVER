@@ -2,7 +2,7 @@ import Config from '../config/config.js';
 import { deserialize } from '../utils/Packet/serialize.js';
 import { validateVersion } from '../utils/validate/validateVersion.js';
 import { validateSequence } from '../utils/validate/validateSequence.js';
-import packetParser from '../utils/Packet/PacketParser.js';
+import packetParser from '../utils/Packet/packetParser.js';
 import { handlerError } from '../error/errorHandler.js';
 import { CustomError } from '../error/customError.js';
 

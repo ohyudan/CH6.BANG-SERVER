@@ -8,6 +8,7 @@ import CustomError from '../../error/customError.js';
 const packetParser = (packet) => {
   try {
     const protoMessages = getProtoMessages();
+
     const message = protoMessages.packets.GamePacket;
     let decodedPacket;
 
@@ -19,8 +20,7 @@ const packetParser = (packet) => {
 
     return payload;
   } catch (error) {
-    //throw new CustomError(ErrorCodes.PACKET_DECODE_ERROR, `패킷 파싱 중 에러 발생`);
-    console.log(error);
+    throw new CustomError(ErrorCodes.PACKET_DECODE_ERROR, `패킷 파싱 중 에러 발생`);
   }
 };
 export default packetParser;

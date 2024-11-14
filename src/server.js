@@ -14,9 +14,9 @@ const startServer = async () => {
       console.log(`${Config.SERVER.HOST}:${Config.SERVER.PORT}로 서버가 열렸습니다.`);
     });
   } catch (e) {
-   console.error(err);
+    console.error(e);
     process.exit(1);
- }};
+  }
+};
 
 startServer();
-
