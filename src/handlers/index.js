@@ -1,17 +1,24 @@
-import { HANDLER_IDS } from '../constants/handlerIds.js';
-import { PACKET_TYPE_NAMES } from '../constants/packetTypes.js';
-import { CustomError } from '../error/customError.js';
-import { ErrorCodes } from '../error/errorCodes.js';
+import HANDLER_IDS from '../constants/handlerIds.js';
 import registerHandler from './auth/register.handler.js';
-
-const handlers = {
-  [HANDLER_IDS.REGISTER]: {
-    handler: registerHandler,
+const packetTypes = {
+  [HANDLER_IDS.REGISTER_REQUEST]: {
+    packetType: undefined,
     protoType: 'GamePacket',
-    protoPayloadType: PACKET_TYPE_NAMES[HANDLER_IDS.REGISTER],
+    protoType: 'C2SRegisterRequest',
   },
 };
 
+export const handler = async (socket, packetType, payload) => {
+  try {
+    const handlerFunction = packetTypes[packetType].packetType;
+    if (!handlerFunction) {
+      //throw new CustomError();
+    }
+    await handlerFunction({ socket, payload });
+  } catch (err) {
+    //await handlerError(socket, err);
+  }
+};
 export const getHandlerById = (packetType) => {
   if (!handlers[packetType]) {
     throw new CustomError(
@@ -24,23 +31,23 @@ export const getHandlerById = (packetType) => {
 };
 
 export const getProtoTypeById = (packetType) => {
-  if (!handlers[packetType]){
+  if (!handlers[packetType]) {
     throw new CustomError(
       ErrorCodes.UNKNOWN_HANDLER_ID,
       `[${packetType}] HandlerID의 프로토타입을 찾을 수 없습니다.`,
-    )
+    );
   }
 
   return handlers[packetType].protoType;
-}
+};
 
 export const getProtoPayloadTypeById = (packetType) => {
-    if (!handlers[packetType]) {
-        throw new CustomError(
-            ErrorCodes.UNKNOWN_HANDLER_ID,
-            `[${packetType}] HandlerID의 프로토타입 페이로드를 찾을 수 없습니다.`
-        )
-    }
+  if (!handlers[packetType]) {
+    throw new CustomError(
+      ErrorCodes.UNKNOWN_HANDLER_ID,
+      `[${packetType}] HandlerID의 프로토타입 페이로드를 찾을 수 없습니다.`,
+    );
+  }
 
-    return handlers[packetType].protoPayloadType;
-}
+  return handlers[packetType].protoPayloadType;
+};

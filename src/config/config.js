@@ -1,42 +1,32 @@
-import {
-  CLIENT_VERSION,
-  HOST,
-  PORT,
-  DB_NAME,
-  DB_USER,
-  DB_PASSWORD,
-  DB_HOST,
-  DB_PORT,
-} from '../constants/env.js';
+import envFiles from '../constants/env.js';
+import { HEADER, TOTAL_LENGTH } from '../constants/header.js';
+export const Config = {
+  SERVER: {
+    HOST: envFiles.SERVER.HOST,
+    PORT: envFiles.SERVER.PORT,
+    VERSION: envFiles.SERVER.VERSION,
+  },
+  CLINET: {
+    VERSION: envFiles.CLIENT.VERSION,
+  },
+  PACKET: {
+    PACKET_TYPE_LENGTH: HEADER.PACKET_TYPES_LENGTH,
+    VERSION_LENGTH: HEADER.VERSION_LENGTH,
+    SEQUENCE_LENGTH: HEADER.SEQUENCE_LENGTH,
+    PAYLOAD_LENGTH: HEADER.PAYLOAD_LENGTH,
+    TOTAL_LENGTH: TOTAL_LENGTH,
+  },
+  DATABASE: {
+    NAME: envFiles.DB1.NAME,
+    USER: envFiles.DB1.USER,
+    PASSWORD: envFiles.DB1.PASSWORD,
+    HOST: envFiles.DB1.HOST,
+    PORT: envFiles.DB1.PORT,
+  },
 
-import {
-  PACKET_TYPE_LENGTH,
-  VERSION_LENGTH,
-  SEQUENCE_LENGTH,
-  PAYLOAD_LENGTH,
-} from '../constants/packetTypes.js';
+  MAX_SEQUENCE_DIFF: 5,
 
-export const config = {
-  server: {
-    host: HOST,
-    port: PORT,
-  },
-  client: {
-    clientVersion: CLIENT_VERSION,
-  },
-  packet: {
-    packetTypeLength: PACKET_TYPE_LENGTH,
-    versionLength: VERSION_LENGTH,
-    sequenceLength: SEQUENCE_LENGTH,
-    payloadLength: PAYLOAD_LENGTH,
-  },
-  database: {
-    database: DB_NAME,
-    user: DB_USER,
-    password: DB_PASSWORD,
-    host: DB_HOST,
-    port: DB_PORT,
-  },
+  SALTROUNDS: 10,
 };
 
 export default Config;
