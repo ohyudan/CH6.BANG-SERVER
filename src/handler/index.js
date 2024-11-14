@@ -1,5 +1,6 @@
 import HANDLER_IDS from '../constants/handlerIds.js';
 
+
 const packetTypes = {
   [HANDLER_IDS.REGISTER_REQUEST]: {
     handler: registerHandler,

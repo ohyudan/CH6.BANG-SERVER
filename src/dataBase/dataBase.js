@@ -1,6 +1,6 @@
 import mysql from 'mysql2/promise';
-import config from '../config/config';
-import { formatDate } from '../utils/dateFomatter';
+import config from '../config/config.js';
+import { formatDate } from '../utils/dateFomatter.js';
 
 
 //connection pool생성
@@ -25,6 +25,6 @@ const createPoolSQL = () => {
   return pool;
 };
 
-const dbPool=createPool();
+const dbPool=createPoolSQL();
 
 export default dbPool;

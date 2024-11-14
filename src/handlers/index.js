@@ -2,13 +2,20 @@ import HANDLER_IDS from '../constants/handlerIds.js';
 import { PACKET_TYPE_NAMES } from '../constants/packetTypes.js';
 import { CustomError } from '../error/customError.js';
 import { ErrorCodes } from '../error/errorCodes.js';
+import loginHandler from './auth/login.handler.js';
 import registerHandler from './auth/register.handler.js';
 
+//constants/handlerids.js에 register_requet랑 register나눈이유
 const handlers = {
   [HANDLER_IDS.REGISTER]: {
     handler: registerHandler,
     protoType: 'GamePacket',
     protoPayloadType: PACKET_TYPE_NAMES[HANDLER_IDS.REGISTER],
+  },
+  [HANDLER_IDS.LOGIN_REQUEST]: {
+    handler: loginHandler,
+    protoType: 'GamePacket',
+    protoPayloadType: PACKET_TYPE_NAMES[HANDLER_IDS.LOGIN],
   },
 };
 

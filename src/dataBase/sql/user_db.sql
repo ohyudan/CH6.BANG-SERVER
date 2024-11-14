@@ -6,3 +6,4 @@ CREATE TABLE IF NOT EXISTS `user`
 --   last_login    TIMESTAMP     DEFAULT CURRENT_TIMESTAMP,
   created_at    TIMESTAMP     DEFAULT CURRENT_TIMESTAMP
 );
+-- email은 id와 같은 값으로 보낸다.
