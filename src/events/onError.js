@@ -1,3 +1,2 @@
-export const onError = (socket) => async (data) => {
-    
-}
+const onError = (socket) => async (data) => {};
+export default onError;

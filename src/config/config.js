@@ -1,32 +1,32 @@
 import envFiles from '../constants/env.js';
-import {
-  PACKET_TYPE_LENGTH,
-  VERSION_LENGTH,
-  SEQUENCE_LENGTH,
-  PAYLOAD_LENGTH,
-} from '../constants/packetTypes.js';
+import { HEADER, TOTAL_LENGTH } from '../constants/header.js';
+export const Config = {
+  SERVER: {
+    HOST: envFiles.SERVER.HOST,
+    PORT: envFiles.SERVER.PORT,
+    VERSION: envFiles.SERVER.VERSION,
+  },
+  CLINET: {
+    VERSION: envFiles.CLIENT.VERSION,
+  },
+  PACKET: {
+    PACKET_TYPE_LENGTH: HEADER.PACKET_TYPES_LENGTH,
+    VERSION_LENGTH: HEADER.VERSION_LENGTH,
+    SEQUENCE_LENGTH: HEADER.SEQUENCE_LENGTH,
+    PAYLOAD_LENGTH: HEADER.PAYLOAD_LENGTH,
+    TOTAL_LENGTH: TOTAL_LENGTH,
+  },
+  DATABASE: {
+    NAME: envFiles.DB1.NAME,
+    USER: envFiles.DB1.USER,
+    PASSWORD: envFiles.DB1.PASSWORD,
+    HOST: envFiles.DB1.HOST,
+    PORT: envFiles.DB1.PORT,
+  },
 
-const config = {
-  server: {
-    host: envFiles.Server.HOST,
-    port: envFiles.Server.PORT,
-  },
-  client: {
-    clientVersion: envFiles.Server.CLIENT_VERSION,
-  },
-  packet: {
-    packetTypeLength: PACKET_TYPE_LENGTH,
-    versionLength: VERSION_LENGTH,
-    sequenceLength: SEQUENCE_LENGTH,
-    payloadLength: PAYLOAD_LENGTH,
-  },
-  database: {
-    database: envFiles.DB1.NAME,
-    user: envFiles.DB1.USER,
-    password: envFiles.DB1.PASSWORD,
-    host: envFiles.DB1.HOST,
-    port: envFiles.DB1.PORT,
-  },
+  MAX_SEQUENCE_DIFF: 5,
+
+  SALTROUNDS: 10,
 };
 
-export default config;
+export default Config;

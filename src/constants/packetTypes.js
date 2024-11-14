@@ -1,8 +1,3 @@
-export const PACKET_TYPE_LENGTH = 2;
-export const VERSION_LENGTH = 1;
-export const SEQUENCE_LENGTH = 4;
-export const PAYLOAD_LENGTH = 4;
-
 // PACKET_TYPES : 패킷 타입의 넘버
 export const PACKET_TYPES = {
   REGISTER_REQUEST: 1,
