@@ -7,11 +7,13 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon ./src/server.js",
-    "migrate": "",
+    "migrate": "node ./src/dataBase/migration/createSchema.js",
     "format": "prettier --write *.js **/.js"
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
+    "joi": "^17.13.3",
     "mysql2": "^3.11.4",
     "proto": "^1.0.19",
     "protobufjs": "^7.4.0",

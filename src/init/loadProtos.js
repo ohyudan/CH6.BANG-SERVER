@@ -6,9 +6,9 @@ import { packetNames } from '../protobuf/packetNames.js';
 // import CustomError from '../utils/error/customError.js';
 // import { ErrorCodes } from '../utils/error/errorCodes.js';
 
-const filename = fileURLToPath(import.meta.url);
-const dirname = path.dirname(filename);
-const protoFolder = path.join(dirname, '../protobuf');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const protoPath  = path.resolve(__dirname, '../protobuf/game/game.proto');
 /**
  * .proto 파일들을 전부 가져오는 함수
  * @param {*} protoFolder
@@ -32,31 +32,19 @@ const getAllProtoFiles = (protoFolder, fileList = []) => {
   return fileList;
 };
 
-const protoFiles = getAllProtoFiles(protoFolder);
-// \src\\protobuf\\game\\game.proto'를 반환한다. proto 파일들의 리스트를 반환
-// console.log(protoFiles);
-const protoMessages = {};
+export let GamePacket = null;
+export let GlobalFailCode = null;
 
-/**
- * protoMessages에 가져온 protoFiles를 등록하는 함수
- */
 export const loadProtos = async () => {
   try {
-    const root = new protobuf.Root();
-    // console.log(root); // 프로토버퍼의 형태를 가진 변수 선언
-    await Promise.all(
-      protoFiles.map((file) => {
-        return root.load(file);
-      }),
-    );
-    // proto 파일들의 리스트에서 하나 하나 root 형식에 맞춰 map 함수를 사용해 객체를 반환
-    // console.log(root); //모든 proto 파일들에 있는 데이터를 root 형식으로 저장한 객체
-    for (const typeName of Object.values(packetNames)) {
-      protoMessages[typeName] = root.lookupType(typeName);
-    }
+    const root = await protobuf.load(protoPath);
+    GamePacket = root.lookupType('GamePacket');
 
+    if(GamePacket) {'GamePacket load success'};
+
+    GlobalFailCode = root.lookupEnum('GlobalFailCode');
+    console.log(GlobalFailCode);
     console.log(`프로토 타입 로드 완료`);
-    // console.log(protoMessages);
   } catch (error) {
     // throw new CustomError(ErrorCodes.PROTOFILE_LOADING_FAIL, `프로토 로딩 중 에러 발생`);
     console.error(error);

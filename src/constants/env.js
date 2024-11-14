@@ -11,7 +11,7 @@ const envFiles = {
   },
   DB1: {
     NAME: process.env.DB_NAME || 'bang_db',
-    USER: process.env.DB_HOST || 'root',
+    USER: process.env.DB_USER || 'root',
     PASSWORD: process.env.DB_PASSWORD || 'aaaa4321',
     HOST: process.env.DB_HOST || 'localhost',
     PORT: process.env.DB_PORT || '3306',

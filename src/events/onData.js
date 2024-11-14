@@ -1,8 +1,9 @@
-
 import config from '../config/config.js';
 import { getHandlerById } from '../handlers/index.js';
 import { packetParser } from '../utils/parser/packetParser.js';
 import { handlerError } from '../error/errorHandler.js';
+import { CustomError } from '../error/customError.js';
+import { ErrorCodes } from '../error/errorCodes.js';
 
 const onData = (socket) => async (data) => {
   // data는 클라이언트가 전송한 버퍼+패킷
@@ -10,8 +11,9 @@ const onData = (socket) => async (data) => {
   console.log(data);
   socket.buffer = Buffer.concat([socket.buffer, data]);
 
-  // 헤더에서 버전의 정보를 가져옴 Offset [2]부터 1바이트
+  // 헤더에서 버전의 길이를 가져옴 Offset [2]부터 1바이트
   const versionLength = socket.buffer.readUInt8(config.packet.packetTypeLength);
+  // console.log(versionLength);
 
   const totalHeaderLength =
     config.packet.packetTypeLength +
@@ -25,7 +27,9 @@ const onData = (socket) => async (data) => {
     const packetType = socket.buffer.readUInt16BE(0);
     // 패킷 타입은 [0]부터 2바이트
 
-    const payloadLength = socket.buffer.readUInt32BE(totalHeaderLength - config.packet.payloadLength);
+    const payloadLength = socket.buffer.readUInt32BE(
+      totalHeaderLength - config.packet.payloadLength,
+    );
     // 헤더에서 페이로드 길이 정보를 가져옴 [전체 헤더 길이 - 페이로드 길이]부터 4바이트
 
     const packetLength = totalHeaderLength + payloadLength;
@@ -38,10 +42,22 @@ const onData = (socket) => async (data) => {
       break; // 중단
     }
 
+    const versionIndex = config.packet.packetTypeLength + config.packet.versionLength;
+    const versionBuffer = socket.buffer.slice(versionIndex, versionIndex + versionLength);
+    const version = versionBuffer.toString('utf-8');
+
+    if (version !== config.client.clientVersion) {
+      throw new CustomError(
+        ErrorCodes.CLIENT_VERSION_MISMATCH,
+        `클라이언트 버전 ${version}은 유효하지 않습니다.`
+      )
+    }
+    // const version = socket.buffer.toString('utf-8', config.packet.packetTypeLength+config.packet.versionLength + versionLength)
+
     const payloadData = socket.buffer.slice(totalHeaderLength, packetLength); // 페이로드의 내용은 헤더를 제외한 나머지
-
+    // console.log(payloadData);
     socket.buffer = socket.buffer.slice(packetLength); // socket.buffer를 비운다, 패킷 길이만큼 slice해서
-
+    // console.log(socket.buffer);
     try {
       const { payload } = packetParser(payloadData, packetType);
       // 패킷을 packetType의 번호와 일치하는 message 형태로 parsing한다.
@@ -59,4 +75,3 @@ const onData = (socket) => async (data) => {
 };
 
 export default onData;
-
