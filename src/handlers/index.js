@@ -1,4 +1,4 @@
-import { HANDLER_IDS } from '../constants/handlerIds.js';
+import HANDLER_IDS from '../constants/handlerIds.js';
 import { PACKET_TYPE_NAMES } from '../constants/packetTypes.js';
 import { CustomError } from '../error/customError.js';
 import { ErrorCodes } from '../error/errorCodes.js';
