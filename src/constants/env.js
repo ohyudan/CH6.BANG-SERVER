@@ -2,12 +2,14 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-
 const envFiles = {
-  Server: {
+  SERVER: {
     PORT: process.env.PORT || 6000,
     HOST: process.env.HOST || 'localhost',
-    CLIENT_VERSION: process.env.CLIENT_VERSION || '1.0.0',
+    VERSION: process.env.VERSION || '1.0.0',
+  },
+  CLIENT: {
+    VERSION: process.env.VERSION || '1.0.0',
   },
   DB1: {
     NAME: process.env.DB_NAME || 'bang_db',
@@ -19,4 +21,3 @@ const envFiles = {
 };
 
 export default envFiles;
-

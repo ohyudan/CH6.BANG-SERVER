@@ -1,3 +1,3 @@
-export const onEnd = (socket) => async (data) => {
-    
-}
+export const onEnd = (socket) => async (data) => {};
+
+export default onEnd;

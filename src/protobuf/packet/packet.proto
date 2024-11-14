@@ -1,8 +1,7 @@
 syntax = "proto3";
 
-/*
-    게임 데이터 명세
-*/
+package packets;
+
 message RoomData {
     int32 id = 1;
     string ownerId = 2;
