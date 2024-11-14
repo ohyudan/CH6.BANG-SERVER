@@ -1,16 +1,17 @@
 {
-  "name": "ch6_Bang",
+  "name": "ch6_bang_server",
   "version": "1.0.0",
   "main": "server.js",
   "author": "ohyudan <ohyudan86@gmail.com>",
   "license": "MIT",
   "type": "module",
-  "script": {
-    "dev": "",
+  "scripts": {
+    "dev": "nodemon src/server.js",
     "migrate": "",
     "format": "prettier --write *.js **/.js"
   },
   "dependencies": {
+    "dotenv": "^16.4.5",
     "proto": "^1.0.19",
     "protobufjs": "^7.4.0",
     "protocol-buffers": "^5.0.0"
