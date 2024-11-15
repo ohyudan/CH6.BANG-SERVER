@@ -6,7 +6,11 @@ import { formatDate } from '../utils/dateFomatter.js';
 //connection pool생성
 const createPoolSQL = () => {
   const pool = mysql.createPool({
-    ...config.database,
+    host: config.database.host,
+    port: config.database.port,
+    user: config.database.user,
+    password: config.database.password,
+    database: config.database.name,
     waitForConnections: true,//최대 연결 수에 도달했을시 새로윤 요청 대기
     connectionLimit: 10,//최대 연결 수 10
     queueLimit: 0,//대기열의 최대길이 제한없음.
