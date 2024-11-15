@@ -2,20 +2,14 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import protobuf from 'protobufjs';
-import packetNames from '../protobuf/packetsName.js';
-import CustomError from '../utils/error/customError.js';
-import { ErrorCodes } from '../utils/error/errorCodes.js';
+import packetNames from '../protobuf/packetNames.js';
+import CustomError from '../error/customError.js';
+import { ErrorCodes } from '../error/errorCodes.js';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 const protoFolder = path.join(dirname, '../protobuf');
 
-/**
- * .proto 파일들을 전부 가져오는 함수
- * @param {*} protoFolder
- * @param {*} fileList
- * @returns
- */
 const getAllProtoFiles = (protoFolder, fileList = []) => {
   const files = fs.readdirSync(protoFolder);
 
