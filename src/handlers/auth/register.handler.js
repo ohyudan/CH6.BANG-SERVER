@@ -6,12 +6,14 @@ import HANDLER_IDS from '../../constants/handlerIds.js';
 import { createUser, findUserById } from '../../dataBase/user/user.db.js';
 import bcrypt from 'bcrypt';
 
+
 const registerHandler = async ({ socket, payload }) => {
   const { email, nickname, password } = payload;
   let failCode = failCodeReturn(0);
   try {
     console.log(email, nickname, password);
     const emailExists=await findUserById(email);
+    
     if(emailExists!==null)//id 중복을 검사하는 if문
     {
       failCode = 7;
@@ -31,10 +33,10 @@ const registerHandler = async ({ socket, payload }) => {
       );
       return socket.write(result);
     }
-    const bcryptPassword=await bcrypt.hash(password,SALTROUNDS);//bcrypt로 비밀번호암호화
+    const bcryptPassword=await bcrypt.hash(password,Config.SALTROUNDS);//bcrypt로 비밀번호암호화
 
 
-    await createUser(email, nickname, password);
+    await createUser(email, nickname, bcryptPassword);
     
     const S2CRegisterResponse = {
       success: 'success',

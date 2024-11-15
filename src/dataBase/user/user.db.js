@@ -4,8 +4,8 @@ import { SQL_QUERIES } from "./user.queries.js"
 
 
 //id를 통해서 유저를 찾는 함수
-export const findUserById = async (id) => {
-    const [rows] = await dbPool.query(SQL_QUERIES.FIND_USER_BY_ID, [id]);
+export const findUserById = async (email) => {
+    const [rows] = await dbPool.query(SQL_QUERIES.FIND_USER_BY_EMAIL, [email]);
     console.log(rows);
     if (rows.length === 0)//중복이 없다는뜻
     {
@@ -15,7 +15,7 @@ export const findUserById = async (id) => {
 }
 //유저를 만드는 함수
 export const createUser = async (email, nickname, password ) => {
-    console.log(`create user nick name: ${nickname} memail:${id}, password: ${password}`);
+    console.log(`create user nick name: ${nickname} email:${email}, password: ${password}`);
     await dbPool.query(SQL_QUERIES.CREATE_USER, [email, nickname, password]);
-    return { id, password };
+    return { email, password,nickname };
 }

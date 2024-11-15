@@ -40,8 +40,6 @@ const loginHandler = async ({ socket, payload }) => {
     const jwtToken = jwt.sign({ email, password }, 'SECRET_KEY', { expiresIn: '1h' }); //SECRET_KEY부분임시로 채움, 만료시간 1시간으로 설정
     
 
-
-    
     const S2CLoginResponse = {
       success: 'success',
       message: 'login success',
