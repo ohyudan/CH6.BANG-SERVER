@@ -12,6 +12,14 @@ const packetTypes = {
     packetType: undefined,
     protoType: 'C2SLoginRequest',
   },
+  [HANDLER_IDS.GET_ROOM_LIST_REQUEST]: {
+    packetType: undefined,
+    protoType: 'C2SGetRoomListRequest',
+  },
+  [HANDLER_IDS.CREATE_ROOM_REQUEST]: {
+    packetType: undefined,
+    protoType: 'C2SCreateRoomRequest',
+  },
 };
 /**
  * 패킷타입에 맞는 핸들러로 분배해주는 함수
