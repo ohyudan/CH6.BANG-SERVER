@@ -1,8 +1,7 @@
 syntax = "proto3";
 
-/*
-    게임 데이터 명세
-*/
+package packets;
+
 message RoomData {
     int32 id = 1;
     string ownerId = 2;
@@ -379,29 +378,6 @@ message GamePacket {
         // 효과 알림
         S2CAnimationNotification animationNotification = 45;
     }
-}
-
-/* 
-    실패 코드
-*/
-enum GlobalFailCode {
-    NONE_FAILCODE = 0;
-    UNKNOWN_ERROR = 1;
-    INVALID_REQUEST = 2;
-    AUTHENTICATION_FAILED = 3;
-    CREATE_ROOM_FAILED = 4;
-    JOIN_ROOM_FAILED = 5;
-    LEAVE_ROOM_FAILED = 6;
-    REGISTER_FAILED = 7;
-    ROOM_NOT_FOUND = 8;
-    CHARACTER_NOT_FOUND = 9;
-    CHARACTER_STATE_ERROR = 10;
-    CHARACTER_NO_CARD = 11;
-    INVALID_ROOM_STATE = 12;
-    NOT_ROOM_OWNER = 13;
-    ALREADY_USED_BBANG = 14;
-    INVALID_PHASE = 15;
-    CHARACTER_CONTAINED = 16;
 }
 
 enum WarningType {
