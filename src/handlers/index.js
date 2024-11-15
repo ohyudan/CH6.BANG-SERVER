@@ -8,6 +8,10 @@ const packetTypes = {
     packetType: registerHandler,
     protoType: 'C2SRegisterRequest',
   },
+  [HANDLER_IDS.LOGIN_REQUEST]: {
+    packetType: undefined,
+    protoType: 'C2SLoginRequest',
+  },
 };
 /**
  * 패킷타입에 맞는 핸들러로 분배해주는 함수
