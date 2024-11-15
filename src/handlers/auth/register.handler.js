@@ -6,14 +6,13 @@ import HANDLER_IDS from '../../constants/handlerIds.js';
 import { createUser, findUserById } from '../../dataBase/user/user.db.js';
 import bcrypt from 'bcrypt';
 
-//email을 어떻게 할것인지 생각해봐야함
 const registerHandler = async ({ socket, payload }) => {
-  const { id, password, passwordConfirm } = payload;
+  const { email, nickname, password } = payload;
   let failCode = failCodeReturn(0);
   try {
-    console.log(id, password, passwordConfirm);
-    const idExists=await findUserById(id);
-    if(idExists!==null)//id 중복을 검사하는 if문
+    console.log(email, nickname, password);
+    const emailExists=await findUserById(email);
+    if(emailExists!==null)//id 중복을 검사하는 if문
     {
       failCode = 7;
       const S2CRegisterResponse = {
@@ -35,7 +34,7 @@ const registerHandler = async ({ socket, payload }) => {
     const bcryptPassword=await bcrypt.hash(password,SALTROUNDS);//bcrypt로 비밀번호암호화
 
 
-    await createUser(id,bcryptPassword);
+    await createUser(email, nickname, password);
     
     const S2CRegisterResponse = {
       success: 'success',

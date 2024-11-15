@@ -14,8 +14,8 @@ export const findUserById = async (id) => {
     return toCamelCase(rows[0]);
 }
 //유저를 만드는 함수
-export const createUser = async (id, password) => {
-    console.log(`create user id:${id}, password: ${password}`);
-    await dbPool.query(SQL_QUERIES.CREATE_USER, [id, password]);
+export const createUser = async (email, nickname, password ) => {
+    console.log(`create user nick name: ${nickname} memail:${id}, password: ${password}`);
+    await dbPool.query(SQL_QUERIES.CREATE_USER, [email, nickname, password]);
     return { id, password };
 }
