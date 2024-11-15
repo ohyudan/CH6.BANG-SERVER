@@ -2,6 +2,43 @@ syntax = "proto3";
 
 package packets;
 
+message RoomData {
+    int32 id = 1;
+    int64 ownerId = 2;
+    string name = 3;
+    int32 maxUserNum = 4;
+    RoomStateType state = 5; // WAIT 0, PREPARE 1, INAGAME 2
+    repeated UserData users = 6; // 인덱스 기반으로 턴 진행
+}
+
+// 입장했을때는 랜덤으로 체력만큼 카드 받음.
+// 하루 종료 시 체력만큼의 카드만 남길 수 있음.
+// 이후 낮이 될때마다 카드 두장 받고 시작
+message UserData {
+    int64 id = 1;
+    string nickname = 2;
+    CharacterData character = 3;
+}
+
+message CharacterData {
+    CharacterType characterType = 1;
+    RoleType roleType = 2;
+    int32 hp = 3;
+    int32 weapon = 4;
+    CharacterStateInfoData stateInfo = 5;
+    repeated int32 equips = 6;
+    repeated int32 debuffs = 7;
+    repeated CardData handCards = 8;
+    int32 bbangCount = 9;
+    int32 handCardsCount = 10;
+}
+
+message CharacterPositionData {
+    int64 id = 1;
+    double x = 2;
+    double y = 3;
+}
+
 message CardData {
     CardType type = 1;
     int32 count = 2;
@@ -16,16 +53,16 @@ message CharacterStateInfoData {
     CharacterStateType state = 1;
     CharacterStateType nextState = 2;
     int64 nextStateAt = 3; // state가 nextState로 풀리는 밀리초 타임스탬프. state가 NONE이면 0
-    string stateTargetUserId = 4; // state에 target이 있을 경우
+    int64 stateTargetUserId = 4; // state에 target이 있을 경우
 }
 
 /* 
     패킷 명세
 */
 message C2SRegisterRequest {
-    string id = 1;
-    string password = 2;
-    string email = 3;
+    string email = 1;
+    string nickname = 2;
+    string password = 3;
 }
 
 message S2CRegisterResponse {
@@ -35,7 +72,7 @@ message S2CRegisterResponse {
 }
 
 message C2SLoginRequest {
-    string id = 1;
+    string email = 1;
     string password = 2;
 }
 
@@ -77,7 +114,6 @@ message S2CJoinRoomResponse {
 }
 
 message C2SJoinRandomRoomRequest {
-    int32 roomId = 1;
 }
 
 message S2CJoinRandomRoomResponse {
@@ -100,7 +136,7 @@ message S2CLeaveRoomResponse {
 }
 
 message S2CLeaveRoomNotification {
-    string userId = 1;
+    int64 userId = 1;
 }
 
 // 게임 시작 전 역할 및 캐릭터 셔플 요청
@@ -148,7 +184,7 @@ message S2CPositionUpdateNotification {
 
 message C2SUseCardRequest {
     CardType cardType = 1;
-    string targetUserId = 2; // 타겟 없으면 빈 값
+    int64 targetUserId = 2; // 타겟 없으면 빈 값
 }
 
 message S2CUseCardResponse { // 성공 여부만 반환하고 대상 유저 효과는 S2CUserUpdateNotification로 통지
@@ -158,18 +194,18 @@ message S2CUseCardResponse { // 성공 여부만 반환하고 대상 유저 효�
 
 message S2CUseCardNotification {
     CardType cardType = 1;
-    string userId = 2;
-    string targetUserId = 3; // 타겟 없으면 빈 값
+    int64 userId = 2;
+    int64 targetUserId = 3; // 타겟 없으면 0
 }
 
 message S2CEquipCardNotification {
     CardType cardType = 1;
-    string userId = 2;
+    int64 userId = 2;
 }
 
 message S2CCardEffectNotification {
     CardType cardType = 1;
-    string userId = 2;
+    int64 userId = 2;
     bool success = 3;
 }
 
@@ -192,7 +228,7 @@ message S2CUserUpdateNotification {
 }
 
 message S2CPhaseUpdateNotification {
-    PhaseType phaseType = 1; // DAY 1, EVENING 2, END 3
+    PhaseType phaseType = 1; // DAY 1, END 3 (EVENING은 필요시 추가)
     int64 nextPhaseAt = 2; // 다음 페이즈 시작 시점(밀리초 타임스탬프)
     repeated CharacterPositionData characterPositions = 3; // 변경된 캐릭터 위치
 }
@@ -215,7 +251,7 @@ message S2CDestroyCardResponse {
 }
 
 message S2CGameEndNotification {
-    repeated string winners = 1;
+    repeated int64 winners = 1;
     WinType winType = 2;
 }
 
@@ -230,7 +266,7 @@ message S2CCardSelectResponse {
 }
 
 message C2SPassDebuffRequest {
-    string targetUserId = 1;
+    int64 targetUserId = 1;
     CardType debuffCardType = 2;
 }
 
@@ -245,7 +281,7 @@ message S2CWarningNotification {
 }
 
 message S2CAnimationNotification {
-    string userId = 1;
+    int64 userId = 1;
     AnimationType animationType = 2;
 }
 
