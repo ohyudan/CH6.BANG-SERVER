@@ -1,6 +1,6 @@
 import envFiles from '../constants/env.js';
 import { HEADER, TOTAL_LENGTH } from '../constants/header.js';
-export const Config = {
+const Config = {
   SERVER: {
     HOST: envFiles.SERVER.HOST,
     PORT: envFiles.SERVER.PORT,
@@ -22,6 +22,9 @@ export const Config = {
     PASSWORD: envFiles.DB1.PASSWORD,
     HOST: envFiles.DB1.HOST,
     PORT: envFiles.DB1.PORT,
+  },
+  AUTH: {
+    SECRET_KEY: envFiles.AUTH.SECRET_KEY,
   },
 
   MAX_SEQUENCE_DIFF: 5,

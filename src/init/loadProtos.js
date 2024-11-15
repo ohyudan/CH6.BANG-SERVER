@@ -2,7 +2,7 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import protobuf from 'protobufjs';
-import packetNames from '../protobuf/packetsName.js';
+import packetNames from '../protobuf/packetNames.js';
 import CustomError from '../error/customError.js';
 import { ErrorCodes } from '../error/errorCodes.js';
 
@@ -49,6 +49,7 @@ export const loadProtos = async () => {
           protoMessages[packageName][protoType] = root.lookupEnum(typeName);
         }
       }
+
     }
 
     console.log(`프로토 타입 로드에 끝났습니다.`);

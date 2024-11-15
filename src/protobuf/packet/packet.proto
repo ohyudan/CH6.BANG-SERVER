@@ -15,7 +15,7 @@ message RoomData {
 // 하루 종료 시 체력만큼의 카드만 남길 수 있음.
 // 이후 낮이 될때마다 카드 두장 받고 시작
 message UserData {
-    string id = 1;
+    int64 id = 1;
     string nickname = 2;
     CharacterData character = 3;
 }
@@ -60,9 +60,9 @@ message CharacterStateInfoData {
     패킷 명세
 */
 message C2SRegisterRequest {
-    string id = 1;
-    string password = 2;
-    string email = 3;
+    string email = 1;
+    string nickname = 2;
+    string password = 3;
 }
 
 message S2CRegisterResponse {
@@ -72,7 +72,7 @@ message S2CRegisterResponse {
 }
 
 message C2SLoginRequest {
-    string id = 1;
+    string email = 1;
     string password = 2;
 }
 
@@ -114,7 +114,6 @@ message S2CJoinRoomResponse {
 }
 
 message C2SJoinRandomRoomRequest {
-    int32 roomId = 1;
 }
 
 message S2CJoinRandomRoomResponse {
@@ -185,7 +184,7 @@ message S2CPositionUpdateNotification {
 
 message C2SUseCardRequest {
     CardType cardType = 1;
-    string targetUserId = 2; // 타겟 없으면 빈 값
+    int64 targetUserId = 2; // 타겟 없으면 0
 }
 
 message S2CUseCardResponse { // 성공 여부만 반환하고 대상 유저 효과는 S2CUserUpdateNotification로 통지
@@ -383,25 +382,6 @@ message GamePacket {
 /* 
     실패 코드
 */
-enum GlobalFailCode {
-    NONE_FAILCODE = 0;
-    UNKNOWN_ERROR = 1;
-    INVALID_REQUEST = 2;
-    AUTHENTICATION_FAILED = 3;
-    CREATE_ROOM_FAILED = 4;
-    JOIN_ROOM_FAILED = 5;
-    LEAVE_ROOM_FAILED = 6;
-    REGISTER_FAILED = 7;
-    ROOM_NOT_FOUND = 8;
-    CHARACTER_NOT_FOUND = 9;
-    CHARACTER_STATE_ERROR = 10;
-    CHARACTER_NO_CARD = 11;
-    INVALID_ROOM_STATE = 12;
-    NOT_ROOM_OWNER = 13;
-    ALREADY_USED_BBANG = 14;
-    INVALID_PHASE = 15;
-    CHARACTER_CONTAINED = 16;
-}
 
 enum WarningType {
     NO_WARNING = 0;
@@ -479,12 +459,6 @@ enum RoleType {
     BODYGUARD = 2;
     HITMAN = 3;
     PSYCHOPATH = 4;
-}
-
-enum RoomStateType {
-    WAIT = 0;
-    PREPARE = 1;
-    INGAME = 2;
 }
 
 enum PhaseType {

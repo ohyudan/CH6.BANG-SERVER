@@ -5,6 +5,7 @@ import { validateSequence } from '../utils/validate/validateSequence.js';
 import packetParser from '../utils/Packet/packetParser.js';
 import { handlerError } from '../error/errorHandler.js';
 import { CustomError } from '../error/customError.js';
+import { handler } from '../handlers/index.js';
 
 const onData = (socket) => async (data) => {
   // data는 클라이언트가 전송한 버퍼+패킷
@@ -27,7 +28,6 @@ const onData = (socket) => async (data) => {
       if (socket.buffer.length >= requiredLength) {
         const packet = socket.buffer.subarray(deserializeData.offset, requiredLength);
         socket.buffer = socket.buffer.subarray(requiredLength);
-        console.log(packet);
         const payload = packetParser(packet);
 
         await handler(socket, deserializeData.packetType, payload);

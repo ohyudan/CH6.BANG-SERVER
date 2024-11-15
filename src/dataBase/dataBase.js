@@ -1,9 +1,13 @@
 import mysql from 'mysql2/promise';
-import config from '../config/config.js';
+import Config from '../config/config.js';
 import { formatDate } from '../utils/formatDate.js';
 const createPool = () => {
   const pool = mysql.createPool({
-    ...config.database,
+    host: Config.DATABASE.HOST,
+    port: Config.DATABASE.PORT,
+    user: Config.DATABASE.USER,
+    password: Config.DATABASE.PASSWORD,
+    database: Config.DATABASE.NAME,
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,

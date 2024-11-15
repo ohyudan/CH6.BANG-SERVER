@@ -1,10 +1,25 @@
 import HANDLER_IDS from '../constants/handlerIds.js';
 import registerHandler from './auth/register.handler.js';
+import loginHandler from './auth/login.handler.js';
+import getRoomListHandler from './lobby/getRoomList.handler.js';
+import createRoomHandler from './lobby/createRoom.handler.js';
 const packetTypes = {
   [HANDLER_IDS.REGISTER_REQUEST]: {
     packetType: registerHandler,
     protoType: 'C2SRegisterRequest',
   },
+  [HANDLER_IDS.LOGIN_REQUEST]: {
+    packetType: loginHandler,
+    protoType: 'C2SLoginRequest',
+  },
+  [HANDLER_IDS.CREATE_ROOM_REQUEST]: {
+    packetType: createRoomHandler,
+    protoType: 'C2SCreateRoomRequest',
+  },
+  [HANDLER_IDS.GET_ROOM_LIST_REQUEST]: {
+    packetType: getRoomListHandler,
+    protoType: 'C2SGetRoomListRequest',
+  }
 };
 /**
  * 패킷타입에 맞는 핸들러로 분배해주는 함수
@@ -14,6 +29,8 @@ const packetTypes = {
  */
 export const handler = async (socket, packetType, payload) => {
   try {
+    console.log('PacketType: ', packetType);
+    console.log('Payload: ', payload);
     const handlerFunction = packetTypes[packetType].packetType;
     if (!handlerFunction) {
       throw new CustomError(ErrorCodes.UNKNOWN_HANDLER_ID, `핸들러를 찾을 수 없습니다`);
