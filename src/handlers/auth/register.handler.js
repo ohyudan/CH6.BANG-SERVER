@@ -15,12 +15,27 @@ const registerHandler = async ({ socket, payload }) => {
     const idExists=await findUserById(id);
     if(idExists!==null)//id 중복을 검사하는 if문
     {
-      throw new Error('This id already exists!');
+      failCode = 7;
+      const S2CRegisterResponse = {
+        success: 'fail',
+        message: 'ID already exists',
+        GlobalFailCode: failCode,
+      };
+      const gamePacket = {
+        registerResponse: S2CRegisterResponse,
+      };
+      const result = createResponse(
+        HANDLER_IDS.REGISTER_RESPONSE,
+        socket.version,
+        socket.sequence,
+        gamePacket,
+      );
+      return socket.write(result);
     }
-    const bcryptPassword=await bcrypt.hash(password,10);//bcrypt로 비밀번호암호화
+    const bcryptPassword=await bcrypt.hash(password,SALTROUNDS);//bcrypt로 비밀번호암호화
 
 
-    createUser(id,bcryptPassword);
+    await createUser(id,bcryptPassword);
     
     const S2CRegisterResponse = {
       success: 'success',
