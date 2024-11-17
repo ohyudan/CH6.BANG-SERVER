@@ -3,6 +3,7 @@ import registerHandler from './auth/register.handler.js';
 import loginHandler from './auth/login.handler.js';
 import getRoomListHandler from './lobby/getRoomList.handler.js';
 import createRoomHandler from './lobby/createRoom.handler.js';
+import joinRoomHandler from './lobby/joinRoom.handler.js';
 const packetTypes = {
   [HANDLER_IDS.REGISTER_REQUEST]: {
     packetType: registerHandler,
@@ -19,7 +20,11 @@ const packetTypes = {
   [HANDLER_IDS.GET_ROOM_LIST_REQUEST]: {
     packetType: getRoomListHandler,
     protoType: 'C2SGetRoomListRequest',
-  }
+  },
+  [HANDLER_IDS.JOIN_ROOM_REQUEST]: {
+    packetType: joinRoomHandler,
+    protoType: 'C2SJoinRoomRequest',
+  },
 };
 /**
  * 패킷타입에 맞는 핸들러로 분배해주는 함수

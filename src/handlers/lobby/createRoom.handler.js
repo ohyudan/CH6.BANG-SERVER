@@ -26,7 +26,7 @@ const createRoomHandler = async ({ socket, payload }) => {
   room.addUser(user);
 
   const S2CCreateRoomResponse = {
-    success: 'Success',
+    success: true,
     room: {
       id: room.id,
       ownerId: room.ownerId,

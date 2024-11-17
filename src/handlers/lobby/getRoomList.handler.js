@@ -22,21 +22,22 @@ const getRoomListHandler = async ({ socket, payload }) => {
   console.log(lobbySession);
   // 로비에 속한 방들의 정보를 모음
   const rooms = lobbySession.rooms.map((room) => {
-    return {
-      id: room.id,
-      ownerId: room.ownerId,
-      name: room.name,
-      maxUserNum: room.maxUserNum,
-      state: room.state,
-      users: room.users,
-    };
+    return room;
+    // return {
+    //   id: room.id,
+    //   ownerId: room.ownerId,
+    //   name: room.name,
+    //   maxUserNum: room.maxUserNum,
+    //   state: room.state,
+    //   users: room.users,
+    // };
   });
   console.log('3');
 
   console.log('rooms 데이터 :', rooms);
 
   const S2CGetRoomListResponse = {
-    success: 'Success',
+    success: true,
     rooms: rooms,
     failCode: 0,
   };
