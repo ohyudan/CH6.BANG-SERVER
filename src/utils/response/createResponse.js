@@ -31,16 +31,16 @@ export const failCodeReturn = (number) => {
   let result;
   switch (number) {
     case 0:
-      result = failCode.NONE;
+      result = failCode.values.NONE_FAILCODE;
       break;
     case 1:
-      result = failCode.UNKNOWN_ERROR;
+      result = failCode.values.UNKNOWN_ERROR;
       break;
     case 2:
-      result = failCode.INVALID_REQUEST;
+      result = failCode.values.INVALID_REQUEST;
       break;
     case 3:
-      result = failCode.AUTHENTICATION_FAILED;
+      result = failCode.values.AUTHENTICATION_FAILED;
       break;
   }
   return result;

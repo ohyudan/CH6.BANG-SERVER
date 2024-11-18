@@ -1,3 +1,4 @@
+import { RoomStateType, STATE } from './room.status.js';
 /**
  * 혹시 모를 확장성 때문에 class 제작
  */
@@ -7,10 +8,18 @@ class Room {
     this._ownerId = ownerId;
     this._name = name;
     this._maxUserNum = maxUserNum;
-    this._state = 0;
+    this._state = new RoomStateType();
     this._playerlist = new Map();
 
-    this.addplayer(ownerId);
+    //this.addplayer(ownerId);
+  }
+
+  setState(state) {
+    const result = this._state.setState(state);
+    return result;
+  }
+  getState() {
+    return this._state.getCurrentStateData();
   }
 
   addplayer(player) {
@@ -29,6 +38,7 @@ class Room {
   }
 }
 
+export default Room;
 // message RoomData {
 //     int32 id = 1;
 //     string ownerId = 2;
