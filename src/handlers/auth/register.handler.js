@@ -10,42 +10,32 @@ import bcrypt from 'bcrypt';
 const registerHandler = async ({ socket, payload }) => {
   const { email, nickname, password } = payload;
   let failCode = failCodeReturn(0);
+  let success = true;
+  let message = 'login success';
   try {
     console.log(email, nickname, password);
-    const emailExists=await findUserById(email);
-    if(email===""||nickname===""||password==="")//입력안했을시 예외처리
+    const emailExists = await findUserById(email);
+    if (email === "" || nickname === "" || password === "")//입력안했을시 예외처리
     {
+      success = false;
+      message = "Fill the blank";
+      failCode = 7;//등록실패
       console.error("Fill the blank");
-      return { success: false };
     }
-    if(emailExists!==null)//id 중복을 검사하는 if문
+    if (emailExists !== null)//id 중복을 검사하는 if문
     {
-      // failCode = 7;
-      // const S2CRegisterResponse = {
-      //   success: 'fail',
-      //   message: 'ID already exists',
-      //   GlobalFailCode: failCode,
-      // };
-      // const gamePacket = {
-      //   registerResponse: S2CRegisterResponse,
-      // };
-      // const result = createResponse(
-      //   HANDLER_IDS.REGISTER_RESPONSE,
-      //   socket.version,
-      //   socket.sequence,
-      //   gamePacket,
-      // );
+      success = false;
+      message = "This email is already register!";
+      failCode = 7;//등록실패
       console.error("This email is already register!");
-      return { success: false };
     }
-    const bcryptPassword=await bcrypt.hash(password,Config.SALTROUNDS);//bcrypt로 비밀번호암호화
-
+    const bcryptPassword = await bcrypt.hash(password, Config.SALTROUNDS);//bcrypt로 비밀번호암호화
 
     await createUser(email, nickname, bcryptPassword);
-    
+
     const S2CRegisterResponse = {
-      success: 'success',
-      message: 'register success',
+      success,
+      message,
       GlobalFailCode: failCode,
     };
     const gamePacket = {

@@ -9,49 +9,39 @@ import jwt from 'jsonwebtoken'; //jwt토큰 발급을 위한 jwt 임포트
 
 //email을 어떻게 할것인지 생각해봐야함
 const loginHandler = async ({ socket, payload }) => {
-  const { email,password } = payload;
+  const { email, password } = payload;
   let failCode = failCodeReturn(0);
+  let success = true;
+  let message = 'login success';
   try {
-    console.log(email,password);
-    const emailExists=await findUserById(email);
-    if(emailExists===null)//id 중복을 검사하는 if문
+    console.log(email, password);
+    const emailExists = await findUserById(email);
+
+    if (emailExists === null)//id 중복을 검사하는 if문
     {
-      // failCode = 17;//LOGIN_FAIL
-      // const S2CLoginResponse = {
-      //   success: 'fail',
-      //   message: 'ID is not exists!',
-      //   GlobalFailCode: failCode,
-      // };
-      // const gamePacket = {
-      //   loginResponse: S2CLoginResponse,
-      // };
-      // const result = createResponse(
-      //   HANDLER_IDS.LOGIN_RESPONSE,
-      //   socket.version,
-      //   socket.sequence,
-      //   gamePacket,
-      // );
-      // return socket.write(result);
+      failCode = 3;//LOGIN_FAIL
+      message = 'ID is not exists';
+      success = false;
       console.error("ID is not exists");
-      return { success: false };
     }
-    if(!(await bcrypt.compare(password, emailExists.password)))//id로찾아낸 db의 정보와 비밀번호 대조
+    if (!(await bcrypt.compare(password, emailExists.password)))//id로찾아낸 db의 정보와 비밀번호 대조
     {
-        console.error("Password is dismatch.");
-        return { success: false };
-        //failCode=3;//AUTHENTICATION_FAILED
+      failCode = 3;//LOGIN_FAIL
+      message = 'Password is dismatch.';
+      success = false;
+      console.error("Password is dismatch.");
     }
     const jwtToken = jwt.sign({ email, password }, 'SECRET_KEY', { expiresIn: '1h' }); //SECRET_KEY부분임시로 채움, 만료시간 1시간으로 설정
-    
+
 
     const S2CLoginResponse = {
-      success: 'success',
-      message: 'login success',
-      token:jwtToken,
-      myInfo:{
+      success,
+      message,
+      token: jwtToken,
+      myInfo: {
         email,
-        nickname:emailExists.nickname,
-        character:null,
+        nickname: emailExists.nickname,
+        character: null,
       },
       GlobalFailCode: failCode,
     };
