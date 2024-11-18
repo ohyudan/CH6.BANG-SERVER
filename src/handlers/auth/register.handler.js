@@ -6,7 +6,6 @@ import HANDLER_IDS from '../../constants/handlerIds.js';
 import { createUser, findUserById } from '../../dataBase/user/user.db.js';
 import bcrypt from 'bcrypt';
 
-
 const registerHandler = async ({ socket, payload }) => {
   const { email, nickname, password } = payload;
   let failCode = failCodeReturn(0);
@@ -15,21 +14,21 @@ const registerHandler = async ({ socket, payload }) => {
   try {
     console.log(email, nickname, password);
     const emailExists = await findUserById(email);
-    if (email === "" || nickname === "" || password === "")//입력안했을시 예외처리
-    {
+    if (email === '' || nickname === '' || password === '') {
+      //입력안했을시 예외처리
       success = false;
-      message = "Fill the blank";
-      failCode = 7;//등록실패
-      console.error("Fill the blank");
+      message = 'Fill the blank';
+      failCode = 7; //등록실패
+      console.error('Fill the blank');
     }
-    if (emailExists !== null)//id 중복을 검사하는 if문
-    {
+    if (emailExists !== null) {
+      //id 중복을 검사하는 if문
       success = false;
-      message = "This email is already register!";
-      failCode = 7;//등록실패
-      console.error("This email is already register!");
+      message = 'This email is already register!';
+      failCode = 7; //등록실패
+      console.error('This email is already register!');
     }
-    const bcryptPassword = await bcrypt.hash(password, Config.SALTROUNDS);//bcrypt로 비밀번호암호화
+    const bcryptPassword = await bcrypt.hash(password, Config.SALTROUNDS); //bcrypt로 비밀번호암호화
 
     await createUser(email, nickname, bcryptPassword);
 
@@ -47,7 +46,6 @@ const registerHandler = async ({ socket, payload }) => {
       socket.sequence,
       gamePacket,
     );
-    console.log(result);
     socket.write(result);
   } catch (err) {
     await handlerError(socket, err);

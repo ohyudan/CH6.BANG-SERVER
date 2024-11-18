@@ -4,6 +4,8 @@ import { CustomError } from '../error/customError.js';
 import { ErrorCodes } from '../error/errorCodes.js';
 import loginHandler from './auth/login.handler.js';
 import registerHandler from './auth/register.handler.js';
+import testlogin from './auth/test-login.js';
+import roomListGetHandler from './room/roomListGetHandler.js';
 const packetTypes = {
   [HANDLER_IDS.REGISTER_REQUEST]: {
     packetType: registerHandler,
@@ -12,6 +14,14 @@ const packetTypes = {
   [HANDLER_IDS.LOGIN_REQUEST]: {
     packetType: loginHandler,
     protoType: 'C2SLoginRequest',
+  },
+  [HANDLER_IDS.GET_ROOM_LIST_REQUEST]: {
+    packetType: roomListGetHandler,
+    protoType: 'C2SGetRoomListRequest',
+  },
+  [HANDLER_IDS.CREATE_ROOM_REQUEST]: {
+    packetType: undefined,
+    protoType: 'C2SCreateRoomRequest',
   },
 };
 /**
