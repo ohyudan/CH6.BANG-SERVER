@@ -5,6 +5,8 @@ import Room from '../../utils/room/room.class.js';
 const roomCreateHander = ({ socket, payload }) => {
   const { name, MaxUserNum } = payload;
 
+  const room = new Room(0);
+
   const S2CCreateRoomResponse = {
     success: true, // 추후 변수 할당
     RoomData: null,
