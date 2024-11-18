@@ -32,19 +32,15 @@ export const failCodeReturn = (number) => {
   switch (number) {
     case 0:
       result = failCode.values.NONE_FAILCODE;
-      result = failCode.NONE_FAILCODE; // 실패 코드 없음
       break;
     case 1:
       result = failCode.values.UNKNOWN_ERROR;
-      result = failCode.UNKNOWN_ERROR; // 알 수 없는 오류
       break;
     case 2:
       result = failCode.values.INVALID_REQUEST;
-      result = failCode.INVALID_REQUEST; // 잘못된 요청
       break;
     case 3:
       result = failCode.values.AUTHENTICATION_FAILED;
-      result = failCode.AUTHENTICATION_FAILED; // 인증 실패
       break;
     case 4:
       result = failCode.CREATE_ROOM_FAILED; // 방 생성 실패
