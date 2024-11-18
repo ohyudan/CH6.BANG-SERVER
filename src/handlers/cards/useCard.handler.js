@@ -1,6 +1,6 @@
 import { failCodeReturn } from '../../utils/response/createResponse.js';
 
-export const useCardHander = ({ socket, payload }) => {
+export const useCardHandler = ({ socket, payload }) => {
   const { cardType, targetUserId } = payload;
   let failCode = failCodeReturn(0);
 
