@@ -2,7 +2,7 @@ import { getUserById } from '../../session/user.session.js';
 import IntervalManager from '../managers/interval.manager.js';
 const LOBBY_MAX_PLAYERS = 50;
 
-// 만들긴 했는데 게임적으로는 채널같은 느낌으로 구현된 듯? 1채널, 2채널? 이번 프로젝트에선 굳이 필요하진 않은거 같은데 이미 이렇게 짜버려서 ㅎㅎ;
+// 채널같은 느낌?
 class Lobby {
   constructor(id) {
     this.id = id;
