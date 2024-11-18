@@ -16,26 +16,28 @@ const loginHandler = async ({ socket, payload }) => {
     const emailExists=await findUserById(email);
     if(emailExists===null)//id 중복을 검사하는 if문
     {
-      failCode = 17;//LOGIN_FAIL
-      const S2CLoginResponse = {
-        success: 'fail',
-        message: 'ID is not exists!',
-        GlobalFailCode: failCode,
-      };
-      const gamePacket = {
-        loginResponse: S2CLoginResponse,
-      };
-      const result = createResponse(
-        HANDLER_IDS.LOGIN_RESPONSE,
-        socket.version,
-        socket.sequence,
-        gamePacket,
-      );
-      return socket.write(result);
+      // failCode = 17;//LOGIN_FAIL
+      // const S2CLoginResponse = {
+      //   success: 'fail',
+      //   message: 'ID is not exists!',
+      //   GlobalFailCode: failCode,
+      // };
+      // const gamePacket = {
+      //   loginResponse: S2CLoginResponse,
+      // };
+      // const result = createResponse(
+      //   HANDLER_IDS.LOGIN_RESPONSE,
+      //   socket.version,
+      //   socket.sequence,
+      //   gamePacket,
+      // );
+      // return socket.write(result);
+      // throw new Error("존재하지 않는 ID");
     }
-    if(!(await bcrypt.compare(password, emailExists.password)));//id로찾아낸 db의 정보와 비밀번호 대조
+    if(!(await bcrypt.compare(password, emailExists.password)))//id로찾아낸 db의 정보와 비밀번호 대조
     {
-        failcode=3;//AUTHENTICATION_FAILED
+        console.log("비밀번호가 일치하지 않습니다.");
+        failCode=3;//AUTHENTICATION_FAILED
     }
     const jwtToken = jwt.sign({ email, password }, 'SECRET_KEY', { expiresIn: '1h' }); //SECRET_KEY부분임시로 채움, 만료시간 1시간으로 설정
     
@@ -45,9 +47,9 @@ const loginHandler = async ({ socket, payload }) => {
       message: 'login success',
       token:jwtToken,
       myInfo:{
-        id,
-        nickname,
-        character,
+        email,
+        nickname:emailExists.nickname,
+        character:null,
       },
       GlobalFailCode: failCode,
     };

@@ -6,7 +6,6 @@ import { SQL_QUERIES } from "./user.queries.js"
 //id를 통해서 유저를 찾는 함수
 export const findUserById = async (email) => {
     const [rows] = await dbPool.query(SQL_QUERIES.FIND_USER_BY_EMAIL, [email]);
-    console.log(rows);
     if (rows.length === 0)//중복이 없다는뜻
     {
         return null;

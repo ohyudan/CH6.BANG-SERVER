@@ -10,7 +10,7 @@ const packetTypes = {
     protoType: 'C2SRegisterRequest',
   },
   [HANDLER_IDS.LOGIN_REQUEST]: {
-    packetType: undefined,
+    packetType: loginHandler,
     protoType: 'C2SLoginRequest',
   },
 };
