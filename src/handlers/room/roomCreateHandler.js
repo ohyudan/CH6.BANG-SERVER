@@ -6,10 +6,10 @@ const roomCreateHander = ({ socket, payload }) => {
   const { name, MaxUserNum } = payload;
 
   const room = new Room(0);
-
+  roomData = room.getRoomData();
   const S2CCreateRoomResponse = {
     success: true, // 추후 변수 할당
-    RoomData: null,
+    RoomData: roomData,
     failCode: failCodeReturn(0),
   };
 

@@ -1,4 +1,6 @@
 import { RoomStateType, STATE } from './room.status.js';
+import { getProtoMessages } from '../../init/loadProtos.js';
+import { message } from 'protocol-buffers/compile.js';
 /**
  * 혹시 모를 확장성 때문에 class 제작
  */
@@ -11,8 +13,12 @@ class Room {
     this._state = new RoomStateType();
     this._playerlist = new Map();
 
+    let message = getProtoMessages();
+    let roomDataMessage = message.room.RoomData;
+
     //this.addplayer(ownerId);
   }
+  getRoomData() {}
 
   setState(state) {
     const result = this._state.setState(state);
