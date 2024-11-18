@@ -12,6 +12,14 @@ const packetTypes = {
     packetType: undefined,
     protoType: 'C2SLoginRequest',
   },
+  [HANDLER_IDS.GAME_PREPARE_REQUEST]: {
+    packetType: undefined,
+    protoType: 'C2SGamePrepareRequest',
+  },
+  [HANDLER_IDS.GAME_START_REQUEST]: {
+    packetType: undefined,
+    protoType: 'C2SGameStartRequest',
+  },
 };
 /**
  * 패킷타입에 맞는 핸들러로 분배해주는 함수
