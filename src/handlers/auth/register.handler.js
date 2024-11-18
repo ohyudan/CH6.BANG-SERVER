@@ -7,7 +7,7 @@ const registerHandler = async ({ socket, payload }) => {
   const { id, password, email } = payload;
   let failCode = failCodeReturn(0);
   try {
-    console.log(id, password, email);
+    //console.log(id, password, email);
     const S2CRegisterResponse = {
       success: '결과',
       message: '내용',
@@ -22,7 +22,6 @@ const registerHandler = async ({ socket, payload }) => {
       socket.sequence,
       gamePacket,
     );
-    console.log(result);
     socket.write(result);
   } catch (err) {
     await handlerError(socket, err);
