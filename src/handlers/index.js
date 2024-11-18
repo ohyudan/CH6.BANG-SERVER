@@ -4,6 +4,7 @@ import loginHandler from './auth/login.handler.js';
 import getRoomListHandler from './lobby/getRoomList.handler.js';
 import createRoomHandler from './lobby/createRoom.handler.js';
 import joinRoomHandler from './lobby/joinRoom.handler.js';
+import joinRandomRoomHandler from './lobby/joinRandomRoom.handler.js';
 const packetTypes = {
   [HANDLER_IDS.REGISTER_REQUEST]: {
     packetType: registerHandler,
@@ -25,6 +26,10 @@ const packetTypes = {
     packetType: joinRoomHandler,
     protoType: 'C2SJoinRoomRequest',
   },
+  [HANDLER_IDS.JOIN_RANDOM_ROOM_REQUEST]: {
+    packetType: joinRandomRoomHandler,
+    protoType: 'C2SJoinRandomRoomRequest',
+  }
 };
 /**
  * 패킷타입에 맞는 핸들러로 분배해주는 함수

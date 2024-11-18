@@ -32,9 +32,9 @@ const getRoomListHandler = async ({ socket, payload }) => {
     //   users: room.users,
     // };
   });
-  console.log('3');
+  // console.log('3');
 
-  console.log('rooms 데이터 :', rooms);
+  // console.log('rooms 데이터 :', rooms);
 
   const S2CGetRoomListResponse = {
     success: true,
@@ -51,8 +51,8 @@ const getRoomListHandler = async ({ socket, payload }) => {
     gamePacket,
   );
 
-  console.log('룸 리스트 불러오기');
-  console.log(getRoomListResponse);
+  // console.log('룸 리스트 불러오기');
+  // console.log(getRoomListResponse);
   socket.write(getRoomListResponse);
   return;
 };
