@@ -89,11 +89,7 @@ const loginHandler = async ({ socket, payload }) => {
         }
 
         // 유저를 자리가 남은 로비에 입장시키기
-        unfilledLobby.addUser({
-          id: user.id,
-          nickname: user.nickname,
-          character: user.character,
-        });
+        unfilledLobby.addUser(user);
         // 로비에 유저를 입장시키고 로비 상태 확인
         unfilledLobby.stateCheck();
 

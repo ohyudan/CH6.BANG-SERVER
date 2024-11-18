@@ -44,3 +44,11 @@ export const getLobby = (id) => {
 export const getLobbySessions = () => {
     return lobbySessions;
 }
+
+export const getLobbyByUserId = (userId) => {
+    return lobbySessions.find((lobby) => lobby.users.find((user) => user.id === userId));
+}
+
+export const getLobbyByRoomId = (roomID) => {
+    return lobbySessions.find((lobby) => lobby.rooms.find((room) => room.id === roomID));
+}

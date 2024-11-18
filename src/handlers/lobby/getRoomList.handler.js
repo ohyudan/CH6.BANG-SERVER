@@ -1,5 +1,5 @@
 import HANDLER_IDS from '../../constants/handlerIds.js';
-import { getLobbySessions } from '../../session/lobby.session.js';
+import { getLobbyByUserId, getLobbySessions } from '../../session/lobby.session.js';
 import { getRoomSessions } from '../../session/room.session.js';
 import { getUserBySocket } from '../../session/user.session.js';
 import { createResponse, failCodeReturn } from '../../utils/response/createResponse.js';
@@ -11,17 +11,19 @@ const getRoomListHandler = async ({ socket, payload }) => {
   const userId = user.id;
 
   // 유저를 갖고 있는 로비가 가진 게임 룸
-  const lobbySessions = getLobbySessions();
+  // const lobbySessions = getLobbySessions();
   // console.log('1');
   // console.log(lobbySessions);
   // 유저가 있는 로비
   // lobby.users 안에 있는 오브젝트 
-  const lobbySession = lobbySessions.find((lobby) => 
-    lobby.users.find((user) => user.id === userId));
+  // const lobbySession = lobbySessions.find((lobby) => 
+  //   lobby.users.find((user) => user.id === userId));
+
+  const thisLobby = getLobbyByUserId(userId);
   // console.log('2');
   // console.log(lobbySession);
   // 로비에 속한 방들의 정보를 모음
-  const rooms = lobbySession.rooms.map((room) => {
+  const rooms = thisLobby.rooms.map((room) => {
     return room;
     // return {
     //   id: room.id,
