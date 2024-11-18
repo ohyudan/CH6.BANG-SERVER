@@ -15,7 +15,7 @@ const registerHandler = async ({ socket, payload }) => {
     const emailExists=await findUserById(email);
     if(email===""||nickname===""||password==="")//입력안했을시 예외처리
     {
-      console.log("Fill the blank");
+      console.error("Fill the blank");
       return { success: false };
     }
     if(emailExists!==null)//id 중복을 검사하는 if문
@@ -35,7 +35,7 @@ const registerHandler = async ({ socket, payload }) => {
       //   socket.sequence,
       //   gamePacket,
       // );
-      console.log("This email is already register!");
+      console.error("This email is already register!");
       return { success: false };
     }
     const bcryptPassword=await bcrypt.hash(password,Config.SALTROUNDS);//bcrypt로 비밀번호암호화

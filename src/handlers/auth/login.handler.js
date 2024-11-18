@@ -32,12 +32,12 @@ const loginHandler = async ({ socket, payload }) => {
       //   gamePacket,
       // );
       // return socket.write(result);
-      console.log("ID is not exists");
+      console.error("ID is not exists");
       return { success: false };
     }
     if(!(await bcrypt.compare(password, emailExists.password)))//id로찾아낸 db의 정보와 비밀번호 대조
     {
-        console.log("Password is dismatch.");
+        console.error("Password is dismatch.");
         return { success: false };
         //failCode=3;//AUTHENTICATION_FAILED
     }
