@@ -45,21 +45,3 @@ export const failCodeReturn = (number) => {
   }
   return result;
 };
-
-export const roomStateTypeReturn = (number) => {
-  const protoMessages = getProtoMessages();
-  const roomState = protoMessages.roomState.RoomStateType;
-  let result;
-  switch (number) {
-    case 0:
-      result = roomState.WAIT;
-      break;
-    case 1:
-      result = roomState.PERPARE;
-      break;
-    case 2:
-      result = roomState.INGAME;
-      break;
-  }
-  return result;
-}

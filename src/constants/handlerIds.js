@@ -1,5 +1,4 @@
 const HANDLER_IDS = {
-
   //회원 가입 및 로그인
   REGISTER_REQUEST: 1,
   REGISTER_RESPONSE: 2,
@@ -88,10 +87,6 @@ const HANDLER_IDS = {
 
   // 효과 알림
   ANIMATION_NOTIFICATION: 45,
-
-  REGISTER: 1,
-  LOGIN: 3,
-
 };
 
 export default HANDLER_IDS;

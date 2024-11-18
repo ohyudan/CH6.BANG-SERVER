@@ -39,8 +39,6 @@ const packetTypes = {
  */
 export const handler = async (socket, packetType, payload) => {
   try {
-    console.log('PacketType: ', packetType);
-    console.log('Payload: ', payload);
     const handlerFunction = packetTypes[packetType].packetType;
     if (!handlerFunction) {
       throw new CustomError(ErrorCodes.UNKNOWN_HANDLER_ID, `핸들러를 찾을 수 없습니다`);

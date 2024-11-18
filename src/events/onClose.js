@@ -1,3 +1,2 @@
-const onClose = (socket) => async () => {};
-
+const onClose = (socket) => async (data) => {};
 export default onClose;
