@@ -17,14 +17,7 @@ const joinRoomHandler = async ({ socket, payload }) => {
     if (room.users.length >= room.maxUserNum) {
       const S2CJoinRoomResponse = {
         success: false,
-        room: {
-          id: room.id,
-          ownerId: room.ownerId,
-          name: room.name,
-          maxUserNum: room.maxUserNum,
-          state: room.state,
-          users: room.users,
-        },
+        room: room,
         failCode: 5,
       };
 
@@ -47,14 +40,7 @@ const joinRoomHandler = async ({ socket, payload }) => {
     // 3. 유저가 참가했음을 요청자에게 알려주고
     const S2CJoinRoomResponse = {
       success: true,
-      room: {
-        id: room.id,
-        ownerId: room.ownerId,
-        name: room.name,
-        maxUserNum: room.maxUserNum,
-        state: room.state,
-        users: room.users,
-      },
+      room: room,
       failCode: 0,
     };
 
