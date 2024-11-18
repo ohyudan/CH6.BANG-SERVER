@@ -32,12 +32,14 @@ const loginHandler = async ({ socket, payload }) => {
       //   gamePacket,
       // );
       // return socket.write(result);
-      // throw new Error("존재하지 않는 ID");
+      console.log("ID is not exists");
+      return { success: false };
     }
     if(!(await bcrypt.compare(password, emailExists.password)))//id로찾아낸 db의 정보와 비밀번호 대조
     {
-        console.log("비밀번호가 일치하지 않습니다.");
-        failCode=3;//AUTHENTICATION_FAILED
+        console.log("Password is dismatch.");
+        return { success: false };
+        //failCode=3;//AUTHENTICATION_FAILED
     }
     const jwtToken = jwt.sign({ email, password }, 'SECRET_KEY', { expiresIn: '1h' }); //SECRET_KEY부분임시로 채움, 만료시간 1시간으로 설정
     
