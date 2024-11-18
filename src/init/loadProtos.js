@@ -28,6 +28,7 @@ const getAllProtoFiles = (protoFolder, fileList = []) => {
 const protoFiles = getAllProtoFiles(protoFolder);
 
 const protoMessages = {};
+export let roomStateType = null;
 
 export const loadProtos = async () => {
   try {
@@ -52,6 +53,10 @@ export const loadProtos = async () => {
 
     }
 
+    roomStateType = root.lookupEnum('packets.RoomStateType').values;
+    // console.log(roomStateType.WAIT);
+    // console.log(roomStateType.PREPARE);
+    // console.log(roomStateType.INGAME);
     console.log(`프로토 타입 로드에 끝났습니다.`);
   } catch (error) {
     throw new CustomError(ErrorCodes.PROTOFILE_LOADING_FAIL, `프로토 로딩 중 에러 발생`);

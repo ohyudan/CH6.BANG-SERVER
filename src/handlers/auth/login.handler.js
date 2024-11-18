@@ -8,13 +8,13 @@ import bcrypt from 'bcrypt';
 import JWT from 'jsonwebtoken';
 import HANDLER_IDS from '../../constants/handlerIds.js';
 
-let failCode = 0;
+
 
 const loginHandler = async ({ socket, payload }) => {
   const { email, password } = payload;
 
   const loginUser = await findUserByEmail(email);
-
+  let failCode = 0;
   // db에 정보가 없으면
   if (!loginUser) {
     failCode = failCodeReturn(2);
@@ -106,8 +106,8 @@ const loginHandler = async ({ socket, payload }) => {
           success: true,
           message: 'Success',
           token: token,
-          myInfo: { id: user.id, nickname: user.nickname, character: user.character },
-          GlobalFailCode: 0,
+          myInfo: user,
+          GlobalFailCode: failCode,
         };
 
         const gamePacket = { loginResponse: S2CLoginResponse };
@@ -119,6 +119,7 @@ const loginHandler = async ({ socket, payload }) => {
           gamePacket,
         );
 
+        console.log(failCode);
         console.log('로그인 성공 / 로비 입장');
         console.log(loginSuccessResponse);
         socket.write(loginSuccessResponse);

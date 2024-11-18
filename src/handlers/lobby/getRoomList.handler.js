@@ -12,31 +12,32 @@ const getRoomListHandler = async ({ socket, payload }) => {
 
   // 유저를 갖고 있는 로비가 가진 게임 룸
   const lobbySessions = getLobbySessions();
-  console.log('1');
-  console.log(lobbySessions);
+  // console.log('1');
+  // console.log(lobbySessions);
   // 유저가 있는 로비
   // lobby.users 안에 있는 오브젝트 
   const lobbySession = lobbySessions.find((lobby) => 
     lobby.users.find((user) => user.id === userId));
-  console.log('2');
-  console.log(lobbySession);
+  // console.log('2');
+  // console.log(lobbySession);
   // 로비에 속한 방들의 정보를 모음
   const rooms = lobbySession.rooms.map((room) => {
-    return {
-      id: room.id,
-      ownerId: room.ownerId,
-      name: room.name,
-      maxUserNum: room.maxUserNum,
-      state: room.state,
-      users: room.users,
-    };
+    return room;
+    // return {
+    //   id: room.id,
+    //   ownerId: room.ownerId,
+    //   name: room.name,
+    //   maxUserNum: room.maxUserNum,
+    //   state: room.state,
+    //   users: room.users,
+    // };
   });
   console.log('3');
 
   console.log('rooms 데이터 :', rooms);
 
   const S2CGetRoomListResponse = {
-    success: 'Success',
+    success: true,
     rooms: rooms,
     failCode: 0,
   };

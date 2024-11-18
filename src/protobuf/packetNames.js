@@ -5,9 +5,6 @@ const packetNames = {
     failCode: {
       GlobalFailCode: 'failCode.GlobalFailCode',
     },
-    roomState: {
-      RoomStateType: 'roomState.RoomStateType',
-    }
   };
   
   export default packetNames;
