@@ -13,7 +13,7 @@ const createRoomHandler = async ({ socket, payload }) => {
 
   //현재 유저가 있는 로비를 가져와야한다.
   const lobbySessions = getLobbySessions();
-  const lobbySession = lobbySessions.find((lobby) =>
+  const thisLobby = lobbySessions.find((lobby) =>
     lobby.users.find((user) => user.id === userId),
   );
 
@@ -21,9 +21,10 @@ const createRoomHandler = async ({ socket, payload }) => {
   const room = addRoom(ownerId, name, maxUserNum);
 
   // 룸을 로비에 추가
-  lobbySession.addRoom(room);
+  thisLobby.addRoom(room);
   console.log(room.id);
   room.addUser(user);
+  thisLobby.removeUser(userId);
 
   const S2CCreateRoomResponse = {
     success: true,

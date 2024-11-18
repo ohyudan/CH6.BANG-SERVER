@@ -3,7 +3,6 @@ import net from 'net';
 import Config from './config/config.js';
 import initServer from './init/initServer.js';
 import onConnection from './events/onConnection.js';
-import { getProtoMessages } from './init/loadProtos.js';
 
 const server = net.createServer(onConnection);
 

@@ -383,6 +383,12 @@ message GamePacket {
     실패 코드
 */
 
+enum RoomStateType {
+    WAIT = 0;
+    PREPARE = 1;
+    INGAME = 2;
+}
+
 enum WarningType {
     NO_WARNING = 0;
     BOMB_WANING = 1;
