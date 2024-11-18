@@ -32,15 +32,58 @@ export const failCodeReturn = (number) => {
   switch (number) {
     case 0:
       result = failCode.values.NONE_FAILCODE;
+      result = failCode.NONE_FAILCODE; // 실패 코드 없음
       break;
     case 1:
       result = failCode.values.UNKNOWN_ERROR;
+      result = failCode.UNKNOWN_ERROR; // 알 수 없는 오류
       break;
     case 2:
       result = failCode.values.INVALID_REQUEST;
+      result = failCode.INVALID_REQUEST; // 잘못된 요청
       break;
     case 3:
       result = failCode.values.AUTHENTICATION_FAILED;
+      result = failCode.AUTHENTICATION_FAILED; // 인증 실패
+      break;
+    case 4:
+      result = failCode.CREATE_ROOM_FAILED; // 방 생성 실패
+      break;
+    case 5:
+      result = failCode.JOIN_ROOM_FAILED; // 방 입장 실패
+      break;
+    case 6:
+      result = failCode.LEAVE_ROOM_FAILED; // 방 나가기 실패
+      break;
+    case 7:
+      result = failCode.REGISTER_FAILED; // 등록 실패
+      break;
+    case 8:
+      result = failCode.ROOM_NOT_FOUND; // 방을 찾을 수 없음
+      break;
+    case 9:
+      result = failCode.CHARACTER_NOT_FOUND; // 캐릭터를 찾을 수 없음
+      break;
+    case 10:
+      result = failCode.CHARACTER_STATE_ERROR; // 캐릭터 상태 오류
+      break;
+    case 11:
+      result = failCode.CHARACTER_NO_CARD; // 캐릭터에 카드 없음
+      break;
+    case 12:
+      result = failCode.INVALID_ROOM_STATE; // 잘못된 방 상태
+      break;
+    case 13:
+      result = failCode.NOT_ROOM_OWNER; // 방 소유자가 아님
+      break;
+    case 14:
+      result = failCode.ALREADY_USED_BBANG; // 이미 사용된 빵야 카드?
+      break;
+    case 15:
+      result = failCode.INVALID_PHASE; // 잘못된 페이즈
+      break;
+    case 16:
+      result = failCode.CHARACTER_CONTAINED; // 캐릭터가 포함됨
       break;
   }
   return result;
