@@ -1,4 +1,5 @@
-import { createResponse, failCodeReturn } from '../../utils/response/createResponse.js';
+import { createResponse } from '../../utils/response/createResponse.js';
+import createFailCode from '../../utils/response/createFailCode.js';
 import { handler } from '../index.js';
 import { handlerError } from '../../error/errorHandler.js';
 import Config from '../../config/config.js';
@@ -8,7 +9,7 @@ import bcrypt from 'bcrypt';
 
 const registerHandler = async ({ socket, payload }) => {
   const { email, nickname, password } = payload;
-  let failCode = failCodeReturn(0);
+  let failCode = createFailCode(0);
   let success = true;
   let message = 'login success';
   try {
