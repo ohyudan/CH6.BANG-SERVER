@@ -1,9 +1,8 @@
-CREATE TABLE IF NOT EXISTS `user`
+CREATE TABLE IF NOT EXISTS users
 (
-  user_id       INT           PRIMARY KEY AUTO_INCREMENT,
+  id       INT           PRIMARY KEY AUTO_INCREMENT,
   email         VARCHAR(255)  NOT NULL UNIQUE,
-  nickname      VARCHAR(255)  NOT NULL,
+  nickname      VARCHAR(255)  NOT NULL UNIQUE,
   password      VARCHAR(255)  NOT NULL,
---   last_login    TIMESTAMP     DEFAULT CURRENT_TIMESTAMP,
   created_at    TIMESTAMP     DEFAULT CURRENT_TIMESTAMP
 );
