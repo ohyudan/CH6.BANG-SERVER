@@ -35,6 +35,7 @@ export const useCardHandler = ({ socket, payload }) => {
     // 1 (빵야)
     // 2 (무차별난사)
     // 4 (백신)
+    if (cardType === 4)
     // 5 (119호출)
     // 6 (현피)
     // 7 (게릴라전)
