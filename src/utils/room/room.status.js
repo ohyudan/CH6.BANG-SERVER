@@ -10,18 +10,15 @@ const STATE = {
  */
 class RoomStateType {
   constructor() {
-    let message = getProtoMessages();
-    let roomMessage = message.room.RoomStateType;
-    this._stateData = {
-      [STATE.WAIT]: { packet: roomMessage.room.RoomStateType.values.WAIT },
-      [STATE.PREPARE]: { packet: roomMessage.room.RoomStateType.values.PREPARE },
-      [STATE.INGAME]: { packet: roomMessage.room.RoomStateType.values.INGAME },
-    };
     this._state = STATE.WAIT;
   }
-
+  /**
+   *
+   * @param {number} newState
+   * @returns true , false
+   */
   setState(newState) {
-    if (this._stateData[newState]) {
+    if (STATE[newState] !== undefined) {
       this._state = newState;
       console.log(`State changed to: ${newState}`);
       return true;
@@ -35,7 +32,7 @@ class RoomStateType {
    * @returns enum
    */
   getCurrentStateData() {
-    return this._stateData[this._state];
+    return this._state;
   }
 }
 export { RoomStateType, STATE };

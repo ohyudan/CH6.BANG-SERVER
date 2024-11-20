@@ -1,9 +1,6 @@
 import { RoomStateType, STATE } from './room.status.js';
-import { getProtoMessages } from '../../init/loadProtos.js';
-import { message } from 'protocol-buffers/compile.js';
-/**
- * 혹시 모를 확장성 때문에 class 제작
- */
+import playerList from '../player/playerList.class.js';
+
 class Room {
   constructor(id, ownerId, name, maxUserNum) {
     this._id = id; // 방 아이디
@@ -11,23 +8,40 @@ class Room {
     this._name = name;
     this._maxUserNum = maxUserNum;
     this._state = new RoomStateType();
-    this._playerlist = new Map();
+    this._playerList = new Map();
 
-    let message = getProtoMessages();
-    let roomDataMessage = message.room.RoomData;
-
-    //this.addplayer(ownerId);
+    let ownerPlayer = playerList.getPlayer(ownerId);
+    this.addplayer(ownerPlayer);
   }
 
   getRoomData() {
-    // RoomData 형식에 맞게 전송 해야됨
-    //return
+    const users = [];
+    this._playerList.forEach((values) => {
+      users.push(values.UserData);
+    });
+    const RoomData = {
+      id: this._id,
+      ownerId: this._ownerId,
+      name: this._name,
+      maxUserNum: this._maxUserNum,
+      state: this._state.getCurrentStateData(),
+      users: users,
+    };
+    return RoomData;
   }
-
+  /**
+   *
+   * @param {number} state
+   * @returns 결과
+   */
   setState(state) {
     const result = this._state.setState(state);
     return result;
   }
+  /**
+   *
+   * @returns protobuff - enum
+   */
   getState() {
     return this._state.getCurrentStateData();
   }
@@ -38,11 +52,11 @@ class Room {
    * @returns {bool} 성공 시 true  실패 시 false
    */
   addplayer(player) {
-    const currentUserNumber = this._playerlist.size();
+    const currentUserNumber = this._playerList.size;
     if (this._maxUserNum <= currentUserNumber) {
       return false;
     }
-    this._playerlist.set(player.id, player);
+    this._playerList.set(player.id, player);
     return true;
   }
   /**
@@ -51,16 +65,12 @@ class Room {
    * @returns {bool} 성공 시 true  실패 시 false
    */
   subplayer(player) {
-    const currentUserNumber = this._playerlist.size();
-    // 소유자가 나가면 어떻게 처리가 되는지
+    const currentUserNumber = this._playerList.size;
+    // 소유자가 나가면 어떻게 처리가 되는지??
     // 그 외에는 id로 제거
   }
-  setState(Number) {
-    this._state.getCurrentStateData(Number);
-  }
-
   getAllPlayers() {
-    return this.playerlist;
+    return this._playerList;
   }
 }
 
