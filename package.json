@@ -11,11 +11,10 @@
     "format": "prettier --write *.js **/.js"
   },
   "dependencies": {
-    "bull": "^4.16.4",
     "bcrypt": "^5.1.1",
+    "bull": "^4.16.4",
     "dotenv": "^16.4.5",
     "jsonwebtoken": "^9.0.2",
-    "jwt": "^0.2.0",
     "lodash": "^4.17.21",
     "mysql2": "^3.11.4",
     "proto": "^1.0.19",
