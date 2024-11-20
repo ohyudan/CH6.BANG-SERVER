@@ -1,7 +1,7 @@
 import HANDLER_IDS from '../../constants/handlerIds.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 //import { addRoomList, getRoomList, subRoomList } from '../../utils/room/roomlist.js';
-import roomList from '../../utils/room/roomList.class.js';
+import roomList from '../../model/room/roomList.class.js';
 const roomListGetHandler = async ({ socket, payload }) => {
   const roomMap = roomList.getRoomList();
   const roomArray = Array.from(roomMap.values());
