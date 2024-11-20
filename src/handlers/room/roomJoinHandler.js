@@ -1,8 +1,8 @@
 import { createResponse } from '../../utils/response/createResponse.js';
 import HANDLER_IDS from '../../constants/handlerIds.js';
 import createFailCode from '../../utils/response/createFailCode.js';
-import roomList from '../../utils/room/roomList.class.js';
-import playerList from '../../utils/player/playerList.class.js';
+import roomList from '../../model/room/roomList.class.js';
+import playerList from '../../model/player/playerList.class.js';
 import roomJoinNotifcation from '../../utils/notification/room.notification.js';
 // 에러 처리 필요
 const roomJoinHandler = async ({ socket, payload }) => {

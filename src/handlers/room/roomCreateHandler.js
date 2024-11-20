@@ -1,11 +1,9 @@
-//import { addRoomList, getRoomList, subRoomList } from '../../utils/room/roomlist.js';
-import roomList from '../../utils/room/roomList.class.js';
 import HANDLER_IDS from '../../constants/handlerIds.js';
 import { createResponse } from '../../utils/response/createResponse.js';
-import Room from '../../utils/room/room.class.js';
 import createFailCode from '../../utils/response/createFailCode.js';
-import roomJoinNotifcation from '../../utils/notification/room.notification.js';
-import playerList from '../../utils/player/playerList.class.js';
+import roomList from '../../model/room/roomList.class.js';
+import Room from '../../model/room/room.class.js';
+import playerList from '../../model/player/playerList.class.js';
 
 const roomCreateHander = async ({ socket, payload }) => {
   const { name, maxUserNum } = payload; // 방이름 , 최대 인원

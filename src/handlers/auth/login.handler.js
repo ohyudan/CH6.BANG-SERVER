@@ -6,7 +6,7 @@ import { createUser, findUserById } from '../../dataBase/user/user.db.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken'; //jwt토큰 발급을 위한 jwt 임포트
 import createFailCode from '../../utils/response/createFailCode.js';
-import playerList from '../../utils/player/playerList.class.js';
+import playerList from '../../model/player/playerList.class.js';
 
 //email을 어떻게 할것인지 생각해봐야함
 const loginHandler = async ({ socket, payload }) => {
