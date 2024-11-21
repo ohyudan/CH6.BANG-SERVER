@@ -53,11 +53,16 @@ export const useCardHandler = ({ socket, payload }) => {
     // 8(흡수),9(신기루) 미구현
     // 10(플리마켓) 미구현
     // 해당 핸들러에서는 CharaterStateType만 지정하고 전투 처리는 캐릭터 정보 업데이트에서 한번 더 처리하는게 좋을거 같다.
-   
+
+    const userData = socket.userData;
+    const charaterData = userData.charaterData;
+    const handCards = charaterData.handCards;
+    // handCards에서 cardType이 호출된 값과 동일한 카드의 count를 -1
+    // 이후 charaterData에서 handCardsCount 를 -1
 
     const S2CUseCardResponse = {
-      succes,
-      failCode,
+      succes: true,
+      failCode: failCode,
     };
 
     const S2CUseCardNotification = {

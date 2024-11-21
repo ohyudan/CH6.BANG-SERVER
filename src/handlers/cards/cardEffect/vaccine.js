@@ -19,6 +19,4 @@ export const useVaccine = (socket) => {
 // }
 
   charaterData.hp++
-  charaterData.cardData.handCards.type[4](count) --  
-  charaterData.handCardsCount -- 
 };
