@@ -1,9 +1,11 @@
+import HANDLER_IDS from '../../constants/handlerIds.js';
 import { useVaccine } from '../../utils/card/vaccine.js';
-import { failCodeReturn } from '../../utils/response/createResponse.js';
+import createFailCode from '../../utils/response/createFailCode.js';
+import { createResponse } from '../../utils/response/createResponse.js';
 
 export const useCardHandler = ({ socket, payload }) => {
   const { cardType, targetUserId } = payload;
-  let failCode = failCodeReturn(0);
+  let failCode = createFailCode(0);
 
   //   CardType {
   //     NONE = 0;
@@ -37,7 +39,7 @@ export const useCardHandler = ({ socket, payload }) => {
     // 2 (무차별난사)
     // 4 (백신)
     if (cardType === 4) {
-      useVaccine(socket)
+      useVaccine(socket);
     }
     // 5 (119호출)
     // 6 (현피)
@@ -47,9 +49,40 @@ export const useCardHandler = ({ socket, payload }) => {
     // 13,14,15,16 (무기)
     // 17,18,19,20 (장비)
     // 21,22,23 (디버프)
-    // 3 (쉴드) - 
+    // 3 (쉴드) -
     // 8(흡수),9(신기루) 미구현
     // 10(플리마켓) 미구현
     // 해당 핸들러에서는 CharaterStateType만 지정하고 전투 처리는 캐릭터 정보 업데이트에서 한번 더 처리하는게 좋을거 같다.
+   
+
+    const S2CUseCardResponse = {
+      succes,
+      failCode,
+    };
+
+    const S2CUseCardNotification = {
+      cardType: cardType,
+      userId: socket.id,
+      targetUserId: targetUserId,
+    };
+
+    const responseGamePacket = { useCardResponse: S2CUseCardResponse };
+    const notificationGamePacket = { useCardNotification: S2CUseCardNotification };
+
+    const responseResult = createResponse(
+      HANDLER_IDS.USE_CARD_REQUEST,
+      socket.version,
+      socket.sequence,
+      responseGamePacket,
+    );
+    const notificationResult = createResponse(
+      HANDLER_IDS.USE_CARD_NOTIFICATION,
+      socket.version,
+      socket.sequence,
+      notificationGamePacket,
+    );
+
+    socket.write(responseResult);
+    socket.write(notificationResult);
   } catch (error) {}
 };
