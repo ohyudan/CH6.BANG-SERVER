@@ -4,14 +4,40 @@ import { CustomError } from '../error/customError.js';
 import { ErrorCodes } from '../error/errorCodes.js';
 import loginHandler from './auth/login.handler.js';
 import registerHandler from './auth/register.handler.js';
+import roomListGetHandler from './room/roomListGetHandler.js';
+import roomCreateHander from './room/roomCreateHandler.js';
+import roomJoinHandler from './room/roomJoinHandler.js';
+import roomLeaveHandler from './room/roomLeaveHandler.js';
+import roomJoinRamdomHandler from './room/roomJoinRamdomHandler.js';
+
 const packetTypes = {
   [HANDLER_IDS.REGISTER_REQUEST]: {
     packetType: registerHandler,
     protoType: 'C2SRegisterRequest',
   },
   [HANDLER_IDS.LOGIN_REQUEST]: {
-    packetType: undefined,
+    packetType: loginHandler,
     protoType: 'C2SLoginRequest',
+  },
+  [HANDLER_IDS.GET_ROOM_LIST_REQUEST]: {
+    packetType: roomListGetHandler,
+    protoType: 'C2SGetRoomListRequest',
+  },
+  [HANDLER_IDS.CREATE_ROOM_REQUEST]: {
+    packetType: roomCreateHander,
+    protoType: 'C2SCreateRoomRequest',
+  },
+  [HANDLER_IDS.JOIN_ROOM_REQUEST]: {
+    packetType: roomJoinHandler,
+    protoType: 'C2SJoinRoomRequest',
+  },
+  [HANDLER_IDS.LEAVE_ROOM_REQUEST]: {
+    packetType: roomLeaveHandler,
+    protoType: 'C2SLeaveRoomRequest',
+  },
+  [HANDLER_IDS.JOIN_RANDOM_ROOM_REQUEST]: {
+    packetType: roomJoinRamdomHandler,
+    ptoroType: 'C2SJoinRandomRoomRequest',
   },
 };
 /**
@@ -31,36 +57,3 @@ export const handler = async (socket, packetType, payload) => {
     //await handlerError(socket, err);
   }
 };
-
-// export const getHandlerById = (packetType) => {
-//   if (!handlers[packetType]) {
-//     throw new CustomError(
-//       ErrorCodes.UNKNOWN_HANDLER_ID,
-//       `[${packetType}] HandlerID의 핸들러를 찾을 수 없습니다.`,
-//     );
-//   }
-
-//   return handlers[packetType].handler;
-// };
-
-// export const getProtoTypeById = (packetType) => {
-//   if (!handlers[packetType]) {
-//     throw new CustomError(
-//       ErrorCodes.UNKNOWN_HANDLER_ID,
-//       `[${packetType}] HandlerID의 프로토타입을 찾을 수 없습니다.`,
-//     );
-//   }
-
-//   return handlers[packetType].protoType;
-// };
-
-// export const getProtoPayloadTypeById = (packetType) => {
-//   if (!handlers[packetType]) {
-//     throw new CustomError(
-//       ErrorCodes.UNKNOWN_HANDLER_ID,
-//       `[${packetType}] HandlerID의 프로토타입 페이로드를 찾을 수 없습니다.`,
-//     );
-//   }
-
-//   return handlers[packetType].protoPayloadType;
-// };

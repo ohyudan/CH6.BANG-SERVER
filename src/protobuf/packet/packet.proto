@@ -2,42 +2,10 @@ syntax = "proto3";
 
 package packets;
 
-message RoomData {
-    int32 id = 1;
-    string ownerId = 2;
-    string name = 3;
-    int32 maxUserNum = 4;
-    RoomStateType state = 5; // WAIT 0, PREPARE 1, INAGAME 2
-    repeated UserData users = 6; // 인덱스 기반으로 턴 진행
-}
 
 // 입장했을때는 랜덤으로 체력만큼 카드 받음.
 // 하루 종료 시 체력만큼의 카드만 남길 수 있음.
 // 이후 낮이 될때마다 카드 두장 받고 시작
-message UserData {
-    string id = 1;
-    string nickname = 2;
-    CharacterData character = 3;
-}
-
-message CharacterData {
-    CharacterType characterType = 1;
-    RoleType roleType = 2;
-    int32 hp = 3;
-    int32 weapon = 4;
-    CharacterStateInfoData stateInfo = 5;
-    repeated int32 equips = 6;
-    repeated int32 debuffs = 7;
-    repeated CardData handCards = 8;
-    int32 bbangCount = 9;
-    int32 handCardsCount = 10;
-}
-
-message CharacterPositionData {
-    string id = 1;
-    double x = 2;
-    double y = 3;
-}
 
 message CardData {
     CardType type = 1;
@@ -49,20 +17,13 @@ message GameStateData {
     int64 nextPhaseAt = 2; // 다음 페이즈 시작 시점(밀리초 타임스탬프)
 }
 
-message CharacterStateInfoData {
-    CharacterStateType state = 1;
-    CharacterStateType nextState = 2;
-    int64 nextStateAt = 3; // state가 nextState로 풀리는 밀리초 타임스탬프. state가 NONE이면 0
-    string stateTargetUserId = 4; // state에 target이 있을 경우
-}
-
 /* 
     패킷 명세
 */
 message C2SRegisterRequest {
-    string id = 1;
-    string password = 2;
-    string email = 3;
+    string email = 1;
+    string nickname = 2;
+    string password = 3;
 }
 
 message S2CRegisterResponse {
@@ -72,7 +33,7 @@ message S2CRegisterResponse {
 }
 
 message C2SLoginRequest {
-    string id = 1;
+    string email = 1;
     string password = 2;
 }
 
@@ -114,7 +75,6 @@ message S2CJoinRoomResponse {
 }
 
 message C2SJoinRandomRoomRequest {
-    int32 roomId = 1;
 }
 
 message S2CJoinRandomRoomResponse {
@@ -137,7 +97,7 @@ message S2CLeaveRoomResponse {
 }
 
 message S2CLeaveRoomNotification {
-    string userId = 1;
+    int64 userId = 1;
 }
 
 // 게임 시작 전 역할 및 캐릭터 셔플 요청
@@ -185,7 +145,7 @@ message S2CPositionUpdateNotification {
 
 message C2SUseCardRequest {
     CardType cardType = 1;
-    string targetUserId = 2; // 타겟 없으면 빈 값
+    int64 targetUserId = 2; // 타겟 없으면 빈 값
 }
 
 message S2CUseCardResponse { // 성공 여부만 반환하고 대상 유저 효과는 S2CUserUpdateNotification로 통지
@@ -195,18 +155,18 @@ message S2CUseCardResponse { // 성공 여부만 반환하고 대상 유저 효�
 
 message S2CUseCardNotification {
     CardType cardType = 1;
-    string userId = 2;
-    string targetUserId = 3; // 타겟 없으면 빈 값
+    int64 userId = 2;
+    int64 targetUserId = 3; // 타겟 없으면 0
 }
 
 message S2CEquipCardNotification {
     CardType cardType = 1;
-    string userId = 2;
+    int64 userId = 2;
 }
 
 message S2CCardEffectNotification {
     CardType cardType = 1;
-    string userId = 2;
+    int64 userId = 2;
     bool success = 3;
 }
 
@@ -229,7 +189,7 @@ message S2CUserUpdateNotification {
 }
 
 message S2CPhaseUpdateNotification {
-    PhaseType phaseType = 1; // DAY 1, EVENING 2, END 3
+    PhaseType phaseType = 1; // DAY 1, END 3 (EVENING은 필요시 추가)
     int64 nextPhaseAt = 2; // 다음 페이즈 시작 시점(밀리초 타임스탬프)
     repeated CharacterPositionData characterPositions = 3; // 변경된 캐릭터 위치
 }
@@ -252,7 +212,7 @@ message S2CDestroyCardResponse {
 }
 
 message S2CGameEndNotification {
-    repeated string winners = 1;
+    repeated int64 winners = 1;
     WinType winType = 2;
 }
 
@@ -267,7 +227,7 @@ message S2CCardSelectResponse {
 }
 
 message C2SPassDebuffRequest {
-    string targetUserId = 1;
+    int64 targetUserId = 1;
     CardType debuffCardType = 2;
 }
 
@@ -282,7 +242,7 @@ message S2CWarningNotification {
 }
 
 message S2CAnimationNotification {
-    string userId = 1;
+    int64 userId = 1;
     AnimationType animationType = 2;
 }
 
@@ -391,38 +351,6 @@ enum WinType {
     PSYCHOPATH_WIN = 2;
 }
 
-enum CharacterType {
-    NONE_CHARACTER = 0;
-    RED = 1; // 빨강이
-    SHARK = 3; // 상어군
-    MALANG = 5; // 말랑이
-    FROGGY = 7; // 개굴군
-    PINK = 8; // 핑크군
-    SWIM_GLASSES = 9; // 물안경군
-    MASK = 10; // 가면군
-    DINOSAUR = 12; // 공룡이
-    PINK_SLIME = 13; // 핑크슬라임
-}
-
-enum CharacterStateType {
-    NONE_CHARACTER_STATE = 0;
-    BBANG_SHOOTER = 1; // 빵야 시전자
-    BBANG_TARGET = 2; // 빵야 대상 (쉴드 사용가능 상태)
-    DEATH_MATCH_STATE = 3; // 현피 중 자신의 턴이 아닐 때
-    DEATH_MATCH_TURN_STATE = 4; // 현피 중 자신의 턴
-    FLEA_MARKET_TURN = 5; // 플리마켓 자신의 턴
-    FLEA_MARKET_WAIT = 6; // 플리마켓 턴 대기 상태
-    GUERRILLA_SHOOTER = 7; // 게릴라 시전자
-    GUERRILLA_TARGET = 8; // 게릴라 대상
-    BIG_BBANG_SHOOTER = 9; // 난사 시전자
-    BIG_BBANG_TARGET = 10; // 난사 대상
-    ABSORBING = 11; // 흡수 중
-    ABSORB_TARGET = 12; // 흡수 대상
-    HALLUCINATING = 13; // 신기루 중
-    HALLUCINATION_TARGET = 14; // 신기루 대상
-    CONTAINED = 15; // 감금 중
-}
-
 enum CardType {
     NONE = 0;
     BBANG = 1; // 20장
@@ -448,20 +376,6 @@ enum CardType {
     CONTAINMENT_UNIT = 21; // 3장
     SATELLITE_TARGET = 22; // 1장
     BOMB = 23; // 1장
-}
-
-enum RoleType {
-    NONE_ROLE = 0;
-    TARGET = 1;
-    BODYGUARD = 2;
-    HITMAN = 3;
-    PSYCHOPATH = 4;
-}
-
-enum RoomStateType {
-    WAIT = 0;
-    PREPARE = 1;
-    INGAME = 2;
 }
 
 enum PhaseType {
