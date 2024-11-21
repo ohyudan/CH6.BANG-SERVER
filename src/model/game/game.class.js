@@ -17,8 +17,8 @@ class Game {
    * @returns {boolean} 성공 여부
    */
   startGame() {
-    // Room 상태를 PREPARE로 설정
     if (!this.roomState.setState(STATE.PREPARE)) {
+      // Room 상태를 PREPARE로 설정
       return false; // 실패 시 false 반환
     }
 
@@ -42,10 +42,7 @@ class Game {
     // 현재 Phase에 따라 다음 Phase 결정
     switch (currentPhase) {
       case PHASE.DAY:
-        nextPhase = PHASE.EVENING;
-        break;
-      case PHASE.EVENING:
-        nextPhase = PHASE.END;
+        nextPhase = PHASE.END; // DAY 이후 바로 END로 전환
         break;
       case PHASE.END:
         this.nextPhaseAt = null; // 게임 종료 시 타이머 제거
@@ -56,7 +53,7 @@ class Game {
 
     // Phase 변경 및 다음 상태 전환 시간 설정
     if (this.phaseManager.setPhase(nextPhase)) {
-      this.nextPhaseAt = nextPhase === PHASE.END ? null : Date.now() + 180000; // END 페이즈가 아니면 3분 후 페이즈 변경
+      this.nextPhaseAt = nextPhase === PHASE.END ? Date.now() + 30000 : Date.now() + 180000; // END 페이즈는 30초 지속, 나머지는 3분
       return true;
     }
 
