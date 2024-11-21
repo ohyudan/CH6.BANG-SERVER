@@ -5,9 +5,6 @@ const STATE = {
   INGAME: 2,
 };
 
-/**
- *  추후 게임에셋으로 빼던가 해야됨 protoMessage
- */
 class RoomStateType {
   constructor() {
     this._state = STATE.WAIT;

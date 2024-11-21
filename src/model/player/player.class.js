@@ -3,7 +3,7 @@ class Player {
     this._id = id;
     this._nickname = nickname;
     this.socket = socket;
-
+    this._currentRoomId = null;
     this.CharacterData = {
       CharacterType: undefined,
       RoleType: undefined,
@@ -24,6 +24,12 @@ class Player {
   }
   get id() {
     return this._id;
+  }
+  set currentRoomId(roomId) {
+    this._currentRoomId = roomId;
+  }
+  get currentRoomId() {
+    return this._currentRoomId;
   }
 }
 export default Player;

@@ -1,16 +1,14 @@
-import { createResponse } from '../../utils/response/createResponse.js';
 import HANDLER_IDS from '../../constants/handlerIds.js';
-import createFailCode from '../../utils/response/createFailCode.js';
+import { createResponse } from '../../utils/response/createResponse.js';
 import roomList from '../../model/room/roomList.class.js';
+import createFailCode from '../../utils/response/createFailCode.js';
 import playerList from '../../model/player/playerList.class.js';
 import roomJoinNotifcation from '../../utils/notification/roomJoin.notification.js';
-
-const roomJoinHandler = async ({ socket, payload }) => {
-  const { roomId } = payload;
+const roomJoinRamdomHandler = async ({ socket, payload }) => {
   try {
     let success = true;
     let failCode = createFailCode(0);
-    const room = roomList.getRoom(roomId);
+    const room = roomList.getRandomWaitRoom();
     const player = playerList.getPlayer(socket.id);
 
     if (room == undefined) {
@@ -20,18 +18,18 @@ const roomJoinHandler = async ({ socket, payload }) => {
       room.addPlayer(player);
     }
 
-    const C2SJoinRoomRequest = {
+    const S2CJoinRandomRoomResponse = {
       success: success,
       room: room.getRoomData(),
       FailCode: failCode,
     };
 
     const gamePacket = {
-      joinRoomResponse: C2SJoinRoomRequest,
+      joinRandomRoomResponse: S2CJoinRandomRoomResponse,
     };
 
     const result = createResponse(
-      HANDLER_IDS.JOIN_ROOM_RESPONSE,
+      HANDLER_IDS.JOIN_RANDOM_ROOM_RESPONSE,
       socket.version,
       socket.sequence,
       gamePacket,
@@ -39,22 +37,22 @@ const roomJoinHandler = async ({ socket, payload }) => {
 
     if (success == true) {
       roomJoinNotifcation(room, player);
-      player.currentRoomId = roomId;
+      player.currentRoomId = room.id;
     }
 
     socket.write(result);
   } catch (err) {
-    const S2CJoinRoomResponse = {
+    const S2CJoinRandomRoomResponse = {
       success: false,
       room: undefined,
       FailCode: createFailCode(5),
     };
     const gamePacket = {
-      joinRoomResponse: S2CJoinRoomResponse,
+      joinRandomRoomResponse: S2CJoinRandomRoomResponse,
     };
 
     const result = createResponse(
-      HANDLER_IDS.JOIN_ROOM_RESPONSE,
+      HANDLER_IDS.JOIN_RANDOM_ROOM_RESPONSE,
       socket.version,
       socket.sequence,
       gamePacket,
@@ -62,13 +60,11 @@ const roomJoinHandler = async ({ socket, payload }) => {
     socket.write(result);
   }
 };
-
-export default roomJoinHandler;
-// message C2SJoinRoomRequest {
-//     int32 roomId = 1;
+export default roomJoinRamdomHandler;
+// message C2SJoinRandomRoomRequest {
 // }
 
-// message S2CJoinRoomResponse {
+// message S2CJoinRandomRoomResponse {
 //     bool success = 1;
 //     RoomData room = 2;
 //     GlobalFailCode failCode = 3;
