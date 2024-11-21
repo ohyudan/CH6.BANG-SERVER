@@ -43,7 +43,7 @@ const loginHandler = async ({ socket, payload }) => {
         message,
         token: jwtToken,
         myInfo: {
-          email,
+          id: user.id,
           nickname: user.nickname,
           character: null,
         },
