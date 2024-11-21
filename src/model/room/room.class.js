@@ -1,8 +1,10 @@
 import { RoomStateType, STATE } from './room.status.js';
 import playerList from '../player/playerList.class.js';
+import { Observable } from '../observer/observer.js';
 
-class Room {
+class Room extends Observable {
   constructor(id, ownerId, name, maxUserNum) {
+    super();
     this._id = id; // 방 아이디
     this._ownerId = ownerId;
     this._name = name;
@@ -11,10 +13,18 @@ class Room {
     this._playerList = new Map();
 
     let ownerPlayer = playerList.getPlayer(ownerId);
-    this.addplayer(ownerPlayer);
+    this.addPlayer(ownerPlayer);
   }
-
+  get id() {
+    return this._id;
+  }
+  get ownerId() {
+    return this._ownerId;
+  }
   getRoomData() {
+    //const test = getProtoMessages();
+    //let roomMessage = test.room.RoomStateType.values.WAIT;
+
     const users = [];
     this._playerList.forEach((values) => {
       users.push(values.UserData);
@@ -27,6 +37,7 @@ class Room {
       state: this._state.getCurrentStateData(),
       users: users,
     };
+
     return RoomData;
   }
   /**
@@ -51,7 +62,7 @@ class Room {
    * @param {Player}
    * @returns {bool} 성공 시 true  실패 시 false
    */
-  addplayer(player) {
+  addPlayer(player) {
     const currentUserNumber = this._playerList.size;
     if (this._maxUserNum <= currentUserNumber) {
       return false;
@@ -64,10 +75,12 @@ class Room {
    * @param {Player}
    * @returns {bool} 성공 시 true  실패 시 false
    */
-  subplayer(player) {
-    const currentUserNumber = this._playerList.size;
-    // 소유자가 나가면 어떻게 처리가 되는지??
-    // 그 외에는 id로 제거
+  subPlayer(player) {
+    this._playerList.delete(player.id);
+    if (this._playerList.size === 0) {
+      this.notifyObservers('roomEmpty', this);
+    }
+    //return true;
   }
   getAllPlayers() {
     return this._playerList;
