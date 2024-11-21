@@ -23,7 +23,7 @@ const roomCreateHander = async ({ socket, payload }) => {
   // 생성
   const S2CCreateRoomResponse = {
     success: success,
-    RoomData: roomData,
+    room: roomData,
     failCode: failCode,
   };
 
@@ -38,20 +38,7 @@ const roomCreateHander = async ({ socket, payload }) => {
     gamePacket,
   );
 
-  const S2CJoinRoomNotification = {
-    joinUser: ownerPlayer.UserData,
-  };
-  gamePacket = { joinRoomNotification: S2CJoinRoomNotification };
-
-  const result2 = createResponse(
-    HANDLER_IDS.JOIN_ROOM_NOTIFICATION,
-    socket.version,
-    socket.sequence,
-    gamePacket,
-  );
-
   socket.write(result); // 방 만들기
-  socket.write(result2); // 나 자신 들어가기
 };
 
 export default roomCreateHander;
