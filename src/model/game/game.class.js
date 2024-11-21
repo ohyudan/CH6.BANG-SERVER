@@ -12,20 +12,6 @@ class Game {
   }
 
   /**
-   * 게임 시작 메서드
-   * 방 상태를 PREPARE로 변경
-   * @returns {boolean} 성공 여부
-   */
-  startGame() {
-    if (!this.roomState.setState(STATE.PREPARE)) {
-      // Room 상태를 PREPARE로 설정
-      return false; // 실패 시 false 반환
-    }
-
-    return true; // 성공 시 true 반환
-  }
-
-  /**
    * 페이즈 업데이트 메서드
    * Room 상태가 INGAME일 때만 작동
    * @returns {boolean} 성공 여부
