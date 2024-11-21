@@ -7,6 +7,9 @@ import registerHandler from './auth/register.handler.js';
 import roomListGetHandler from './room/roomListGetHandler.js';
 import roomCreateHander from './room/roomCreateHandler.js';
 import roomJoinHandler from './room/roomJoinHandler.js';
+import roomLeaveHandler from './room/roomLeaveHandler.js';
+import roomJoinRamdomHandler from './room/roomJoinRamdomHandler.js';
+
 const packetTypes = {
   [HANDLER_IDS.REGISTER_REQUEST]: {
     packetType: registerHandler,
@@ -35,6 +38,14 @@ const packetTypes = {
   [HANDLER_IDS.JOIN_ROOM_REQUEST]: {
     packetType: roomJoinHandler,
     protoType: 'C2SJoinRoomRequest',
+  },
+  [HANDLER_IDS.LEAVE_ROOM_REQUEST]: {
+    packetType: roomLeaveHandler,
+    protoType: 'C2SLeaveRoomRequest',
+  },
+  [HANDLER_IDS.JOIN_RANDOM_ROOM_REQUEST]: {
+    packetType: roomJoinRamdomHandler,
+    ptoroType: 'C2SJoinRandomRoomRequest',
   },
 };
 /**
