@@ -15,9 +15,11 @@ class RoomList extends Observer {
   getRoomList() {
     // 요청 받을 떄마다 하지말고 방 생성 / 방 삭제 / 인원 변경 / 상태 변경 / 에만 새로고침할 수 있지않을까.
     // -> 옵저버 패턴의 추가로 Update를 만들면 가능해졌음
+
+    const roomStateList = getWaitStateRoom();
     const rooms = [];
-    if (this._roomMap.size <= 1) {
-      this._roomMap.forEach((room) => {
+    if (roomStateList.length <= 1) {
+      roomStateList.forEach((room) => {
         rooms.push(room.getRoomData());
       });
     }
@@ -81,7 +83,7 @@ class RoomList extends Observer {
     return this._roomMap.get(roomId);
   }
 
-  getwaitStateRoom() {
+  getWaitStateRoom() {
     const result = [];
     this._roomMap.forEach((room) => {
       if (room.getState() == 0) {
