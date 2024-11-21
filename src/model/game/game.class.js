@@ -1,4 +1,5 @@
 import { PhaseType, PHASE } from './game.status.js';
+import { RoomStateType, STATE } from '../room/room.status.js';
 
 class Game {
   constructor(id, roomId, users) {
@@ -6,32 +7,39 @@ class Game {
     this.roomId = roomId; // 방 ID
     this.users = users; // 방에 있는 유저 리스트
     this.phaseManager = new PhaseType(); // Phase 관리
+    this.roomState = new RoomStateType(); // Room 상태 관리
     this.nextPhaseAt = null; // 다음 상태 전환 시간
   }
 
-  // 게임 시작
+  /**
+   * 게임 시작 메서드
+   * 방 상태를 PREPARE로 변경
+   * @returns {boolean} 성공 여부
+   */
   startGame() {
-    if (this.phaseManager.getCurrentPhase() !== PHASE.NONE_PHASE) {
-      console.error('게임이 이미 실행중이거나 종료되었습니다.');
-      return false;
+    // Room 상태를 PREPARE로 설정
+    if (!this.roomState.setState(STATE.PREPARE)) {
+      return false; // 실패 시 false 반환
     }
 
-    this.phaseManager.setPhase(PHASE.DAY);
-    this.nextPhaseAt = Date.now() + 180000; // 3분 후
-    console.log(`Game started in room: ${this.roomId}`);
-    this.notifyUsers({
-      type: 'GameStart',
-      phaseType: this.phaseManager.getCurrentPhase(),
-      nextPhaseAt: this.nextPhaseAt,
-    });
-    return true;
+    return true; // 성공 시 true 반환
   }
 
-  // 페이즈 업데이트
+  /**
+   * 페이즈 업데이트 메서드
+   * Room 상태가 INGAME일 때만 작동
+   * @returns {boolean} 성공 여부
+   */
   updatePhase() {
+    // Room 상태가 INGAME인지 확인
+    if (this.roomState.getCurrentStateData() !== STATE.INGAME) {
+      return false; // INGAME 상태가 아니면 업데이트 불가
+    }
+
     const currentPhase = this.phaseManager.getCurrentPhase();
     let nextPhase;
 
+    // 현재 Phase에 따라 다음 Phase 결정
     switch (currentPhase) {
       case PHASE.DAY:
         nextPhase = PHASE.EVENING;
@@ -40,30 +48,19 @@ class Game {
         nextPhase = PHASE.END;
         break;
       case PHASE.END:
-        console.log('Game has ended. No further phases.');
-        this.nextPhaseAt = null; // END 단계는 타이머 없음
-        return false;
+        this.nextPhaseAt = null; // 게임 종료 시 타이머 제거
+        return false; // 더 이상 업데이트할 페이즈 없음
       default:
-        console.error('Invalid phase state.');
-        return false;
+        return false; // 유효하지 않은 Phase
     }
 
-    this.phaseManager.setPhase(nextPhase);
-    this.nextPhaseAt = nextPhase === PHASE.END ? null : Date.now() + 180000; // 다음 상태 전환 시간
-    console.log(`Phase updated to: ${Object.keys(PHASE).find((key) => PHASE[key] === nextPhase)}.`);
-    this.notifyUsers({
-      type: 'PhaseUpdate',
-      phaseType: this.phaseManager.getCurrentPhase(),
-      nextPhaseAt: this.nextPhaseAt,
-    });
-    return true;
-  }
+    // Phase 변경 및 다음 상태 전환 시간 설정
+    if (this.phaseManager.setPhase(nextPhase)) {
+      this.nextPhaseAt = nextPhase === PHASE.END ? null : Date.now() + 180000; // END 페이즈가 아니면 3분 후 페이즈 변경
+      return true;
+    }
 
-  // 사용자들에게 알림 전송
-  notifyUsers(notification) {
-    this.users.forEach((user) => {
-      user.socket.write(notification); // 사용자 소켓에 알림 전송
-    });
+    return false; // Phase 변경 실패 시 false 반환
   }
 }
 
