@@ -52,7 +52,7 @@ class Room extends Observable {
   }
   /**
    *
-   * @returns protobuff - enum
+   * @returns {number}
    */
   getState() {
     return this._state.getCurrentStateData();

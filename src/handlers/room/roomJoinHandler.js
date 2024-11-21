@@ -4,19 +4,28 @@ import createFailCode from '../../utils/response/createFailCode.js';
 import roomList from '../../model/room/roomList.class.js';
 import playerList from '../../model/player/playerList.class.js';
 import roomJoinNotifcation from '../../utils/notification/roomJoin.notification.js';
-// 에러 처리 필요
+
 const roomJoinHandler = async ({ socket, payload }) => {
   const { roomId } = payload;
   try {
+    let success = true;
+    let failCode = createFailCode(0);
     const room = roomList.getRoom(roomId);
     const player = playerList.getPlayer(socket.id);
-    room.addPlayer(player);
+
+    if (room == undefined) {
+      success = false;
+      failCode = createFailCode(8);
+    } else {
+      room.addPlayer(player);
+    }
 
     const C2SJoinRoomRequest = {
-      success: true,
+      success: success,
       room: room.getRoomData(),
-      FailCode: createFailCode(0),
+      FailCode: failCode,
     };
+
     const gamePacket = {
       joinRoomResponse: C2SJoinRoomRequest,
     };
@@ -27,17 +36,21 @@ const roomJoinHandler = async ({ socket, payload }) => {
       socket.sequence,
       gamePacket,
     );
-    roomJoinNotifcation(room, player);
+
+    if (success == true) {
+      roomJoinNotifcation(room, player);
+      player.currentRoomId = roomId;
+    }
+
     socket.write(result);
-    player.currentRoomId = roomId;
   } catch (err) {
-    const C2SJoinRoomRequest = {
+    const S2CJoinRoomResponse = {
       success: false,
       room: undefined,
       FailCode: createFailCode(5),
     };
     const gamePacket = {
-      joinRoomResponse: C2SJoinRoomRequest,
+      joinRoomResponse: S2CJoinRoomResponse,
     };
 
     const result = createResponse(

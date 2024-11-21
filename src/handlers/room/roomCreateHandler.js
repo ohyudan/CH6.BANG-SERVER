@@ -20,7 +20,6 @@ const roomCreateHander = async ({ socket, payload }) => {
     ownerPlayer = playerList.getPlayer(socket.id);
   }
 
-  // 생성
   const S2CCreateRoomResponse = {
     success: success,
     room: roomData,
