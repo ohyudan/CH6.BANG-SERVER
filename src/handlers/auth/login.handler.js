@@ -39,7 +39,7 @@ const loginHandler = async ({ socket, payload }) => {
       message,
       token: jwtToken,
       myInfo: {
-        email,
+        id: user.id,
         nickname: user.nickname,
         character: null,
       },
@@ -56,6 +56,7 @@ const loginHandler = async ({ socket, payload }) => {
     );
     // 동시 접속 중인지 확인
     socket.id = user.id;
+    console.log(user.id);
     playerList.addPlayer(user.id, user.nickname, socket);
     socket.write(result);
   } catch (err) {
