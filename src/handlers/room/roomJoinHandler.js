@@ -3,14 +3,14 @@ import HANDLER_IDS from '../../constants/handlerIds.js';
 import createFailCode from '../../utils/response/createFailCode.js';
 import roomList from '../../model/room/roomList.class.js';
 import playerList from '../../model/player/playerList.class.js';
-import roomJoinNotifcation from '../../utils/notification/room.notification.js';
+import roomJoinNotifcation from '../../utils/notification/roomJoin.notification.js';
 // 에러 처리 필요
 const roomJoinHandler = async ({ socket, payload }) => {
   const { roomId } = payload;
   try {
     const room = roomList.getRoom(roomId);
     const player = playerList.getPlayer(socket.id);
-    room.addplayer(player);
+    room.addPlayer(player);
 
     const C2SJoinRoomRequest = {
       success: true,
@@ -27,8 +27,9 @@ const roomJoinHandler = async ({ socket, payload }) => {
       socket.sequence,
       gamePacket,
     );
-    socket.write(result);
     roomJoinNotifcation(room, player);
+    socket.write(result);
+    player.currentRoomId = roomId;
   } catch (err) {
     const C2SJoinRoomRequest = {
       success: false,
