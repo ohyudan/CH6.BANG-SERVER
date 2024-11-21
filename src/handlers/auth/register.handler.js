@@ -12,6 +12,7 @@ const registerHandler = async ({ socket, payload }) => {
   let failCode = createFailCode(0);
   let success = true;
   let message = 'login success';
+  let emailFormat = /^[^\s@]+@[^\s@]+.[^@\s@]+$/;//이메일 검사하는 정규식추가.
   try {
     console.log(email, nickname, password);
     const emailExists = await findUserById(email);
@@ -22,16 +23,24 @@ const registerHandler = async ({ socket, payload }) => {
       failCode = 7; //등록실패
       console.error('Fill the blank');
     }
-    if (emailExists !== null) {
+    else if (!emailFormat.test(email)) {
+      success = false;
+      message = 'Wrong email format!.';
+      failCode = 7; //등록실패
+      console.error('Wrong email format!.');
+    }
+    else if (emailExists !== null) {
       //id 중복을 검사하는 if문
       success = false;
       message = 'This email is already register!';
       failCode = 7; //등록실패
       console.error('This email is already register!');
     }
-    const bcryptPassword = await bcrypt.hash(password, Config.SALTROUNDS); //bcrypt로 비밀번호암호화
+    else {//예외처리 통과했을때만 user생성
+      const bcryptPassword = await bcrypt.hash(password, Config.SALTROUNDS); //bcrypt로 비밀번호암호화
 
-    await createUser(email, nickname, bcryptPassword);
+      await createUser(email, nickname, bcryptPassword);
+    }
 
     const S2CRegisterResponse = {
       success,

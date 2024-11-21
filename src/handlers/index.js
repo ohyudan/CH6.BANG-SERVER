@@ -5,7 +5,8 @@ import { ErrorCodes } from '../error/errorCodes.js';
 import loginHandler from './auth/login.handler.js';
 import registerHandler from './auth/register.handler.js';
 import roomListGetHandler from './room/roomListGetHandler.js';
-
+import roomCreateHander from './room/roomCreateHandler.js';
+import roomJoinHandler from './room/roomJoinHandler.js';
 const packetTypes = {
   [HANDLER_IDS.REGISTER_REQUEST]: {
     packetType: registerHandler,
@@ -20,8 +21,12 @@ const packetTypes = {
     protoType: 'C2SGetRoomListRequest',
   },
   [HANDLER_IDS.CREATE_ROOM_REQUEST]: {
-    packetType: undefined,
+    packetType: roomCreateHander,
     protoType: 'C2SCreateRoomRequest',
+  },
+  [HANDLER_IDS.JOIN_ROOM_REQUEST]: {
+    packetType: roomJoinHandler,
+    protoType: 'C2SJoinRoomRequest',
   },
 };
 /**
