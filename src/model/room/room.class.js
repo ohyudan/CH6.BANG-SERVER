@@ -6,7 +6,7 @@ class Room extends Observable {
   constructor(id, ownerId, name, maxUserNum) {
     super();
     this._id = id; // 방 아이디
-    this._ownerId = ownerId;
+    this._ownerId = ownerId; //-> 클라이언트에서는 배열의 순서대로 확인해서 방장을 0번일 때만 줌??? 아닌데 ?
     this._name = name;
     this._maxUserNum = maxUserNum;
     this._state = new RoomStateType();
@@ -21,6 +21,7 @@ class Room extends Observable {
   get ownerId() {
     return this._ownerId;
   }
+
   getRoomData() {
     //const test = getProtoMessages();
     //let roomMessage = test.room.RoomStateType.values.WAIT;
@@ -68,6 +69,7 @@ class Room extends Observable {
       return false;
     }
     this._playerList.set(player.id, player);
+
     return true;
   }
   /**
@@ -89,10 +91,10 @@ class Room extends Observable {
 
 export default Room;
 // message RoomData {
-//     int32 id = 1;
-//     string ownerId = 2;
-//     string name = 3;
-//     int32 maxUserNum = 4;
-//     RoomStateType state = 5; // WAIT 0, PREPARE 1, INAGAME 2
-//     repeated UserData users = 6; // 인덱스 기반으로 턴 진행
+//   int32 id = 1;
+//   int64 ownerId = 2;
+//   string name = 3;
+//   int32 maxUserNum = 4;
+//   RoomStateType state = 5; // WAIT 0, PREPARE 1, INAGAME 2
+//   repeated UserData users = 6; // 인덱스 기반으로 턴 진행
 // }
