@@ -16,7 +16,7 @@ class RoomList extends Observer {
     // 요청 받을 떄마다 하지말고 방 생성 / 방 삭제 / 인원 변경 / 상태 변경 / 에만 새로고침할 수 있지않을까.
     // -> 옵저버 패턴의 추가로 Update를 만들면 가능해졌음
 
-    const roomStateList = getWaitStateRoom();
+    const roomStateList = this.getWaitStateRoom();
     const rooms = [];
     if (roomStateList.length <= 1) {
       roomStateList.forEach((room) => {
