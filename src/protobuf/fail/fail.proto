@@ -20,4 +20,5 @@ enum GlobalFailCode {
     ALREADY_USED_BBANG = 14;
     INVALID_PHASE = 15;
     CHARACTER_CONTAINED = 16;
+    LOGIN_FAIL=17;
 }
