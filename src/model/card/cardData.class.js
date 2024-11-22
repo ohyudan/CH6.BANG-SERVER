@@ -1,5 +1,6 @@
 class CardData {
-  constructor(type, count) {
+  constructor(type, count = 1) {
+    //count 어따쓰는 지 잘 모르겠음
     this.type = type;
     this.count = count;
   }

@@ -1,0 +1,13 @@
+{
+  "characterTypes": [
+    { "type": 1, "hp": 4 },
+    { "type": 3, "hp": 4 },
+    { "type": 5, "hp": 4 },
+    { "type": 7, "hp": 4 },
+    { "type": 8, "hp": 4 },
+    { "type": 9, "hp": 4 },
+    { "type": 10, "hp": 4 },
+    { "type": 12, "hp": 3 },
+    { "type": 13, "hp": 3 }
+  ]
+}

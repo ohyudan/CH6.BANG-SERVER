@@ -4,31 +4,32 @@ import createFailCode from '../../utils/response/createFailCode.js';
 import roomList from '../../model/room/roomList.class.js';
 import playerList from '../../model/player/playerList.class.js';
 import gamePrepareNotification from '../../utils/notification/gamePrepare.notification.js';
-import shuffle from '../../utils/shuffle.js';
-import { cardDeck } from '../../utils/cardDeck.js';
+import loadCardInit from '../../utils/cardDeck.js';
 import DoubleLinkedList from '../../utils/doubleLinkedList.js';
-import { Packets } from '../../init/loadProtos.js';
+import { ROOM_STATE } from '../../constants/room.enum.js';
+import shuffle from 'lodash/shuffle.js';
+import { getGameAssets } from '../../init/loadGameAssets.js';
 
-export const gamePrepareHandler = async (socket) => {
+export const gamePrepareHandler = async ({ socket, payload }) => {
   try {
     let success = true;
     let failCode = createFailCode(0);
 
+    const gameAssets = getGameAssets();
+
     const ownerUser = playerList.getPlayer(socket.id);
-
-    // 방장 여부 확인
-    if (!ownerUser || !ownerUser.roomId) {
-      success = false;
-      failCode = createFailCode(13); // NOT_ROOM_OWNER
-    }
-
     // 방 정보 가져오기
-    const room = ownerUser ? roomList.getRoom(ownerUser.roomId) : undefined;
+    const room = ownerUser ? roomList.getRoom(ownerUser.currentRoomId) : undefined;
 
-    // 방 존재 여부 확인
-    if (!room) {
+    if (!(room == undefined)) {
+      // 방장 여부 확인
+      if (!(ownerUser.id === room._ownerId)) {
+        success = false;
+        failCode = createFailCode(13); // NOT_ROOM_OWNER
+      }
+    } else {
       success = false;
-      failCode = createFailCode(8); // ROOM_NOT_FOUND
+      failCode = createFailCode(8); // 룸 못찾음
     }
 
     // 방 상태를 PREPARE로 설정
@@ -44,19 +45,8 @@ export const gamePrepareHandler = async (socket) => {
      * 1. 캐릭터 셔플 후 사용자에게 배분
      * 2. 각 캐릭터의 hp 설정
      */
-    const characterTypes = [
-      { type: Packets.CharacterType.RED, hp: 4 },
-      { type: Packets.CharacterType.SHARK, hp: 4 },
-      { type: Packets.CharacterType.MALANG, hp: 4 },
-      { type: Packets.CharacterType.FROGGY, hp: 4 },
-      { type: Packets.CharacterType.PINK, hp: 4 },
-      { type: Packets.CharacterType.SWIM_GLASSES, hp: 4 },
-      { type: Packets.CharacterType.MASK, hp: 4 },
-      { type: Packets.CharacterType.DINOSAUR, hp: 3 },
-      { type: Packets.CharacterType.PINK_SLIME, hp: 3 },
-    ];
 
-    const shuffledCharacter = shuffle(characterTypes).splice(0, inGameUsers.length); // 캐릭터 셔플
+    const shuffledCharacter = shuffle(gameAssets.characterType.characterTypes);
     inGameUsers.forEach((user, i) => {
       user.setCharacterType(shuffledCharacter[i].type); // 캐릭터 유형 설정
       user.setHp(shuffledCharacter[i].hp); // 캐릭터 hp 설정
@@ -66,29 +56,12 @@ export const gamePrepareHandler = async (socket) => {
      * 역할(RoleType) 배분
      * 2인~7인 플레이어 기준으로 역할 셔플 후 배분
      */
-    const roleTypes = {
-      2: [Packets.RoleType.TARGET, Packets.RoleType.HITMAN],
-      3: [Packets.RoleType.TARGET, Packets.RoleType.HITMAN, Packets.RoleType.PSYCHOPATH],
-      4: [
-        Packets.RoleType.TARGET,
-        Packets.RoleType.HITMAN,
-        Packets.RoleType.HITMAN,
-        Packets.RoleType.PSYCHOPATH,
-      ],
-      5: [
-        Packets.RoleType.TARGET,
-        Packets.RoleType.BODYGUARD,
-        Packets.RoleType.HITMAN,
-        Packets.RoleType.HITMAN,
-        Packets.RoleType.PSYCHOPATH,
-      ],
-    };
 
-    const roleTypeClone = roleTypes[inGameUsers.length];
+    const roleTypeClone = gameAssets.roleTypes.roleTypes[inGameUsers.size];
     const shuffledRoleType = shuffle(roleTypeClone); // 역할 셔플
     inGameUsers.forEach((user, i) => {
       user.setCharacterRoleType(shuffledRoleType[i]); // 역할 설정
-      if (user.characterData.roleType === Packets.RoleType.TARGET) {
+      if (user.characterData.roleType === 0) {
         user.increaseHp(); // TARGET 역할의 경우 hp 추가
       }
     });
@@ -97,7 +70,8 @@ export const gamePrepareHandler = async (socket) => {
      * 카드 덱 생성 및 배분
      * 셔플된 덱에서 사용자에게 hp만큼 카드를 배분
      */
-    const shuffledCardsArr = shuffle(cardDeck); // 카드 덱 셔플
+    const cardDeck = await loadCardInit();
+    const shuffledCardsArr = shuffle(cardDeck); // 카드 덱
     const deck = new DoubleLinkedList();
     shuffledCardsArr.forEach((card) => {
       deck.append(card); // 덱에 카드 추가
@@ -105,7 +79,7 @@ export const gamePrepareHandler = async (socket) => {
 
     // 카드 배분
     inGameUsers.forEach((user) => {
-      // 1. 임시로 사람별 덱 구성
+      // 1. 임시로 사람별 패 구성
       const tmp = [];
       for (let i = 0; i < user.characterData.hp; i++) {
         const card = deck.removeFront();
@@ -123,12 +97,9 @@ export const gamePrepareHandler = async (socket) => {
      * 게임 준비 알림 전송
      * 사용자에게 각자의 데이터 전달
      */
-    inGameUsers.forEach((user) => {
-      const notificationPayload = gamePrepareNotification(room, user);
-      user.socket.write(
-        createResponse(HANDLER_IDS.GAME_PREPARE_NOTIFICATION, 0, notificationPayload),
-      );
-    });
+
+    room.setState(ROOM_STATE.PREPARE);
+    gamePrepareNotification(room, ownerUser);
 
     // 응답 생성
     const S2CGamePrepareResponse = {
@@ -146,7 +117,6 @@ export const gamePrepareHandler = async (socket) => {
       socket.sequence,
       gamePacket,
     );
-
     socket.write(response);
   } catch (error) {
     console.error('게임 준비 중 오류 발생:', error);
@@ -166,7 +136,7 @@ export const gamePrepareHandler = async (socket) => {
       socket.sequence,
       gamePacket,
     );
-
+    room.setState(ROOM_STATE.WAIT);
     socket.write(response);
   }
 };
