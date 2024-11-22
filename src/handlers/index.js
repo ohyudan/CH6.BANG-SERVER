@@ -19,6 +19,14 @@ const packetTypes = {
     packetType: loginHandler,
     protoType: 'C2SLoginRequest',
   },
+  [HANDLER_IDS.GAME_PREPARE_REQUEST]: {
+    packetType: undefined,
+    protoType: 'C2SGamePrepareRequest',
+  },
+  [HANDLER_IDS.GAME_START_REQUEST]: {
+    packetType: undefined,
+    protoType: 'C2SGameStartRequest',
+  },
   [HANDLER_IDS.GET_ROOM_LIST_REQUEST]: {
     packetType: roomListGetHandler,
     protoType: 'C2SGetRoomListRequest',

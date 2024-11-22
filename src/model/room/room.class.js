@@ -11,6 +11,7 @@ class Room extends Observable {
     this._maxUserNum = maxUserNum;
     this._state = new RoomStateType();
     this._playerList = new Map();
+    this._deck = null; // 방의 카드 덱을 저장하는 속성
 
     let ownerPlayer = playerList.getPlayer(ownerId);
     this.addPlayer(ownerPlayer);
@@ -86,6 +87,33 @@ class Room extends Observable {
   }
   getAllPlayers() {
     return this._playerList;
+  }
+
+  /**
+   * 게임 시작
+   * 방 상태를 PREPARE로 변경
+   * @returns {boolean} 성공 여부
+   */
+  startGame() {
+    if (!this._state.setState(STATE.PREPARE)) {
+      return false;
+    }
+    return true;
+  }
+  /**
+   * 방의 카드 덱 설정
+   * @param {DoubleLinkedList} deck - 카드 덱
+   */
+  setDeck(deck) {
+    this._deck = deck;
+  }
+
+  /**
+   * 방의 카드 덱 가져오기
+   * @returns {DoubleLinkedList} - 저장된 카드 덱
+   */
+  getDeck() {
+    return this._deck;
   }
 }
 
