@@ -35,11 +35,77 @@ export const useCardHandler = ({ socket, payload }) => {
   // }
   try {
     // cardType에 따라 다른 로직 적용
-    // 1 (빵야)
-    // 2 (무차별난사)
-    // 4 (백신)
-    if (cardType === 4) {
-      useVaccine(socket);
+    switch (cardType) {
+      // 1 (빵야)
+      // 2 (무차별난사)
+      // 4 (백신)
+      case 4: {
+        useVaccine(socket);
+
+        const userData = socket.userData;
+        const charaterData = userData.charaterData;
+        const handCards = charaterData.handCards;
+        // handCards에서 cardType이 호출된 값과 동일한 카드의 count를 -1
+        // 이후 charaterData에서 handCardsCount 를 -1
+
+        const S2CUseCardResponse = {
+          succes: true,
+          failCode: failCode,
+        };
+
+        const S2CUseCardNotification = {
+          cardType: cardType,
+          userId: socket.id,
+          targetUserId: targetUserId,
+        };
+
+        const S2CCardEffectNotification = {
+          cardType: cardType,
+          userId: socket.id,
+          succes: true,
+        };
+
+        const S2CUserUpdateNotification = {
+          user: userData,
+        };
+
+        const responseGamePacket = { useCardResponse: S2CUseCardResponse };
+        const notificationGamePacket = { useCardNotification: S2CUseCardNotification };
+        const cardEffectNotificationGamePacket = {
+          cardEffectNotification: S2CCardEffectNotification,
+        };
+        const userUpdateGamePacket = { userUpdateNotification: S2CUserUpdateNotification };
+
+        const responseResult = createResponse(
+          HANDLER_IDS.USE_CARD_REQUEST,
+          socket.version,
+          socket.sequence,
+          responseGamePacket,
+        );
+        const notificationResult = createResponse(
+          HANDLER_IDS.USE_CARD_NOTIFICATION,
+          socket.version,
+          socket.sequence,
+          notificationGamePacket,
+        );
+        const effectResult = createResponse(
+          HANDLER_IDS.CARD_EFFECT_NOTIFICATION,
+          socket.version,
+          socket.sequence,
+          cardEffectNotificationGamePacket,
+        );
+        const userUpdateResult = createResponse(
+          HANDLER_IDS.USER_UPDATE_NOTIFICATION,
+          socket.version,
+          socket.sequence,
+          userUpdateGamePacket,
+        );
+
+        socket.write(responseResult);
+        socket.write(notificationResult);
+        socket.write(effectResult);
+        socket.write(userUpdateResult);
+      }
     }
     // 5 (119호출)
     // 6 (현피)
@@ -53,41 +119,7 @@ export const useCardHandler = ({ socket, payload }) => {
     // 8(흡수),9(신기루) 미구현
     // 10(플리마켓) 미구현
     // 해당 핸들러에서는 CharaterStateType만 지정하고 전투 처리는 캐릭터 정보 업데이트에서 한번 더 처리하는게 좋을거 같다.
-
-    const userData = socket.userData;
-    const charaterData = userData.charaterData;
-    const handCards = charaterData.handCards;
-    // handCards에서 cardType이 호출된 값과 동일한 카드의 count를 -1
-    // 이후 charaterData에서 handCardsCount 를 -1
-
-    const S2CUseCardResponse = {
-      succes: true,
-      failCode: failCode,
-    };
-
-    const S2CUseCardNotification = {
-      cardType: cardType,
-      userId: socket.id,
-      targetUserId: targetUserId,
-    };
-
-    const responseGamePacket = { useCardResponse: S2CUseCardResponse };
-    const notificationGamePacket = { useCardNotification: S2CUseCardNotification };
-
-    const responseResult = createResponse(
-      HANDLER_IDS.USE_CARD_REQUEST,
-      socket.version,
-      socket.sequence,
-      responseGamePacket,
-    );
-    const notificationResult = createResponse(
-      HANDLER_IDS.USE_CARD_NOTIFICATION,
-      socket.version,
-      socket.sequence,
-      notificationGamePacket,
-    );
-
-    socket.write(responseResult);
-    socket.write(notificationResult);
-  } catch (error) {}
+  } catch (error) {
+    console.log('카드 확인 중 에러 발생', error);
+  }
 };
