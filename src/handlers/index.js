@@ -9,6 +9,8 @@ import roomCreateHander from './room/roomCreateHandler.js';
 import roomJoinHandler from './room/roomJoinHandler.js';
 import roomLeaveHandler from './room/roomLeaveHandler.js';
 import roomJoinRamdomHandler from './room/roomJoinRamdomHandler.js';
+import gamePrepareHandler from './game/gamePrepare.handler.js';
+import gameStartHandler from './game/gameStart.handler.js';
 
 const packetTypes = {
   [HANDLER_IDS.REGISTER_REQUEST]: {
@@ -20,11 +22,11 @@ const packetTypes = {
     protoType: 'C2SLoginRequest',
   },
   [HANDLER_IDS.GAME_PREPARE_REQUEST]: {
-    packetType: undefined,
+    packetType: gamePrepareHandler,
     protoType: 'C2SGamePrepareRequest',
   },
   [HANDLER_IDS.GAME_START_REQUEST]: {
-    packetType: undefined,
+    packetType: gameStartHandler,
     protoType: 'C2SGameStartRequest',
   },
   [HANDLER_IDS.GET_ROOM_LIST_REQUEST]: {
