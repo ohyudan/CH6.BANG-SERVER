@@ -2,7 +2,7 @@
 
 import { Observer } from '../observer/observer.js';
 import Room from './room.class.js';
-
+import { ROOM_STATE } from '../../constants/room.enum.js';
 class RoomList extends Observer {
   constructor() {
     super();
@@ -89,14 +89,14 @@ class RoomList extends Observer {
   getWaitStateRoom() {
     const result = [];
     this._roomMap.forEach((room) => {
-      if (room.getState() == 0) {
+      if (room.getState() == ROOM_STATE.WAIT) {
         result.push(room);
       }
     });
     return result;
   }
   getRandomWaitRoom() {
-    const rooms = this.getwaitStateRoom();
+    const rooms = this.getWaitStateRoom();
 
     if (rooms.length === 0) {
       return null; // 상태에 맞는 플레이어가 없으면 null 반환

@@ -1,12 +1,7 @@
-const STATE = {
-  WAIT: 0,
-  PREPARE: 1,
-  INGAME: 2,
-};
-
+import { ROOM_STATE } from '../../constants/room.enum.js';
 class RoomStateType {
   constructor() {
-    this._currentState = STATE.WAIT;
+    this._currentState = ROOM_STATE.WAIT;
   }
 
   set currentState(newState) {
@@ -16,4 +11,4 @@ class RoomStateType {
     return this._currentState;
   }
 }
-export { RoomStateType, STATE };
+export { RoomStateType };

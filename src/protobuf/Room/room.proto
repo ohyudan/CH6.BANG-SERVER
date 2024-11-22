@@ -18,3 +18,14 @@ enum RoomStateType {
     PREPARE = 1;
     INGAME = 2;
 }
+
+enum PhaseType {
+    NONE_PHASE = 0;
+    DAY = 1;
+    EVENING = 2;
+    END = 3;
+}
+message GameStateData {
+    PhaseType phaseType = 1; // DAY 1, EVENING 2, END 3 (하루 종료시 카드 버리는 턴)
+    int64 nextPhaseAt = 2; // 다음 페이즈 시작 시점(밀리초 타임스탬프)
+}
