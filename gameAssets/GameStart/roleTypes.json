@@ -1,0 +1,27 @@
+{
+  "roleTypes": [
+    [],
+    [],
+    [{ "roleType": 1 }, { "roleType": 3 }],
+    [{ "roleType": 1 }, { "roleType": 3 }, { "roleType": 4 }],
+    [{ "roleType": 1 }, { "roleType": 3 }, { "roleType": 3 }, { "roleType": 4 }],
+    [{ "roleType": 1 }, { "roleType": 2 }, { "roleType": 3 }, { "roleType": 3 }, { "roleType": 4 }],
+    [
+      { "roleType": 1 },
+      { "roleType": 2 },
+      { "roleType": 3 },
+      { "roleType": 3 },
+      { "roleType": 3 },
+      { "roleType": 4 }
+    ],
+    [
+      { "roleType": 1 },
+      { "roleType": 2 },
+      { "roleType": 2 },
+      { "roleType": 3 },
+      { "roleType": 3 },
+      { "roleType": 3 },
+      { "roleType": 4 }
+    ]
+  ]
+}
