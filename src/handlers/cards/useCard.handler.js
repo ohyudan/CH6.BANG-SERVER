@@ -40,13 +40,10 @@ export const useCardHandler = ({ socket, payload }) => {
       // 2 (무차별난사)
       // 4 (백신)
       case 4: {
-        useVaccine(socket);
-
-        const userData = socket.userData;
-        const charaterData = userData.charaterData;
-        const handCards = charaterData.handCards;
-        // handCards에서 cardType이 호출된 값과 동일한 카드의 count를 -1
-        // 이후 charaterData에서 handCardsCount 를 -1
+        const player = getPlayer(socket.id)
+        player.removeHandCard(4)
+        player.increaseHp()
+        player.decreaseHandCardsCount()
 
         const S2CUseCardResponse = {
           succes: true,
