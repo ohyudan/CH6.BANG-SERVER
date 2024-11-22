@@ -7,6 +7,7 @@ import registerHandler from './auth/register.handler.js';
 import roomListGetHandler from './room/roomListGetHandler.js';
 import roomCreateHander from './room/roomCreateHandler.js';
 import roomJoinHandler from './room/roomJoinHandler.js';
+import { useCardHandler } from './cards/useCardHandler.js';
 const packetTypes = {
   [HANDLER_IDS.REGISTER_REQUEST]: {
     packetType: registerHandler,
@@ -27,6 +28,10 @@ const packetTypes = {
   [HANDLER_IDS.JOIN_ROOM_REQUEST]: {
     packetType: roomJoinHandler,
     protoType: 'C2SJoinRoomRequest',
+  },
+  [HANDLER_IDS.USE_CARD_REQUEST]: {
+    packetType: useCardHandler,
+    protoType: 'C2SUseCardRequest',
   },
 };
 /**
