@@ -1,29 +1,162 @@
+import CharacterData from '../character/characterData.class.js';
+import Position from './position.class.js';
+
 class Player {
   constructor(id, nickname, socket) {
     this._id = id;
     this._nickname = nickname;
     this.socket = socket;
+    this._currentRoomId = null;
 
-    this.CharacterData = {
-      CharacterType: undefined,
-      RoleType: undefined,
-      hp: undefined,
-      weapon: undefined,
-      CharacterStateInfoData: undefined,
-      equips: [],
-      debuffers: [],
-      CardData: [],
-      bbangCount: undefined,
-      handCardCount: undefined,
-    };
+    this.characterData = new CharacterData(); // CharacterData 객체 생성
+
+    this.position = new Position(); // Position 객체 생성
     this.UserData = {
       id: this._id,
       nickname: this._nickname,
-      CharacterData: this.CharacterData,
+      CharacterData: this.characterData,
     };
   }
   get id() {
     return this._id;
+  }
+  set currentRoomId(roomId) {
+    this._currentRoomId = roomId;
+  }
+  get currentRoomId() {
+    return this._currentRoomId;
+  }
+  // 위치 업데이트
+  updatePosition(x, y) {
+    this.position.x = x;
+    this.position.y = y;
+  }
+
+  // 플레이어의 x 좌표 반환
+  getX() {
+    return this.position.x;
+  }
+
+  // 플레이어의 y 좌표 반환
+  getY() {
+    return this.position.y;
+  }
+
+  // 캐릭터 타입 설정
+  setCharacterType(characterType) {
+    this.characterData.characterType = characterType;
+  }
+
+  // 캐릭터 역할 설정
+  setCharacterRoleType(roleType) {
+    this.characterData.roleType = roleType;
+  }
+
+  // 캐릭터의 체력(HP) 설정
+  setHp(hp) {
+    this.characterData.hp = hp;
+  }
+
+  // 캐릭터의 체력 증가
+  increaseHp() {
+    this.characterData.hp += 1;
+  }
+
+  // 캐릭터의 체력 감소
+  decreaseHp() {
+    this.characterData.hp -= 1;
+  }
+
+  // 캐릭터가 사용하는 무기 설정
+  setWeapon(weapon) {
+    this.characterData.weapon = weapon;
+  }
+
+  // 현재 캐릭터 상태 설정
+  setCharacterStateType(characterStateType) {
+    this.characterData.stateInfo.state = characterStateType;
+  }
+
+  // 캐릭터의 다음 상태 설정
+  setNextCharacterStateType(nextStateType) {
+    this.characterData.stateInfo.nextState = nextStateType;
+  }
+
+  // 다음 상태로 변경될 시각 설정 (타임스탬프)
+  setNextStateAt(nextStateAt) {
+    this.characterData.stateInfo.nextStateAt = nextStateAt;
+  }
+
+  // 상태 변경의 대상 사용자 ID 설정
+  setStateTargetUserId(targetUserId) {
+    this.characterData.stateInfo.stateTargetUserId = targetUserId;
+  }
+
+  // 캐릭터의 장비 추가
+  addEquip(equip) {
+    this.characterData.equips.push(equip);
+  }
+
+  // 캐릭터의 디버프 추가
+  addDebuff(debuff) {
+    this.characterData.debuffs.push(debuff);
+  }
+
+  // 캐릭터의 손패(카드) 추가
+  addHandCard(card) {
+    this.characterData.handCards.push(card);
+  }
+
+  // 캐릭터의 손패(카드) 제거
+  removeHandCard(usingCard) {
+    this.characterData.handCards = this.characterData.handCards.filter(
+      (card) => card !== usingCard,
+    );
+  }
+
+  // 빵야 사용 횟수 증가
+  increaseBbangCount() {
+    this.characterData.bbangCount += 1;
+  }
+
+  // 빵야 사용 횟수 감소
+  decreaseBbangCount() {
+    this.characterData.bbangCount -= 1;
+  }
+
+  // 손패 카드 수 증가
+  increaseHandCardsCount() {
+    this.characterData.handCardsCount += 1;
+  }
+
+  // 손패 카드 수 감소
+  decreaseHandCardsCount() {
+    this.characterData.handCardsCount -= 1;
+  }
+
+  // Player 데이터 직렬화
+  makeRawObject() {
+    return {
+      id: this._id,
+      nickname: this._nickname,
+      character: {
+        characterType: this.characterData.characterType,
+        roleType: this.characterData.roleType,
+        hp: this.characterData.hp,
+        weapon: this.characterData.weapon,
+        stateInfo: {
+          state: this.characterData.stateInfo.state,
+          nextState: this.characterData.stateInfo.nextState,
+          nextStateAt: this.characterData.stateInfo.nextStateAt,
+          stateTargetUserId: this.characterData.stateInfo.stateTargetUserId,
+        },
+        equips: this.characterData.equips,
+        debuffs: this.characterData.debuffs,
+        handCards: this.characterData.handCards,
+        bbangCount: this.characterData.bbangCount,
+        handCardsCount: this.characterData.handCardsCount,
+      },
+    };
   }
 }
 export default Player;
