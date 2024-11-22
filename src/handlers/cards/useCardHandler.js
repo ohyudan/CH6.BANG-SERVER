@@ -1,5 +1,4 @@
 import HANDLER_IDS from '../../constants/handlerIds.js';
-import { useVaccine } from '../../utils/card/vaccine.js';
 import createFailCode from '../../utils/response/createFailCode.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
@@ -8,16 +7,18 @@ export const useCardHandler = ({ socket, payload }) => {
   let failCode = createFailCode(0);
 
   try {
+    const player = getPlayer(socket.id);
+    player.removeHandCard(cardType);
+    player.decreaseHandCardsCount();
+    // switch - case 구문에 넣어야 할 수 있음
+
     // cardType에 따라 다른 로직 적용
     switch (cardType) {
       // 1 (빵야)
       // 2 (무차별난사)
       // 4 (백신)
       case 4: {
-        const player = getPlayer(socket.id);
-        player.removeHandCard(4);
         player.increaseHp();
-        player.decreaseHandCardsCount();
         // 느낌만
 
         const S2CUseCardResponse = {
@@ -78,13 +79,10 @@ export const useCardHandler = ({ socket, payload }) => {
 
       // 5 (119호출)
       case 5: {
-        const player = getPlayer(socket.id);
-        player.removeHandCard(5);        
-        player.decreaseHandCardsCount();
         if (targetUserId !== 0) {
-        player.increaseHp();
+          player.increaseHp();
         } else {
-          // 플레이어를 제외한 모든 플레이어의 hp +1
+          // 사용 플레이어를 제외한 모든 플레이어의 hp +1
         }
         // 느낌만
 
