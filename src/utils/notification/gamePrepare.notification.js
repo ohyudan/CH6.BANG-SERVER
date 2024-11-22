@@ -11,19 +11,22 @@ const gamePrepareNotification = (room, owner) => {
   const roomPlayList = room.getAllPlayers();
 
   roomPlayList.forEach((values, key) => {
-    const S2CGamePrepareNotification = {
-      room: room.getRoomData(),
-    };
-    const gamePacket = { gamePrepareNotification: S2CGamePrepareNotification };
+    //if (owner.id !== key)
+    {
+      const S2CGamePrepareNotification = {
+        room: room.getRoomData(),
+      };
+      const gamePacket = { gamePrepareNotification: S2CGamePrepareNotification };
 
-    const result = createResponse(
-      HANDLER_IDS.GAME_PREPARE_NOTIFICATION,
-      values.socket.version,
-      values.socket.sequence,
-      gamePacket,
-    );
+      const result = createResponse(
+        HANDLER_IDS.GAME_PREPARE_NOTIFICATION,
+        values.socket.version,
+        values.socket.sequence,
+        gamePacket,
+      );
 
-    values.socket.write(result);
+      values.socket.write(result);
+    }
   });
   // return {
   //   gamePrepareNotification: {

@@ -1,4 +1,5 @@
-import { RoomStateType, STATE } from './room.status.js';
+import { RoomStateType } from './room.status.js';
+import { ROOM_STATE } from '../../constants/room.enum.js';
 import playerList from '../player/playerList.class.js';
 import { Observable } from '../observer/observer.js';
 
@@ -89,12 +90,12 @@ class Room extends Observable {
   }
 
   /**
-   * 게임 시작
-   * 방 상태를 PREPARE로 변경
-   * @returns {boolean} 성공 여부
+   *  게임 시작 가능 여부 확인 함수.
+   * @param {number} number
+   * @returns {bool}
    */
   startGame(number) {
-    if (STATE.WAIT === this._state.currentState) {
+    if (ROOM_STATE.WAIT === this._state.currentState) {
       return true;
     }
     return false;

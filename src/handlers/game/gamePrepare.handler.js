@@ -6,7 +6,7 @@ import playerList from '../../model/player/playerList.class.js';
 import gamePrepareNotification from '../../utils/notification/gamePrepare.notification.js';
 import loadCardInit from '../../utils/cardDeck.js';
 import DoubleLinkedList from '../../utils/doubleLinkedList.js';
-import { Packets } from '../../init/loadProtos.js';
+import { ROOM_STATE } from '../../constants/room.enum.js';
 import shuffle from 'lodash/shuffle.js';
 import { getGameAssets } from '../../init/loadGameAssets.js';
 
@@ -18,7 +18,6 @@ export const gamePrepareHandler = async ({ socket, payload }) => {
     const gameAssets = getGameAssets();
 
     const ownerUser = playerList.getPlayer(socket.id);
-    console.log(gameAssets);
     // 방 정보 가져오기
     const room = ownerUser ? roomList.getRoom(ownerUser.currentRoomId) : undefined;
 
@@ -99,6 +98,7 @@ export const gamePrepareHandler = async ({ socket, payload }) => {
      * 사용자에게 각자의 데이터 전달
      */
 
+    room.setState(ROOM_STATE.PREPARE);
     gamePrepareNotification(room, ownerUser);
 
     // 응답 생성
@@ -117,7 +117,6 @@ export const gamePrepareHandler = async ({ socket, payload }) => {
       socket.sequence,
       gamePacket,
     );
-
     socket.write(response);
   } catch (error) {
     console.error('게임 준비 중 오류 발생:', error);
@@ -137,7 +136,7 @@ export const gamePrepareHandler = async ({ socket, payload }) => {
       socket.sequence,
       gamePacket,
     );
-
+    room.setState(ROOM_STATE.WAIT);
     socket.write(response);
   }
 };
