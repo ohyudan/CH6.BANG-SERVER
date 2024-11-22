@@ -12,7 +12,7 @@ export const roomJoinNotifcation = (room, newuser) => {
   roomPlayList.forEach((values, key) => {
     if (newuser.id !== key) {
       const S2CJoinRoomNotification = {
-        joinUser: newuser.UserData,
+        joinUser: newuser.makeRawObject(),
       };
       const gamePacket = { joinRoomNotification: S2CJoinRoomNotification };
 

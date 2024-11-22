@@ -11,11 +11,6 @@ class Player {
     this.characterData = new CharacterData(); // CharacterData 객체 생성
 
     this.position = new Position(); // Position 객체 생성
-    this.UserData = {
-      id: this._id,
-      nickname: this._nickname,
-      CharacterData: this.characterData,
-    };
   }
   get id() {
     return this._id;

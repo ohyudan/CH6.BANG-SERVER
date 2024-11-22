@@ -82,7 +82,10 @@ class RoomList extends Observer {
   getRoom(roomId) {
     return this._roomMap.get(roomId);
   }
-
+  /**
+   *
+   * @returns {[]} WAIT 상태
+   */
   getWaitStateRoom() {
     const result = [];
     this._roomMap.forEach((room) => {

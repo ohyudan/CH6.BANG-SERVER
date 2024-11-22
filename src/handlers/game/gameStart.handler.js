@@ -5,7 +5,7 @@ import GameStartNotification from '../../utils/notification/gameStart.notificati
 import playerList from '../../model/player/playerList.class.js';
 import roomList from '../../model/room/roomList.class.js';
 import { Packets } from '../../init/loadProtos.js';
-import { characterPositions } from '../../init/loadPositions.js';
+//import { characterPositions } from '../../init/loadPositions.js';
 
 const gameStartHandler = async ({ socket }) => {
   try {

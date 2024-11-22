@@ -1,4 +1,3 @@
-import { getProtoMessages } from '../../init/loadProtos.js';
 const STATE = {
   WAIT: 0,
   PREPARE: 1,
@@ -7,29 +6,14 @@ const STATE = {
 
 class RoomStateType {
   constructor() {
-    this._state = STATE.WAIT;
-  }
-  /**
-   *
-   * @param {number} newState
-   * @returns true , false
-   */
-  setState(newState) {
-    if (STATE[newState] !== undefined) {
-      this._state = newState;
-      console.log(`State changed to: ${newState}`);
-      return true;
-    }
-    console.error('Invalid state change attempt.');
-    return false;
+    this._currentState = STATE.WAIT;
   }
 
-  /**
-   *
-   * @returns enum
-   */
-  getCurrentStateData() {
-    return this._state;
+  set currentState(newState) {
+    this._currentState = newState;
+  }
+  get currentState() {
+    return this._currentState;
   }
 }
 export { RoomStateType, STATE };

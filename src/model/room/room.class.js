@@ -29,14 +29,14 @@ class Room extends Observable {
 
     const users = [];
     this._playerList.forEach((values) => {
-      users.push(values.UserData);
+      users.push(values.makeRawObject());
     });
     const RoomData = {
       id: this._id,
       ownerId: this._ownerId,
       name: this._name,
       maxUserNum: this._maxUserNum,
-      state: this._state.getCurrentStateData(),
+      state: this._state.currentState,
       users: users,
     };
 
@@ -44,19 +44,18 @@ class Room extends Observable {
   }
   /**
    *
-   * @param {number} state
+   * @param {number} enum_nubmer
    * @returns 결과
    */
-  setState(state) {
-    const result = this._state.setState(state);
-    return result;
+  setState(enum_nubmer) {
+    this._state.currentState = enum_nubmer;
   }
   /**
    *
    * @returns {number}
    */
   getState() {
-    return this._state.getCurrentStateData();
+    return this._state.currentState;
   }
 
   /**
@@ -94,11 +93,11 @@ class Room extends Observable {
    * 방 상태를 PREPARE로 변경
    * @returns {boolean} 성공 여부
    */
-  startGame() {
-    if (!this._state.setState(STATE.PREPARE)) {
-      return false;
+  startGame(number) {
+    if (STATE.WAIT === this._state.currentState) {
+      return true;
     }
-    return true;
+    return false;
   }
   /**
    * 방의 카드 덱 설정
