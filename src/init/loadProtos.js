@@ -10,6 +10,7 @@ const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 const protoFolder = path.join(dirname, '../protobuf');
 
+// 모든 .proto 파일 가져오기
 const getAllProtoFiles = (protoFolder, fileList = []) => {
   const files = fs.readdirSync(protoFolder);
 
@@ -28,9 +29,10 @@ const getAllProtoFiles = (protoFolder, fileList = []) => {
 const protoFiles = getAllProtoFiles(protoFolder);
 
 const protoMessages = {};
+export const Packets = {}; // Packets 객체를 통해 Protobuf에서 정의된 enum 값을 가져옴
 
 /**
- * protoMessages에 가져온 protoFiles를 등록하는 함수
+ * Protobuf 파일 로드 및 protoMessages와 Packets 객체 생성
  */
 export const loadProtos = async () => {
   try {
@@ -42,19 +44,27 @@ export const loadProtos = async () => {
       }),
     );
 
+    // protoMessages 초기화
     for (let [packageName, types] of Object.entries(packetNames)) {
       protoMessages[packageName] = {};
 
       for (const [protoType, typeName] of Object.entries(types)) {
         try {
-          protoMessages[packageName][protoType] = root.lookupType(typeName);
+          const type = root.lookupType(typeName);
+          protoMessages[packageName][protoType] = type;
         } catch (error) {
-          protoMessages[packageName][protoType] = root.lookupEnum(typeName);
+          const enumType = root.lookupEnum(typeName);
+          protoMessages[packageName][protoType] = enumType;
+
+          // Packets 객체에 열거형(enum) 값 등록
+          if (!Packets[protoType]) {
+            Packets[protoType] = enumType.values;
+          }
         }
       }
     }
 
-    console.log(`프로토 타입 로드에 끝났습니다.`);
+    console.log(`프로토 타입 로드가 완료되었습니다.`);
   } catch (error) {
     throw new CustomError(ErrorCodes.PROTOFILE_LOADING_FAIL, `프로토 로딩 중 에러 발생`);
   }
