@@ -1,9 +1,9 @@
-import { Packets } from '../../init/loadProtos.js';
+import { CHARACTER_STATE_TYPE } from '../../constants/user.enum.js';
 
 class CharacterStateInfoData {
   constructor() {
-    this.state = Packets.CharacterStateType.NONE_CHARACTER_STATE;
-    this.nextState = Packets.CharacterStateType.NONE_CHARACTER_STATE;
+    this.state = CHARACTER_STATE_TYPE.NONE_CHARACTER_STATE;
+    this.nextState = CHARACTER_STATE_TYPE.NONE_CHARACTER_STATE;
     this.nextStateAt = 0; // int64
     this.stateTargetUserId = 0;
   }
