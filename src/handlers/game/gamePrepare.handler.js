@@ -10,6 +10,7 @@ import { ROOM_STATE } from '../../constants/room.enum.js';
 import shuffle from 'lodash/shuffle.js';
 import { getGameAssets } from '../../init/loadGameAssets.js';
 
+
 export const gamePrepareHandler = async ({ socket, payload }) => {
   try {
     let success = true;
@@ -79,18 +80,32 @@ export const gamePrepareHandler = async ({ socket, payload }) => {
       deck.append(card); // 덱에 카드 추가
     });
 
+
     // 카드 배분
     inGameUsers.forEach((user) => {
       // 1. 임시로 사람별 패 구성
       const tmp = [];
+      let duplicate=false;
       for (let i = 0; i < user.characterData.hp; i++) {
         const card = deck.removeFront();
-        tmp.push(card);
+        for(let i=0;i<tmp.length;i++)
+        {  
+          if(card.type===tmp[i].type)
+          {
+            tmp[i].count++;
+            duplicate=true;
+            break;
+          }
+        }
+        if(duplicate===false){
+          tmp.push(card);
+        }
+        duplicate=false;
         user.increaseHandCardsCount();
       }
       // 2. 한 번에 추가
       const result = transformData(tmp);
-      user.characterData.handCards = result;
+      user.characterData.handCards = tmp;
     });
 
     room.setDeck(deck); // 덱을 방에 저장
@@ -155,7 +170,7 @@ const transformData = (data) => {
   data.forEach((type) => {
     typeCountMap.set(type, (typeCountMap.get(type) || 0) + 1);
   });
-
+  console.log(Array.from(typeCountMap, ([type, count]) => ({ type, count })));
   return Array.from(typeCountMap, ([type, count]) => ({ type, count }));
 };
 
