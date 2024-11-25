@@ -1,15 +1,18 @@
 import HANDLER_IDS from '../../constants/handlerIds.js';
 import createFailCode from '../../utils/response/createFailCode.js';
 import { createResponse } from '../../utils/response/createResponse.js';
+import playerList from '../../model/player/playerList.class.js';
+import Player from '../../model/player/player.class.js';
+import Room from '../../model/room/room.class.js';
 
 export const useCardHandler = ({ socket, payload }) => {
   const { cardType, targetUserId } = payload;
   let failCode = createFailCode(0);
 
   try {
-    const player = getPlayer(socket.id);
-    player.removeHandCard(cardType);
-    player.decreaseHandCardsCount();
+    let player = playerList.getPlayer(socket.id);
+    player = Player.removeHandCard(cardType);
+    player = Player.decreaseHandCardsCount();
     // switch - case 구문에 넣어야 할 수 있음
 
     // cardType에 따라 다른 로직 적용
@@ -18,7 +21,7 @@ export const useCardHandler = ({ socket, payload }) => {
       // 2 (무차별난사)
       // 4 (백신)
       case 4: {
-        player.increaseHp();
+        player = Player.increaseHp();
         // 느낌만
 
         const S2CUseCardResponse = {
@@ -80,9 +83,16 @@ export const useCardHandler = ({ socket, payload }) => {
       // 5 (119호출)
       case 5: {
         if (targetUserId !== 0) {
-          player.increaseHp();
+          player = Player.increaseHp();
         } else {
           // 사용 플레이어를 제외한 모든 플레이어의 hp +1
+          // 1. 룸 찾아서
+          // 2. 룸에서 playerid를 제외한 다른 플레이어의 데이타에서
+          // 3. hp를 증가
+          // 반복문 + if문을 해서 적용?
+
+          const inGameUsers = Array.from(Room.getAllPlayers().values());
+          inGameUsers.forEach(() => {});
         }
         // 느낌만
 
