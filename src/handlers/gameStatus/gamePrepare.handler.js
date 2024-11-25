@@ -62,8 +62,13 @@ export const gamePrepareHandler = async ({ socket, payload }) => {
     inGameUsers.forEach((user, i) => {
       const roleType = shuffledRoleType.pop();
       user.setCharacterRoleType(roleType.roleType); // 역할 설정
-      if (user.characterData.roleType === 0) {
-        user.increaseHp(); // TARGET 역할의 경우 hp 추가
+      if (user.characterData.roleType === 1) {
+        const matchedCharacter = gameAssets.characterType.characterTypes.find(
+          (character) => character.type === user.characterData.roleType,
+        );
+        if (matchedCharacter) {
+          user.increaseHp(); // TARGET 역할의 경우 hp 추가
+        }
       }
     });
 
