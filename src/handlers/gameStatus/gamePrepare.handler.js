@@ -5,7 +5,6 @@ import roomList from '../../model/room/roomList.class.js';
 import playerList from '../../model/player/playerList.class.js';
 import gamePrepareNotification from '../../utils/notification/gamePrepare.notification.js';
 import loadCardInit from '../../utils/cardDeck.js';
-import DoubleLinkedList from '../../utils/doubleLinkedList.js';
 import { ROOM_STATE } from '../../constants/room.enum.js';
 import shuffle from 'lodash/shuffle.js';
 import { getGameAssets } from '../../init/loadGameAssets.js';
@@ -68,32 +67,34 @@ export const gamePrepareHandler = async ({ socket, payload }) => {
       }
     });
 
+    // 여기부터 카드 분배 까지 리펙토링 필요
     /**
      * 카드 덱 생성 및 배분
      * 셔플된 덱에서 사용자에게 hp만큼 카드를 배분
      */
-    const cardDeck = await loadCardInit();
-    const shuffledCardsArr = shuffle(cardDeck); // 카드 덱
-    const deck = new DoubleLinkedList();
-    shuffledCardsArr.forEach((card) => {
-      deck.append(card); // 덱에 카드 추가
-    });
+    //const cardDeck = await loadCardInit();
+    //const shuffledCardsArr = shuffle(cardDeck); // 카드 덱
+    //const deck = new DoubleLinkedList();
+    // shuffledCardsArr.forEach((card) => {
+    //   deck.append(card); // 덱에 카드 추가
+    // });
 
     // 카드 배분
     inGameUsers.forEach((user) => {
       // 1. 임시로 사람별 패 구성
-      const tmp = [];
+      const handCardArr = [];
       for (let i = 0; i < user.characterData.hp; i++) {
-        const card = deck.removeFront();
-        tmp.push(card);
+        const card = room.deck.removeFront();
+        const handCards = card.getcardData();
+        handCardArr.push(handCards);
         user.increaseHandCardsCount();
       }
       // 2. 한 번에 추가
-      const result = transformData(tmp);
-      user.characterData.handCards = result;
+      //const result = transformData(tmp);
+      user.characterData.handCards = handCardArr;
     });
 
-    room.setDeck(deck); // 덱을 방에 저장
+    //room.setDeck(deck); // 덱을 방에 저장
 
     /**
      * 게임 준비 알림 전송
