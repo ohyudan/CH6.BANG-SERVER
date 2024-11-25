@@ -48,8 +48,9 @@ export const gamePrepareHandler = async ({ socket, payload }) => {
 
     const shuffledCharacter = shuffle(gameAssets.characterType.characterTypes);
     inGameUsers.forEach((user, i) => {
-      user.setCharacterType(shuffledCharacter[i].type); // 캐릭터 유형 설정
-      user.setHp(shuffledCharacter[i].hp); // 캐릭터 hp 설정
+      const characterData = shuffledCharacter.pop();
+      user.setCharacterType(characterData.type); // 캐릭터 유형 설정
+      user.setHp(characterData.hp);
     });
 
     /**
@@ -60,7 +61,8 @@ export const gamePrepareHandler = async ({ socket, payload }) => {
     const roleTypeClone = gameAssets.roleTypes.roleTypes[inGameUsers.size];
     const shuffledRoleType = shuffle(roleTypeClone); // 역할 셔플
     inGameUsers.forEach((user, i) => {
-      user.setCharacterRoleType(shuffledRoleType[i]); // 역할 설정
+      const roleType = shuffledRoleType.pop();
+      user.setCharacterRoleType(roleType.roleType); // 역할 설정
       if (user.characterData.roleType === 0) {
         user.increaseHp(); // TARGET 역할의 경우 hp 추가
       }
