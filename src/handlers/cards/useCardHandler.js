@@ -4,6 +4,7 @@ import { createResponse } from '../../utils/response/createResponse.js';
 import playerList from '../../model/player/playerList.class.js';
 import Player from '../../model/player/player.class.js';
 import Room from '../../model/room/room.class.js';
+import roomList from '../../model/room/roomList.class.js';
 
 export const useCardHandler = ({ socket, payload }) => {
   const { cardType, targetUserId } = payload;
@@ -90,9 +91,15 @@ export const useCardHandler = ({ socket, payload }) => {
           // 2. 룸에서 playerid를 제외한 다른 플레이어의 데이타에서
           // 3. hp를 증가
           // 반복문 + if문을 해서 적용?
+          const Room = roomFind
 
           const inGameUsers = Array.from(Room.getAllPlayers().values());
-          inGameUsers.forEach(() => {});
+          inGameUsers.forEach(() => {
+            if (socket.id !== player.id) {
+              increaseHp()
+              // 느낌만
+            }
+          });
         }
         // 느낌만
 
