@@ -11,6 +11,7 @@ import roomLeaveHandler from './room/roomLeaveHandler.js';
 import roomJoinRamdomHandler from './room/roomJoinRamdomHandler.js';
 import gamePrepareHandler from './game/gamePrepare.handler.js';
 import gameStartHandler from './game/gameStart.handler.js';
+import positionUpdateHandler from './game/positionUpdate.handler.js';
 
 const packetTypes = {
   [HANDLER_IDS.REGISTER_REQUEST]: {
@@ -49,6 +50,10 @@ const packetTypes = {
     packetType: roomJoinRamdomHandler,
     ptoroType: 'C2SJoinRandomRoomRequest',
   },
+  [HANDLER_IDS.POSITION_UPDATE_REQUEST]: {
+    packetType: positionUpdateHandler,
+    protoType: 'C2SPositionUpdateRequest',
+  }
 };
 /**
  * 패킷타입에 맞는 핸들러로 분배해주는 함수
