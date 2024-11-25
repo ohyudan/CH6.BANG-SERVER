@@ -3,6 +3,7 @@
 import { Observer } from '../observer/observer.js';
 import Room from './room.class.js';
 import { ROOM_STATE } from '../../constants/room.enum.js';
+
 class RoomList extends Observer {
   constructor() {
     super();
@@ -84,7 +85,7 @@ class RoomList extends Observer {
   }
   /**
    *
-   * @returns {[]} WAIT 상태
+   * @returns {[Room...]} WAIT 상태
    */
   getWaitStateRoom() {
     const result = [];
@@ -112,10 +113,10 @@ class RoomList extends Observer {
    * @param {String} event
    * @param {Room} data
    */
-  update(event, data) {
+  update(event, room) {
     switch (event) {
       case 'roomEmpty':
-        this.subRoomList(data);
+        this.subRoomList(room);
         break;
       default:
         break;
