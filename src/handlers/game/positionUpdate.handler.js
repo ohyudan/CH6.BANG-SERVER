@@ -6,38 +6,38 @@ import { createResponse } from '../../utils/response/createResponse.js';
 const positionUpdateHandler = ({ socket, payload }) => {
   const { x, y } = payload;
 
-  const player = playerList.getPlayer(socket.id);
-  const room = roomList.getRoom(player.currentRoomId);
+  console.log(payload);
 
-  player.updatePosition(x, y);
+  const user = playerList.getPlayer(socket.id);
+  const room = roomList.getRoom(user.currentRoomId);
 
-  const inGamePlayersPositions = playerList.forEach((player) => { // 같은 룸 플레이어들의 위치 정보
-    if (player.currentRoomId === room.id) {
-        return player.position;
-    }
-  })
+  user.updatePosition(x, y);
 
-  console.log(inGamePlayersPositions);
+  const inGameUsers = Array.from(room.getAllPlayers().values());
+
+  const inGamePlayersPositions = inGameUsers.map((player) => ({
+    id: player.id,
+    x: player.position.x,
+    y: player.position.y,
+  }));
 
   // 같은 룸에 있는 플레이어들에게 알림
-  playerList.forEach((player) => {
-    if (player.currentRoomId === room.id) {
-        const S2CPositionUpdateNotification = { 
-            characterPosition: inGamePlayersPositions,
-        }
+  inGameUsers.forEach((player) => {
+    const S2CPositionUpdateNotification = {
+      characterPositions: inGamePlayersPositions,
+    };
 
-        const gamePacket = { positionUpdateNotification: S2CPositionUpdateNotification };
+    const gamePacket = { positionUpdateNotification: S2CPositionUpdateNotification };
 
-        const positionUpdateNotification = createResponse(
-          HANDLER_IDS.POSITION_UPDATE_NOTIFICATION,
-          player.socket.version,
-          player.socket.sequence,
-          gamePacket,
-        );
-    
-        player.socket.write(positionUpdateNotification);
-    }
-  })
+    const positionUpdateNotification = createResponse(
+      HANDLER_IDS.POSITION_UPDATE_NOTIFICATION,
+      player.socket.version,
+      player.socket.sequence,
+      gamePacket,
+    );
+
+    player.socket.write(positionUpdateNotification);
+  });
 
   return;
 };
