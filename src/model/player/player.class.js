@@ -123,7 +123,10 @@ class Player {
   increaseHandCardsCount() {
     this.characterData.handCardsCount += 1;
   }
-
+  // 손패 매개변수 만큼 카드 수 증가
+  increaseHandCardsCountParam(count){
+    this.characterData.handCardsCount += count;
+  }
   // 손패 카드 수 감소
   decreaseHandCardsCount() {
     this.characterData.handCardsCount -= 1;

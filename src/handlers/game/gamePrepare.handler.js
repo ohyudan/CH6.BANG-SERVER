@@ -10,6 +10,7 @@ import { ROOM_STATE } from '../../constants/room.enum.js';
 import shuffle from 'lodash/shuffle.js';
 import { getGameAssets } from '../../init/loadGameAssets.js';
 
+
 export const gamePrepareHandler = async ({ socket, payload }) => {
   try {
     let success = true;
@@ -48,8 +49,9 @@ export const gamePrepareHandler = async ({ socket, payload }) => {
 
     const shuffledCharacter = shuffle(gameAssets.characterType.characterTypes);
     inGameUsers.forEach((user, i) => {
-      user.setCharacterType(shuffledCharacter[i].type); // 캐릭터 유형 설정
-      user.setHp(shuffledCharacter[i].hp); // 캐릭터 hp 설정
+      const characterData = shuffledCharacter.pop();
+      user.setCharacterType(characterData.type); // 캐릭터 유형 설정
+      user.setHp(characterData.hp);
     });
 
     /**
@@ -60,9 +62,15 @@ export const gamePrepareHandler = async ({ socket, payload }) => {
     const roleTypeClone = gameAssets.roleTypes.roleTypes[inGameUsers.size];
     const shuffledRoleType = shuffle(roleTypeClone); // 역할 셔플
     inGameUsers.forEach((user, i) => {
-      user.setCharacterRoleType(shuffledRoleType[i]); // 역할 설정
-      if (user.characterData.roleType === 0) {
-        user.increaseHp(); // TARGET 역할의 경우 hp 추가
+      const roleType = shuffledRoleType.pop();
+      user.setCharacterRoleType(roleType.roleType); // 역할 설정
+      if (user.characterData.roleType === 1) {
+        const matchedCharacter = gameAssets.characterType.characterTypes.find(
+          (character) => character.type === user.characterData.roleType,
+        );
+        if (matchedCharacter) {
+          user.increaseHp(); // TARGET 역할의 경우 hp 추가
+        }
       }
     });
 
@@ -76,22 +84,18 @@ export const gamePrepareHandler = async ({ socket, payload }) => {
     shuffledCardsArr.forEach((card) => {
       deck.append(card); // 덱에 카드 추가
     });
+    room.setDeck(deck);
 
     // 카드 배분
     inGameUsers.forEach((user) => {
       // 1. 임시로 사람별 패 구성
-      const tmp = [];
-      for (let i = 0; i < user.characterData.hp; i++) {
-        const card = deck.removeFront();
-        tmp.push(card);
-        user.increaseHandCardsCount();
-      }
-      // 2. 한 번에 추가
-      const result = transformData(tmp);
-      user.characterData.handCards = result;
+      user.characterData.handCards = room.cardDraw(user.characterData.hp);
+      user.increaseHandCardsCountParam(user.characterData.hp);
+
+      
     });
 
-    room.setDeck(deck); // 덱을 방에 저장
+
 
     /**
      * 게임 준비 알림 전송
@@ -141,21 +145,7 @@ export const gamePrepareHandler = async ({ socket, payload }) => {
   }
 };
 
-/**
- * 카드 데이터를 변환
- * @param {Array} data - 카드 데이터 배열
- * @returns {Array} - { type, count } 형태로 변환된 데이터
- * [{ type: 'A', count: 2 }]
- */
-const transformData = (data) => {
-  const typeCountMap = new Map();
 
-  data.forEach((type) => {
-    typeCountMap.set(type, (typeCountMap.get(type) || 0) + 1);
-  });
-
-  return Array.from(typeCountMap, ([type, count]) => ({ type, count }));
-};
 
 export default gamePrepareHandler;
 
