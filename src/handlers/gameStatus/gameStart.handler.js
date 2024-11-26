@@ -1,7 +1,7 @@
 import HANDLER_IDS from '../../constants/handlerIds.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import { createFailCode } from '../../utils/response/createFailCode.js';
-import GameStartNotification from '../../utils/notification/gameStart.notification.js';
+import GameStartNotification from '../../utils/notification/gameStatus/gameStart.notification.js';
 import playerList from '../../model/player/playerList.class.js';
 import roomList from '../../model/room/roomList.class.js';
 //import { Packets } from '../../init/loadProtos.js';
