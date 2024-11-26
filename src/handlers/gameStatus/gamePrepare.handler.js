@@ -3,7 +3,7 @@ import HANDLER_IDS from '../../constants/handlerIds.js';
 import createFailCode from '../../utils/response/createFailCode.js';
 import roomList from '../../model/room/roomList.class.js';
 import playerList from '../../model/player/playerList.class.js';
-import gamePrepareNotification from '../../utils/notification/gamePrepare.notification.js';
+import gamePrepareNotification from '../../utils/notification/gameStatus/gamePrepare.notification.js';
 import loadCardInit from '../../utils/cardDeck.js';
 import { ROOM_STATE } from '../../constants/room.enum.js';
 import shuffle from 'lodash/shuffle.js';

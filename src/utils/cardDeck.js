@@ -1,6 +1,6 @@
 import CardData from '../model/card/cardData.class.js';
 import { getGameAssets } from '../init/loadGameAssets.js';
-import DoubleLinkedList from './doubleLinkedList.js';
+import DoubleLinkedList from '../model/doubleLinkedList/doubleLinkedList.js';
 import shuffle from 'lodash/shuffle.js';
 
 // 카드의 타입과 개수를 정의
