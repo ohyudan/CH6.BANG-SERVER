@@ -123,8 +123,8 @@ class Room extends Observable {
     {
       const drawCard=this._deck.removeFront();
       card.push(drawCard);
-      this._deck.append(drawCard);
     }
+    //console.log(transformData(card));
     return transformData(card);
   }
 }
