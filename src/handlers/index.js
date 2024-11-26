@@ -12,6 +12,7 @@ import roomJoinRamdomHandler from './room/roomJoinRamdomHandler.js';
 import gamePrepareHandler from './game/gamePrepare.handler.js';
 import gameStartHandler from './game/gameStart.handler.js';
 import positionUpdateHandler from './game/positionUpdate.handler.js';
+import useCardHandler from './cards/useCard.handler.js';
 
 const packetTypes = {
   [HANDLER_IDS.REGISTER_REQUEST]: {
@@ -53,6 +54,10 @@ const packetTypes = {
   [HANDLER_IDS.POSITION_UPDATE_REQUEST]: {
     packetType: positionUpdateHandler,
     protoType: 'C2SPositionUpdateRequest',
+  },
+  [HANDLER_IDS.USE_CARD_REQUEST]: {
+    packetType: useCardHandler,
+    protoType: 'C2SUseCardRequest',
   }
 };
 /**
