@@ -84,36 +84,18 @@ export const gamePrepareHandler = async ({ socket, payload }) => {
     shuffledCardsArr.forEach((card) => {
       deck.append(card); // 덱에 카드 추가
     });
-
+    room.setDeck(deck);
 
     // 카드 배분
     inGameUsers.forEach((user) => {
       // 1. 임시로 사람별 패 구성
-      const tmp = [];
-      let duplicate=false;
-      for (let i = 0; i < user.characterData.hp; i++) {
-        const card = deck.removeFront();
-        for(let i=0;i<tmp.length;i++)
-        {  
-          if(card.type===tmp[i].type)
-          {
-            tmp[i].count++;
-            duplicate=true;
-            break;
-          }
-        }
-        if(duplicate===false){
-          tmp.push(card);
-        }
-        duplicate=false;
-        user.increaseHandCardsCount();
-      }
-      // 2. 한 번에 추가
-      const result = transformData(tmp);
-      user.characterData.handCards = tmp;
+      user.characterData.handCards = room.cardDraw(user.characterData.hp);
+      user.increaseHandCardsCountParam(user.characterData.hp);
+
+      
     });
 
-    room.setDeck(deck); // 덱을 방에 저장
+
 
     /**
      * 게임 준비 알림 전송
@@ -163,21 +145,7 @@ export const gamePrepareHandler = async ({ socket, payload }) => {
   }
 };
 
-/**
- * 카드 데이터를 변환
- * @param {Array} data - 카드 데이터 배열
- * @returns {Array} - { type, count } 형태로 변환된 데이터
- * [{ type: 'A', count: 2 }]
- */
-const transformData = (data) => {
-  const typeCountMap = new Map();
 
-  data.forEach((type) => {
-    typeCountMap.set(type, (typeCountMap.get(type) || 0) + 1);
-  });
-  console.log(Array.from(typeCountMap, ([type, count]) => ({ type, count })));
-  return Array.from(typeCountMap, ([type, count]) => ({ type, count }));
-};
 
 export default gamePrepareHandler;
 

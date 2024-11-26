@@ -4,6 +4,11 @@ class CardData {
     this.type = type;
     this.count = count;
   }
+
+  cardDraw(socket){
+    //카드를 추가해주는 함수.
+    
+  }
 }
 
 export default CardData;
