@@ -117,6 +117,16 @@ class Room extends Observable {
   getDeck() {
     return this._deck;
   }
+  //카드를 뽑는 함수 앞에서 제거한만큼 뒤에 다시 append해준다.
+  cardDraw(count) {
+    const card = [];
+    for (let i = 0; i < count; i++) {
+      const drawCard = this._deck.removeFront();
+      card.push(drawCard);
+    }
+    //console.log(transformData(card));
+    return transformData(card);
+  }
 }
 
 export default Room;
