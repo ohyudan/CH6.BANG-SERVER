@@ -1,34 +1,57 @@
 import HANDLER_IDS from '../../constants/handlerIds.js';
 import { CARD_TYPE } from '../../constants/card.enum.js';
 import { createResponse } from '../../utils/response/createResponse.js';
-const useCardHandler = ({ socket, payload }) => {
+import cardTypeAction from './cardIndex.js';
+import createFailCode from '../../utils/response/createFailCode.js';
+import roomList from '../../model/room/roomList.class.js';
+
+const useCardHandler = async ({ socket, payload }) => {
   const { cardType, targetUserId } = payload;
 
-  const cardTypeAction = {
-    [CARD_TYPE.BBANG]: {},
-    [CARD_TYPE.BIG_BBANG]: { handler: undefined },
-    [CARD_TYPE.SHIELD]: {},
-    [CARD_TYPE.VACCINE]: {},
-    [CARD_TYPE.CALL_119]: {},
-    [CARD_TYPE.DEATH_MATCH]: {},
-    [CARD_TYPE.GUERRILLA]: {},
-    [CARD_TYPE.ABSORB]: {},
-    [CARD_TYPE.HALLUCINATION]: {},
-    [CARD_TYPE.FLEA_MARKET]: {},
-    [CARD_TYPE.MATURED_SAVINGS]: {},
-    [CARD_TYPE.WIN_LOTTERY]: {},
-    [CARD_TYPE.SNIPER_GUN]: {},
-    [CARD_TYPE.HAND_GUN]: {},
-    [CARD_TYPE.DESERT_EAGLE]: {},
-    [CARD_TYPE.AUTO_RIFLE]: {},
-    [CARD_TYPE.LASER_POINTER]: {},
-    [CARD_TYPE.RADAR]: {},
-    [CARD_TYPE.AUTO_SHIELD]: {},
-    [CARD_TYPE.STEALTH_SUIT]: {},
-    [CARD_TYPE.CONTAINMENT_UNIT]: {},
-    [CARD_TYPE.SATELLITE_TARGET]: {},
-    [CARD_TYPE.BOMB]: {},
-  };
+  const cardActionFunction = cardTypeAction[cardType].Action;
+  try {
+    if (!cardActionFunction) {
+      console.error('카드 타입이 없음');
+
+      const S2CUseCardResponse = {
+        success: success,
+        failCode: failCode,
+      };
+      const gamePacket = {
+        useCardResponse: S2CUseCardResponse,
+      };
+      const result = createResponse(
+        HANDLER_IDS.USE_CARD_RESPONSE,
+        socket.version,
+        socket.sequence,
+        gamePacket,
+      );
+      socket.write(result);
+    } else {
+      /**
+       *  false or true 반환할 것
+       *  failcode 마찬가지
+       */
+      const { success, failCode } = await cardActionFunction({ socket, cardType, targetUserId });
+
+      const S2CUseCardResponse = {
+        success: success,
+        failCode: failCode,
+      };
+      const gamePacket = {
+        useCardResponse: S2CUseCardResponse,
+      };
+      const result = createResponse(
+        HANDLER_IDS.USE_CARD_RESPONSE,
+        socket.version,
+        socket.sequence,
+        gamePacket,
+      );
+      socket.write(result);
+    }
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 export default useCardHandler;
