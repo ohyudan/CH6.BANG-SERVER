@@ -75,36 +75,9 @@ export const gamePrepareHandler = async ({ socket, payload }) => {
     // 카드 배분
     inGameUsers.forEach((user) => {
       // 1. 임시로 사람별 패 구성
-      const handCardArr = [];
-      for (let i = 0; i < user.characterData.hp; i++) {
-        const card = room.deck.removeFront();
-        const handCards = card.getcardData();
-        handCardArr.push(handCards);
-        user.increaseHandCardsCount();
-      }
-      // 2. 한 번에 추가
-      user.characterData.handCards = handCardArr;
+      user.characterData.handCards = room.cardDraw(user.characterData.hp);
+      user.increaseHandCardsCountParam(user.characterData.hp);
     });
-
-    // /**
-    //  * 카드 덱 생성 및 배분
-    //  * 셔플된 덱에서 사용자에게 hp만큼 카드를 배분
-    //  */
-    // const cardDeck = await loadCardInit();
-    // const shuffledCardsArr = shuffle(cardDeck); // 카드 덱
-    // const deck = new DoubleLinkedList();
-    // shuffledCardsArr.forEach((card) => {
-    //   deck.append(card); // 덱에 카드 추가
-    // });
-    // room.setDeck(deck);
-
-    // // 카드 배분
-    // inGameUsers.forEach((user) => {
-    //   // 1. 임시로 사람별 패 구성
-    //   user.characterData.handCards = room.cardDraw(user.characterData.hp);
-    //   user.increaseHandCardsCountParam(user.characterData.hp);
-
-    // });
 
     /**
      * 게임 준비 알림 전송

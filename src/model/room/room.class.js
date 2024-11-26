@@ -12,12 +12,12 @@ class Room extends Observable {
     this._maxUserNum = maxUserNum;
     this._state = new RoomStateType();
     this._playerList = new Map();
-    this.deck = loadCardInit();
+    this._deck = loadCardInit();
 
     let ownerPlayer = playerList.getPlayer(ownerId);
     this.addPlayer(ownerPlayer);
 
-    this.notifyObservers('roomCreate', this);
+    //this.notifyObservers('roomCreate', this);
   }
   get id() {
     return this._id;
@@ -122,10 +122,12 @@ class Room extends Observable {
     const card = [];
     for (let i = 0; i < count; i++) {
       const drawCard = this._deck.removeFront();
-      card.push(drawCard);
+      const handCards = drawCard.getcardData();
+      card.push(handCards);
     }
+    return card;
     //console.log(transformData(card));
-    return transformData(card);
+    //return transformData(card);
   }
 }
 

@@ -4,7 +4,7 @@ import DoubleLinkedList from './doubleLinkedList.js';
 import shuffle from 'lodash/shuffle.js';
 
 // 카드의 타입과 개수를 정의
-const loadCardInit = async () => {
+const loadCardInit = () => {
   let cardDeckArr = [];
 
   const gameAsset = getGameAssets();

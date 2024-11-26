@@ -6,7 +6,7 @@ const useCardHandler = ({ socket, payload }) => {
 
   const cardTypeAction = {
     [CARD_TYPE.BBANG]: {},
-    [CARD_TYPE.BIG_BBANG]: {},
+    [CARD_TYPE.BIG_BBANG]: { handler: undefined },
     [CARD_TYPE.SHIELD]: {},
     [CARD_TYPE.VACCINE]: {},
     [CARD_TYPE.CALL_119]: {},
