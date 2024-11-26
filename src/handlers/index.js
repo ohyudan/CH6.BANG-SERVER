@@ -12,8 +12,8 @@ import roomJoinRamdomHandler from './room/roomJoinRamdomHandler.js';
 import gamePrepareHandler from './game/gamePrepare.handler.js';
 import gameStartHandler from './game/gameStart.handler.js';
 import positionUpdateHandler from './game/positionUpdate.handler.js';
+import useCardHandler from './cards/useCard.handler.js';
 
-import { useCardHandler } from './cards/useCardHandler.js';
 const packetTypes = {
   [HANDLER_IDS.REGISTER_REQUEST]: {
     packetType: registerHandler,
