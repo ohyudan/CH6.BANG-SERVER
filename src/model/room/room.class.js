@@ -2,6 +2,7 @@ import { RoomStateType } from './room.status.js';
 import { ROOM_STATE } from '../../constants/room.enum.js';
 import playerList from '../player/playerList.class.js';
 import { Observable } from '../observer/observer.js';
+import { transformData } from '../../utils/duplicateCardCheck.js';
 
 class Room extends Observable {
   constructor(id, ownerId, name, maxUserNum) {
@@ -114,6 +115,17 @@ class Room extends Observable {
    */
   getDeck() {
     return this._deck;
+  }
+  //카드를 뽑는 함수 앞에서 제거한만큼 뒤에 다시 append해준다.
+  cardDraw(count){
+    const card=[];
+    for(let i=0;i<count;i++)
+    {
+      const drawCard=this._deck.removeFront();
+      card.push(drawCard);
+    }
+    //console.log(transformData(card));
+    return transformData(card);
   }
 }
 
