@@ -1,6 +1,6 @@
-import { PHASE_TYPE } from '../../constants/room.enum.js';
-import { createResponse } from '../response/createResponse.js';
-import HANDLER_IDS from '../../constants/handlerIds.js';
+import { PHASE_TYPE } from '../../../constants/room.enum.js';
+import { createResponse } from '../../response/createResponse.js';
+import HANDLER_IDS from '../../../constants/handlerIds.js';
 /**
  * 게임 시작 알림 생성
  * @param {Object} room - Room 객체
