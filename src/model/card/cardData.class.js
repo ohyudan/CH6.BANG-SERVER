@@ -1,8 +1,16 @@
 class CardData {
   constructor(type, count = 1) {
     //count 어따쓰는 지 잘 모르겠음
-    this.type = type;
-    this.count = count;
+    this._type = type;
+    this._count = count;
+  }
+
+  getcardData() {
+    const cardData = {
+      type: this._type,
+      count: this._count,
+    };
+    return cardData;
   }
 
   cardDraw(socket){
@@ -12,6 +20,11 @@ class CardData {
 }
 
 export default CardData;
+// message CardData {
+//   CardType type = 1;
+//   int32 count = 2;
+// }
+
 // enum CardType {
 //     NONE = 0;
 //     BBANG = 1; // 20장

@@ -5,11 +5,9 @@ import roomList from '../../model/room/roomList.class.js';
 import playerList from '../../model/player/playerList.class.js';
 import gamePrepareNotification from '../../utils/notification/gamePrepare.notification.js';
 import loadCardInit from '../../utils/cardDeck.js';
-import DoubleLinkedList from '../../utils/doubleLinkedList.js';
 import { ROOM_STATE } from '../../constants/room.enum.js';
 import shuffle from 'lodash/shuffle.js';
 import { getGameAssets } from '../../init/loadGameAssets.js';
-
 
 export const gamePrepareHandler = async ({ socket, payload }) => {
   try {
@@ -74,28 +72,12 @@ export const gamePrepareHandler = async ({ socket, payload }) => {
       }
     });
 
-    /**
-     * 카드 덱 생성 및 배분
-     * 셔플된 덱에서 사용자에게 hp만큼 카드를 배분
-     */
-    const cardDeck = await loadCardInit();
-    const shuffledCardsArr = shuffle(cardDeck); // 카드 덱
-    const deck = new DoubleLinkedList();
-    shuffledCardsArr.forEach((card) => {
-      deck.append(card); // 덱에 카드 추가
-    });
-    room.setDeck(deck);
-
     // 카드 배분
     inGameUsers.forEach((user) => {
       // 1. 임시로 사람별 패 구성
       user.characterData.handCards = room.cardDraw(user.characterData.hp);
       user.increaseHandCardsCountParam(user.characterData.hp);
-
-      
     });
-
-
 
     /**
      * 게임 준비 알림 전송
@@ -144,8 +126,6 @@ export const gamePrepareHandler = async ({ socket, payload }) => {
     socket.write(response);
   }
 };
-
-
 
 export default gamePrepareHandler;
 
