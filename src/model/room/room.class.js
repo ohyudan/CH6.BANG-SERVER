@@ -2,21 +2,22 @@ import { RoomStateType } from './room.status.js';
 import { ROOM_STATE } from '../../constants/room.enum.js';
 import playerList from '../player/playerList.class.js';
 import { Observable } from '../observer/observer.js';
-import { transformData } from '../../utils/duplicateCardCheck.js';
-
+import loadCardInit from '../../utils/cardDeck.js';
 class Room extends Observable {
   constructor(id, ownerId, name, maxUserNum) {
     super();
     this._id = id; // 방 아이디
-    this._ownerId = ownerId; //-> 클라이언트에서는 배열의 순서대로 확인해서 방장을 0번일 때만 줌??? 아닌데 ?
+    this._ownerId = ownerId;
     this._name = name;
     this._maxUserNum = maxUserNum;
     this._state = new RoomStateType();
     this._playerList = new Map();
-    this._deck = null; // 방의 카드 덱을 저장하는 속성
+    this._deck = loadCardInit();
 
     let ownerPlayer = playerList.getPlayer(ownerId);
     this.addPlayer(ownerPlayer);
+
+    //this.notifyObservers('roomCreate', this);
   }
   get id() {
     return this._id;
@@ -117,15 +118,16 @@ class Room extends Observable {
     return this._deck;
   }
   //카드를 뽑는 함수 앞에서 제거한만큼 뒤에 다시 append해준다.
-  cardDraw(count){
-    const card=[];
-    for(let i=0;i<count;i++)
-    {
-      const drawCard=this._deck.removeFront();
-      card.push(drawCard);
+  cardDraw(count) {
+    const card = [];
+    for (let i = 0; i < count; i++) {
+      const drawCard = this._deck.removeFront();
+      const handCards = drawCard.getcardData();
+      card.push(handCards);
     }
+    return card;
     //console.log(transformData(card));
-    return transformData(card);
+    //return transformData(card);
   }
 }
 

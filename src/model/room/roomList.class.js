@@ -3,6 +3,7 @@
 import { Observer } from '../observer/observer.js';
 import Room from './room.class.js';
 import { ROOM_STATE } from '../../constants/room.enum.js';
+
 class RoomList extends Observer {
   constructor() {
     super();
@@ -14,7 +15,7 @@ class RoomList extends Observer {
    */
   getRoomList() {
     // 요청 받을 떄마다 하지말고 방 생성 / 방 삭제 / 인원 변경 / 상태 변경 / 에만 새로고침할 수 있지않을까.
-    // -> 옵저버 패턴의 추가로 Update를 만들면 가능해졌음
+    // -> 옵저버 패턴의 추가로 갱신 받을 때마다 보내주기 가능
 
     const roomStateList = this.getWaitStateRoom();
     const rooms = [];
@@ -84,7 +85,7 @@ class RoomList extends Observer {
   }
   /**
    *
-   * @returns {[]} WAIT 상태
+   * @returns {[Room...]} WAIT 상태
    */
   getWaitStateRoom() {
     const result = [];
@@ -112,10 +113,10 @@ class RoomList extends Observer {
    * @param {String} event
    * @param {Room} data
    */
-  update(event, data) {
+  update(event, room) {
     switch (event) {
       case 'roomEmpty':
-        this.subRoomList(data);
+        this.subRoomList(room);
         break;
       default:
         break;

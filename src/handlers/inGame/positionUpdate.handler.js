@@ -6,8 +6,6 @@ import { createResponse } from '../../utils/response/createResponse.js';
 const positionUpdateHandler = ({ socket, payload }) => {
   const { x, y } = payload;
 
-  console.log(payload);
-
   const user = playerList.getPlayer(socket.id);
   const room = roomList.getRoom(user.currentRoomId);
 
