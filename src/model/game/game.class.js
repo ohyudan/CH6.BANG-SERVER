@@ -31,8 +31,10 @@ class Game {
         nextPhase = PHASE.END; // DAY 이후 바로 END로 전환
         break;
       case PHASE.END:
-        this.nextPhaseAt = null; // 게임 종료 시 타이머 제거
-        return false; // 더 이상 업데이트할 페이즈 없음
+        // this.nextPhaseAt = null; // 게임 종료 시 타이머 제거
+        // return false; // 더 이상 업데이트할 페이즈 없음
+        nextPhase = PHASE.DAY; // END 이후 DAY로 재전환
+        break;
       default:
         return false; // 유효하지 않은 Phase
     }
