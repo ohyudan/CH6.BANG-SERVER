@@ -101,7 +101,12 @@ class Player {
   addHandCard(card) {
     this.characterData.handCards.push(card);
   }
-
+  //캐릭터의 손패(카드)가 배열로 들어올때 추가
+  addHandCardArr(card){
+    console.log(card);
+    console.log(this.characterData.handCards.concat(card));
+    this.characterData.handCards=this.characterData.handCards.concat(card);
+  }
   // 캐릭터의 손패(카드) 제거
   removeHandCard(usingCard) {
     this.characterData.handCards = this.characterData.handCards.filter(

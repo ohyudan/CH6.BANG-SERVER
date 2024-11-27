@@ -2,7 +2,7 @@
   "cardDeck": [
     { "type": 0, "count": 0 },
     { "type": 1, "count": 0 },
-    { "type": 2, "count": 20 },
+    { "type": 2, "count": 0 },
     { "type": 3, "count": 0 },
     { "type": 4, "count": 0 },
     { "type": 5, "count": 0 },
@@ -12,17 +12,17 @@
     { "type": 9, "count": 0 },
     { "type": 10, "count": 0 },
     { "type": 11, "count": 0 },
-    { "type": 12, "count": 0 },
-    { "type": 13, "count": 0 },
-    { "type": 14, "count": 0 },
+    { "type": 12, "count": 20 },
+    { "type": 13, "count": 1 },
+    { "type": 14, "count": 2 },
     { "type": 15, "count": 0 },
     { "type": 16, "count": 0 },
     { "type": 17, "count": 0 },
     { "type": 18, "count": 0 },
-    { "type": 19, "count": 0 },
-    { "type": 20, "count": 0 },
-    { "type": 21, "count": 0 },
-    { "type": 22, "count": 0 },
-    { "type": 23, "count": 0 }
+    { "type": 19, "count": 2 },
+    { "type": 20, "count": 2 },
+    { "type": 21, "count": 3 },
+    { "type": 22, "count": 1 },
+    { "type": 23, "count": 1 }
   ]
 }

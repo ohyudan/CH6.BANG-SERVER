@@ -1,4 +1,5 @@
 import bigBbang from '../../utils/card/bigBbang.js';
+import lotto from '../../utils/card/lotto.js';
 import { CARD_TYPE } from '../../constants/card.enum.js';
 const cardTypeAction = {
   [CARD_TYPE.BBANG]: {},
@@ -12,7 +13,7 @@ const cardTypeAction = {
   [CARD_TYPE.HALLUCINATION]: {},
   [CARD_TYPE.FLEA_MARKET]: {},
   [CARD_TYPE.MATURED_SAVINGS]: {},
-  [CARD_TYPE.WIN_LOTTERY]: {},
+  [CARD_TYPE.WIN_LOTTERY]: {Action:lotto},
   [CARD_TYPE.SNIPER_GUN]: {},
   [CARD_TYPE.HAND_GUN]: {},
   [CARD_TYPE.DESERT_EAGLE]: {},
