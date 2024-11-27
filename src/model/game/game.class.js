@@ -1,5 +1,7 @@
 import { PhaseType, PHASE } from './game.status.js';
 import { RoomStateType, STATE } from '../room/room.status.js';
+import phaseUpdateNotification from '../../utils/notification/phaseUpdate.notification.js';
+import { getGameAssets } from '../../init/loadGameAssets.js';
 
 class Game {
   constructor(id, roomId, users) {
@@ -31,17 +33,44 @@ class Game {
         nextPhase = PHASE.END; // DAY 이후 바로 END로 전환
         break;
       case PHASE.END:
-        // this.nextPhaseAt = null; // 게임 종료 시 타이머 제거
-        // return false; // 더 이상 업데이트할 페이즈 없음
         nextPhase = PHASE.DAY; // END 이후 DAY로 재전환
         break;
       default:
         return false; // 유효하지 않은 Phase
     }
 
+    let changedPositions = new Map();
+    if (nextPhase === PHASE.END) {
+      // 현재 플레이어 캐릭터의 위치
+      // users로 플레이어 class객체의 함수를 쓸 수 있는지 판단
+      for (i = 0; i < this.users.length; i++) {
+        let position = { id: this.users[i].id, x: this.users[i].getX(), y: this.users[i].getY() };
+        changedPositions.push(position);
+      }
+    } else {
+      // 새로 지정하는 포지션
+      const gameAssets = getGameAssets();
+
+      const characterPositions = gameAssets.characterPositionData.position;
+      // 위치 정보 셔플링 및 유저 위치 설정
+      const selectedPositions = new Set();
+      while (selectedPositions.size < this.users.length) {
+        const randId = Math.floor(Math.random() * characterPositions.length);
+        selectedPositions.add(characterPositions[randId]);
+      }
+
+      const posArr = [...selectedPositions];
+      for (i = 0; i < this.users.length; i++) {
+        let position = { id: this.users[i].id, x: posArr[i].x, y: posArr[y] };
+        changedPositions.push(position);
+      }
+    }
+
     // Phase 변경 및 다음 상태 전환 시간 설정
+    // 이후 notification
     if (this.phaseManager.setPhase(nextPhase)) {
       this.nextPhaseAt = nextPhase === PHASE.END ? Date.now() + 30000 : Date.now() + 180000; // END 페이즈는 30초 지속, 나머지는 3분
+      phaseUpdateNotification(user, nextPhase, this.nextPhaseAt, changedPositions);
       return true;
     }
 
