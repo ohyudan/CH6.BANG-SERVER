@@ -1,30 +1,13 @@
 class CardData {
   constructor(type, count = 1) {
     //count 어따쓰는 지 잘 모르겠음
-    this._type = type;
-    this._count = count;
+    this.type = type;
+    this.count = count;
   }
 
-  getcardData() {
-    const cardData = {
-      type: this._type,
-      count: this._count,
-    };
-    return cardData;
-  }
-
-  cardDraw(socket){
-    //카드를 추가해주는 함수.
-    
-  }
 }
 
 export default CardData;
-// message CardData {
-//   CardType type = 1;
-//   int32 count = 2;
-// }
-
 // enum CardType {
 //     NONE = 0;
 //     BBANG = 1; // 20장
