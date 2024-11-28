@@ -89,6 +89,7 @@ class Room extends ObservableObserver {
     }
     this._playerList.delete(player.id);
     player.removeObserver(this);
+    player.currentRoomId = null;
     if (this._playerList.size === 0) {
       this.notifyObservers('roomEmpty', this);
     }
