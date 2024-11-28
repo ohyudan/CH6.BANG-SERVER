@@ -29,7 +29,7 @@ const getAllProtoFiles = (protoFolder, fileList = []) => {
 const protoFiles = getAllProtoFiles(protoFolder);
 
 const protoMessages = {};
-export const Packets = {}; // Packets 객체를 통해 Protobuf에서 정의된 enum 값을 가져옴
+//export const Packets = {}; // Packets 객체를 통해 Protobuf에서 정의된 enum 값을 가져옴
 
 /**
  * Protobuf 파일 로드 및 protoMessages와 Packets 객체 생성
@@ -50,16 +50,18 @@ export const loadProtos = async () => {
 
       for (const [protoType, typeName] of Object.entries(types)) {
         try {
-          const type = root.lookupType(typeName);
-          protoMessages[packageName][protoType] = type;
+          protoMessages[packageName][protoType] = root.lookupType(typeName);
+          // const type = root.lookupType(typeName);
+          // protoMessages[packageName][protoType] = type;
         } catch (error) {
-          const enumType = root.lookupEnum(typeName);
-          protoMessages[packageName][protoType] = enumType;
+          protoMessages[packageName][protoType] = root.lookupEnum(typeName);
+          // const enumType = root.lookupEnum(typeName);
+          // protoMessages[packageName][protoType] = enumType;
 
           // Packets 객체에 열거형(enum) 값 등록
-          if (!Packets[protoType]) {
-            Packets[protoType] = enumType.values;
-          }
+          // if (!Packets[protoType]) {
+          //   Packets[protoType] = enumType.values;
+          // }
         }
       }
     }
