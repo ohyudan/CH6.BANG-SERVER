@@ -2,6 +2,7 @@ import { PhaseType, PHASE } from './game.status.js';
 import { RoomStateType, STATE } from '../room/room.status.js';
 import phaseUpdateNotification from '../../utils/notification/phaseUpdate.notification.js';
 import { getGameAssets } from '../../init/loadGameAssets.js';
+import userUpdateNotification from '../../utils/notification/userDataUpdate.notification.js';
 
 class Game {
   constructor(id, roomId, users) {
@@ -48,7 +49,7 @@ class Game {
         changedPositions.push(position);
       }
     } else {
-      // 새로 지정하는 포지션
+      // 캐릭터 위치 재조정
       const gameAssets = getGameAssets();
 
       const characterPositions = gameAssets.characterPositionData.position;
@@ -64,7 +65,20 @@ class Game {
         let position = { id: this.users[i].id, x: posArr[i].x, y: posArr[y] };
         changedPositions.push(position);
       }
+
+      // 낮 시작시 자신의 핸드가 자신의 체력 이상이면 랜덤으로 체력 수치만큼 카드를 버리도록 조정
+
+
+      // 자신의 디버프를 체크 한 후 해당 디버프 적용
+
+      // 카드를 2장씩 드로우
+
+      // 빵야 횟수 초기화
+
+      // 캐릭터 정보 업데이트
+      userUpdateNotification()
     }
+
 
     // Phase 변경 및 다음 상태 전환 시간 설정
     // 이후 notification
