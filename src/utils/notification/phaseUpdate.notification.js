@@ -1,6 +1,5 @@
-import HANDLER_IDS from '../../constants/handlerIds';
-import { PHASE_TYPE } from '../../constants/room.enum';
-import Game from '../../model/game/game.class';
+import HANDLER_IDS from '../../constants/handlerIds.js';
+import { createResponse } from '../response/createResponse.js';
 
 /**
  * 페이즈 업데이트 알림 데이터를 생성
