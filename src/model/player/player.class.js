@@ -1,5 +1,6 @@
 import CharacterData from '../character/characterData.class.js';
 import Position from './position.class.js';
+import roomList from '../room/roomList.class.js';
 
 class Player {
   constructor(id, nickname, socket) {
@@ -124,7 +125,7 @@ class Player {
     this.characterData.handCardsCount += 1;
   }
   // 손패 매개변수 만큼 카드 수 증가
-  increaseHandCardsCountParam(count){
+  increaseHandCardsCountParam(count) {
     this.characterData.handCardsCount += count;
   }
   // 손패 카드 수 감소
@@ -155,6 +156,46 @@ class Player {
         handCardsCount: this.characterData.handCardsCount,
       },
     };
+  }
+  getAllUsersData() {
+    const room = roomList.getRoom(this._currentRoomId);
+    const inGameUsers = Array.from(room.getAllPlayers().values());
+
+    return inGameUsers.map((user) => {
+      if (user.id === this._id) {
+        return {
+          id: user.id,
+          nickname: user.nickname,
+          character: {
+            characterType: user.characterData.characterType,
+            roleType: user.characterData.roleType,
+            hp: user.characterData.hp,
+            weapon: user.characterData.weapon,
+            stateInfo: user.characterData.stateInfo,
+            equips: user.characterData.equips,
+            debuffs: user.characterData.debuffs,
+            handCards: user.characterData.handCards,
+            bbangCount: user.characterData.bbangCount,
+            handCardsCount: user.characterData.handCardsCount,
+          },
+        };
+      } else {
+        return {
+          id: user.id,
+          nickname: user.nickname,
+          character: {
+            characterType: user.characterData.characterType,
+            hp: user.characterData.hp,
+            weapon: user.characterData.weapon,
+            stateInfo: user.characterData.stateInfo,
+            equips: user.characterData.equips,
+            debuffs: user.characterData.debuffs,
+            bbangCount: user.characterData.bbangCount,
+            handCardsCount: user.characterData.handCardsCount,
+          },
+        };
+      }
+    });
   }
 }
 export default Player;
