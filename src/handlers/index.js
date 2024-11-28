@@ -9,11 +9,10 @@ import roomCreateHander from './room/roomCreateHandler.js';
 import roomJoinHandler from './room/roomJoinHandler.js';
 import roomLeaveHandler from './room/roomLeaveHandler.js';
 import roomJoinRamdomHandler from './room/roomJoinRamdomHandler.js';
-import gamePrepareHandler from './game/gamePrepare.handler.js';
-import gameStartHandler from './game/gameStart.handler.js';
-import positionUpdateHandler from './game/positionUpdate.handler.js';
-import useCardHandler from './cards/useCard.handler.js';
-
+import gamePrepareHandler from './gameStatus/gamePrepare.handler.js';
+import gameStartHandler from './gameStatus/gameStart.handler.js';
+import positionUpdateHandler from './inGame/positionUpdate.handler.js';
+import useCardHandler from './inGame/useCardHandler.js';
 const packetTypes = {
   [HANDLER_IDS.REGISTER_REQUEST]: {
     packetType: registerHandler,
@@ -58,7 +57,11 @@ const packetTypes = {
   [HANDLER_IDS.POSITION_UPDATE_REQUEST]: {
     packetType: positionUpdateHandler,
     protoType: 'C2SPositionUpdateRequest',
-  }
+  },
+  [HANDLER_IDS.USE_CARD_REQUEST]: {
+    packetType: useCardHandler,
+    protoType: 'C2SUseCardRequest',
+  },
 };
 /**
  * 패킷타입에 맞는 핸들러로 분배해주는 함수

@@ -1,8 +1,12 @@
 import CharacterData from '../character/characterData.class.js';
+import roomList from '../room/roomList.class.js';
 import Position from './position.class.js';
+import { Observable } from '../observer/observer.js';
+import CardData from '../card/cardData.class.js';
 
-class Player {
+class Player extends Observable {
   constructor(id, nickname, socket) {
+    super();
     this._id = id;
     this._nickname = nickname;
     this.socket = socket;
@@ -20,6 +24,9 @@ class Player {
   }
   get currentRoomId() {
     return this._currentRoomId;
+  }
+  get nickname() {
+    return this._nickname;
   }
   // 위치 업데이트
   updatePosition(x, y) {
@@ -98,15 +105,37 @@ class Player {
   }
 
   // 캐릭터의 손패(카드) 추가
-  addHandCard(card) {
-    this.characterData.handCards.push(card);
+  /**
+   *
+   * @param {Card} card
+   *
+   */
+  addHandCard() {
+    const card = this.notifyObservers('addHandCard', this);
+    if (!(card == null)) {
+      this.characterData.handCards.push(card);
+      return true;
+    } else {
+      return false;
+    }
   }
 
+  /**
+   *
+   * @param {CardType} CardType CardType
+   *
+   * 덱으로 반환 필요
+   */
   // 캐릭터의 손패(카드) 제거
-  removeHandCard(usingCard) {
-    this.characterData.handCards = this.characterData.handCards.filter(
-      (card) => card !== usingCard,
-    );
+  removeHandCard(cardType) {
+    const { result, index } = this.characterData.getCardsearch(cardType);
+    if (!(result == null)) {
+      this.notifyObservers('removeHandCard', result);
+
+      this.characterData.handCards.splice(index, 1);
+      return true;
+    }
+    return false;
   }
 
   // 빵야 사용 횟수 증가
@@ -123,7 +152,10 @@ class Player {
   increaseHandCardsCount() {
     this.characterData.handCardsCount += 1;
   }
-
+  // 손패 매개변수 만큼 카드 수 증가
+  increaseHandCardsCountParam(count) {
+    this.characterData.handCardsCount += count;
+  }
   // 손패 카드 수 감소
   decreaseHandCardsCount() {
     this.characterData.handCardsCount -= 1;
@@ -147,11 +179,55 @@ class Player {
         },
         equips: this.characterData.equips,
         debuffs: this.characterData.debuffs,
-        handCards: this.characterData.handCards,
+        handCards: this.characterData.getAllhandCard(),
         bbangCount: this.characterData.bbangCount,
         handCardsCount: this.characterData.handCardsCount,
       },
     };
+  }
+  getAllUsersData() {
+    const room = roomList.getRoom(this._currentRoomId);
+    const inGameUsers = Array.from(room.getAllPlayers().values());
+
+    return inGameUsers.map((user) => {
+      if (user.id === this._id) {
+        return {
+          id: user.id,
+          nickname: user.nickname,
+          character: {
+            characterType: user.characterData.characterType,
+            roleType: user.characterData.roleType,
+            hp: user.characterData.hp,
+            weapon: user.characterData.weapon,
+            stateInfo: user.characterData.stateInfo,
+            equips: user.characterData.equips,
+            debuffs: user.characterData.debuffs,
+            handCards: user.characterData.handCards,
+            bbangCount: user.characterData.bbangCount,
+            handCardsCount: user.characterData.handCardsCount,
+          },
+        };
+      } else {
+        return {
+          id: user.id,
+          nickname: user.nickname,
+          character: {
+            characterType: user.characterData.characterType,
+            hp: user.characterData.hp,
+            weapon: user.characterData.weapon,
+            stateInfo: user.characterData.stateInfo,
+            equips: user.characterData.equips,
+            debuffs: user.characterData.debuffs,
+            bbangCount: user.characterData.bbangCount,
+            handCardsCount: user.characterData.handCardsCount,
+          },
+        };
+      }
+    });
+  }
+
+  notifyObservers(event, data) {
+    return this.observers.map((observer) => observer.update(event, data))[0];
   }
 }
 export default Player;
