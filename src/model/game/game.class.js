@@ -41,7 +41,7 @@ class Game {
         return false; // 유효하지 않은 Phase
     }
 
-    const room = roomList.getRoom(roomId);
+    const room = roomList.getRoom(this.roomId);
     const playerList = room.getAllPlayers();
 
     let changedPositions = new Map();
@@ -78,16 +78,59 @@ class Game {
               Math.floor(Math.random() * playerList[i].handCards.length),
               1,
             )[0];
-            console.log('id', playerList[i].id, '버려진 카드', DestroyCards);
+            // console.log('id', playerList[i].id, '버려진 카드', DestroyCards);
           }
         }
       }
 
-      // 자신의 디버프를 체크 한 후 해당 디버프 적용
+      // 플레이어의 디버프를 체크 한 후 해당 디버프 적용
+      for (i = 0; i < playerList.length; i++) {
+        // 감옥
+        if (playerList[i].characterData.debuffs === CARD_TYPE.CONTAINMENT_UNIT) {
+          const random = Math.random() * 100;
+          if (random < 75) {
+            playerList[i].setCharacterStateType(CHARACTER_STATE_TYPE.CONTAINED);
+          } else {
+            playerList[i].setCharacterStateType(CHARACTER_STATE_TYPE.NONE_CHARACTER_STATE);
+            playerList[i].removeDebuff(CARD_TYPE.CONTAINMENT_UNIT);
+          }
+          // 위성 폭탄
+        } else if (playerList[i].characterData.debuffs === CARD_TYPE.SATELLITE_TARGET) {
+          const random = Math.random() * 100;
+          if (random < 3) {
+            playerList[i].decreaseHp();
+            playerList[i].decreaseHp();
+            playerList[i].decreaseHp();
+            playerList[i].removeDebuff(CARD_TYPE.SATELLITE_TARGET);
+          } else {
+            playerList[i].removeDebuff(CARD_TYPE.SATELLITE_TARGET);
+            if (i !== playerList.length - 1) {
+              playerList[i + 1].addDebuff(CARD_TYPE.SATELLITE_TARGET);
+            } else {
+              playerList[0].addDebuff(CARD_TYPE.SATELLITE_TARGET);
+            }
+          }
+        }
+      }
 
       // 카드를 2장씩 드로우
+      for (i = 0; i < playerList.length; i++) {
+        playerList[i].characterData.handCards.push(room.cardDraw(2));
+      }
 
       // 빵야 횟수 초기화
+      for (i = 0; i < playerList.length; i++) {
+        if (
+          playerList[i].characterData.characterType === CHARACTER_TYPE.RED ||
+          playerList[i].characterData.weapon === CARD_TYPE.AUTO_RIFLE
+        ) {
+          playerList[i].setBbangCount(99);
+        } else if (playerList[i].characterData.weapon === CARD_TYPE.HAND_GUN) {
+          playerList[i].setBbangCount(2);
+        } else {
+          playerList[i].setBbangCount(1);
+        }
+      }
 
       // 캐릭터 정보 업데이트
       userUpdateNotification();
@@ -104,5 +147,8 @@ class Game {
     return false; // Phase 변경 실패 시 false 반환
   }
 }
+import { CHARACTER_STATE_TYPE, CHARACTER_TYPE } from '../../constants/user.enum.js';
+import CardData from '../card/cardData.class.js';
+import { CARD_TYPE } from '../../constants/card.enum.js';
 
 export default Game;
