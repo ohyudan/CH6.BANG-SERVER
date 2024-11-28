@@ -1,11 +1,13 @@
 import { RoomStateType } from './room.status.js';
-import { ROOM_STATE } from '../../constants/room.enum.js';
+import { PHASE_TYPE, ROOM_STATE } from '../../constants/room.enum.js';
 import playerList from '../player/playerList.class.js';
 //import { Observable } from '../observer/observer.js';
 import { ObservableObserver } from '../observer/observer.js';
 import loadCardInit from '../../utils/cardDeck.js';
 import random from 'lodash/random.js';
 import CardData from '../../model/card/cardData.class.js';
+import Phase from './phase/phase.class.js';
+
 class Room extends ObservableObserver {
   constructor(id, ownerId, name, maxUserNum) {
     super();
@@ -16,6 +18,7 @@ class Room extends ObservableObserver {
     this._state = new RoomStateType();
     this._playerList = new Map();
     this._deck = loadCardInit();
+    this._phase = new Phase();
 
     let ownerPlayer = playerList.getPlayer(ownerId);
     this.addPlayer(ownerPlayer);
@@ -136,6 +139,21 @@ class Room extends ObservableObserver {
     const randomNumber = random(0, size);
     this._deck.insert(card, randomNumber);
     return null;
+  }
+
+  /**
+   * 페이즈 지정하기   *
+   * @param {number} enum_nubmer
+   * @returns 결과
+   */
+  startPhase() {
+    this._phase.startPhase();
+    setTimeout(() => this.changePhase(), 3000);
+  }
+
+  changePhase() {
+    this._phase.updatePhase(this._playerList);
+    setTimeout(() => this.changePhase(), this._phase.nextPhaseAt - Date.now());
   }
 
   update(event, data) {
