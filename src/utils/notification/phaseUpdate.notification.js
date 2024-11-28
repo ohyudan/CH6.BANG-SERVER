@@ -9,7 +9,7 @@ import Game from '../../model/game/game.class';
  * @param {Number} nextPhaseAt 해당 페이즈 지속시간
  * @param {Array} characterPositions 지정한 캐릭터 위치 정보
  */
-export const phaseUpdateNotification = (users, phaseType, nextPhaseAt, characterPositions) => {
+const phaseUpdateNotification = (users, phaseType, nextPhaseAt, characterPositions) => {
   users.forEach((values, key) => {
     const S2CPhaseUpdateNotification = {
       phaseType: phaseType,
