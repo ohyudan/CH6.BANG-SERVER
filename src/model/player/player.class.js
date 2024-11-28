@@ -97,6 +97,11 @@ class Player {
     this.characterData.debuffs.push(debuff);
   }
 
+  // 캐릭터의 디버프 제거 (phaseBranch에서 추가함)
+  removeDebuff(debuff) {
+    this.characterData.debuffs = this.characterData.debuffs.filter((buff) => buff !== debuff);
+  }
+
   // 캐릭터의 손패(카드) 추가
   addHandCard(card) {
     this.characterData.handCards.push(card);
@@ -112,6 +117,11 @@ class Player {
   // 빵야 사용 횟수 증가
   increaseBbangCount() {
     this.characterData.bbangCount += 1;
+  }
+
+  // 빵야 사용 횟수 지정 (phaseBranch에서 추가함)
+  setBbangCount(count) {
+    this.characterData.bbangCount = count;
   }
 
   // 빵야 사용 횟수 감소
