@@ -56,7 +56,7 @@ class RoomList extends Observer {
   getNextAvailableRoomId() {
     const roomIds = Array.from(this._roomMap.keys());
     roomIds.sort((a, b) => a - b);
-    let nextId = 0;
+    let nextId = 1;
     for (let id of roomIds) {
       if (id !== nextId) {
         return nextId;
