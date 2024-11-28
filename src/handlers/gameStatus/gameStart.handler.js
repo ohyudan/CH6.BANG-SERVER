@@ -6,7 +6,7 @@ import playerList from '../../model/player/playerList.class.js';
 import roomList from '../../model/room/roomList.class.js';
 //import { Packets } from '../../init/loadProtos.js';
 import { getGameAssets } from '../../init/loadGameAssets.js';
-import { ROOM_STATE } from '../../constants/room.enum.js';
+import { PHASE_TYPE, ROOM_STATE } from '../../constants/room.enum.js';
 const gameStartHandler = async ({ socket }) => {
   try {
     let success = true;
@@ -46,6 +46,8 @@ const gameStartHandler = async ({ socket }) => {
       posArr[i].id = user.id; // 위치 ID에 유저 ID 설정
       user.updatePosition(posArr[i].x, posArr[i].y); // 유저 좌표 업데이트
     });
+    
+    room.startPhase() // phase 시작
 
     // 게임 시작 알림 전송
     GameStartNotification(room, posArr);
