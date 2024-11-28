@@ -34,8 +34,6 @@ const bigBbangNotification = ({ socket, cardType, targetUserId }) => {
         );
         player.socket.write(result);
         player.decreaseHp();
-      } else {
-        useCardPlayer.removeHandCard(CARD_TYPE.BIG_BBANG);
       }
       userMakeData.push(player.makeRawObject());
     });
@@ -55,6 +53,7 @@ const bigBbangNotification = ({ socket, cardType, targetUserId }) => {
     });
     success = true;
     failCode = createFailCode(0);
+    useCardPlayer.removeHandCard(CARD_TYPE.BIG_BBANG);
   } catch (err) {
     success = false;
     failCode = createFailCode(1);
