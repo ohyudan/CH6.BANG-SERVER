@@ -7,6 +7,7 @@ import HANDLER_IDS from '../../../constants/handlerIds.js';
 
 // 실드 검사하고 있지 않음
 const bigBbang = ({ socket, cardType, targetUserId }) => {
+  console.log(cardType, targetUserId);
   const useCardPlayer = playerList.getPlayer(socket.id);
   const room = roomList.getRoom(useCardPlayer.currentRoomId);
   const roomInJoinPlayerList = room.getAllPlayers();
@@ -18,7 +19,7 @@ const bigBbang = ({ socket, cardType, targetUserId }) => {
   const S2CUseCardNotification = {
     cardType: cardType,
     userId: socket.id,
-    targetUserId: 0,
+    targetUserId: targetUserId.low,
   };
 
   try {

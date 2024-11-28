@@ -2,7 +2,7 @@
   "cardDeck": [
     { "type": 0, "count": 0 },
     { "type": 1, "count": 0 },
-    { "type": 2, "count": 20 },
+    { "type": 2, "count": 60 },
     { "type": 3, "count": 0 },
     { "type": 4, "count": 0 },
     { "type": 5, "count": 0 },
@@ -11,7 +11,7 @@
     { "type": 8, "count": 0 },
     { "type": 9, "count": 0 },
     { "type": 10, "count": 0 },
-    { "type": 11, "count": 40 },
+    { "type": 11, "count": 0 },
     { "type": 12, "count": 0 },
     { "type": 13, "count": 0 },
     { "type": 14, "count": 0 },
