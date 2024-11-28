@@ -21,5 +21,23 @@ class Observable {
     this.observers.forEach((observer) => observer.update(event, data));
   }
 }
+class ObservableObserver extends Observer {
+  constructor() {
+    super();
+    this.observers = [];
+  }
 
-export { Observer, Observable };
+  addObserver(observer) {
+    this.observers.push(observer);
+  }
+
+  removeObserver(observer) {
+    this.observers = this.observers.filter((obs) => obs !== observer);
+  }
+
+  notifyObservers(event, data) {
+    this.observers.forEach((observer) => observer.update(event, data));
+    //this.observers.map((observer) => observer.update(event, data));
+  }
+}
+export { Observer, Observable, ObservableObserver };
