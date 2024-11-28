@@ -5,7 +5,7 @@ class CardData {
     this._count = count;
   }
 
-  getcardData() {
+  getCardData() {
     const cardData = {
       type: this._type,
       count: this._count,
@@ -13,9 +13,8 @@ class CardData {
     return cardData;
   }
 
-  cardDraw(socket){
-    //카드를 추가해주는 함수.
-    
+  get type() {
+    return this._type;
   }
 }
 
