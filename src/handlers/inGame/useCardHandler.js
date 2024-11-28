@@ -32,20 +32,24 @@ const useCardHandler = async ({ socket, payload }) => {
        *  false or true 반환할 것
        *  failcode 마찬가지
        */
-      const { success, failCode } = await cardActionFunction({ socket, cardType, targetUserId });
+      const { success, failCode } = await cardActionFunction({
+        socket,
+        cardType,
+        targetUserId,
+      });
 
-      const S2CUseCardResponse = {
+      const useCardResponse = {
         success: success,
         failCode: failCode,
       };
-      const gamePacket = {
-        useCardResponse: S2CUseCardResponse,
-      };
+      // const gamePacket = {
+      //   useCardResponse: S2CUseCardResponse,
+      // };
       const result = createResponse(
         HANDLER_IDS.USE_CARD_RESPONSE,
         socket.version,
         socket.sequence,
-        gamePacket,
+        useCardResponse,
       );
       socket.write(result);
     }

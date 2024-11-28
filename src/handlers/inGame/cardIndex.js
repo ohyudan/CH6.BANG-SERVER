@@ -1,4 +1,4 @@
-import bigBbang from '../../utils/card/bigBbang.js';
+import bigBbang from '../../utils/notification/card/bigBbang.notification.js';
 import { CARD_TYPE } from '../../constants/card.enum.js';
 const cardTypeAction = {
   [CARD_TYPE.BBANG]: {},
