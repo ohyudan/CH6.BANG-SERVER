@@ -4,6 +4,8 @@ import phaseUpdateNotification from '../../utils/notification/phaseUpdate.notifi
 import { getGameAssets } from '../../init/loadGameAssets.js';
 import userUpdateNotification from '../../utils/notification/userDataUpdate.notification.js';
 import roomList from '../room/roomList.class.js';
+import { CHARACTER_STATE_TYPE, CHARACTER_TYPE } from '../../constants/user.enum.js';
+import { CARD_TYPE } from '../../constants/card.enum.js';
 
 class Game {
   constructor(id, roomId, users) {
@@ -115,7 +117,8 @@ class Game {
 
       // 카드를 2장씩 드로우
       for (i = 0; i < playerList.length; i++) {
-        playerList[i].characterData.handCards.push(room.cardDraw(2));
+        playerList[i].characterData.handCards.push(room.cardDraw(playerList[i]));
+        playerList[i].characterData.handCards.push(room.cardDraw(playerList[i]));
       }
 
       // 빵야 횟수 초기화
@@ -133,22 +136,19 @@ class Game {
       }
 
       // 캐릭터 정보 업데이트
-      userUpdateNotification();
+      userUpdateNotification(playerList);
     }
 
     // Phase 변경 및 다음 상태 전환 시간 설정
     // 이후 notification
     if (this.phaseManager.setPhase(nextPhase)) {
       this.nextPhaseAt = nextPhase === PHASE.END ? Date.now() + 30000 : Date.now() + 180000; // END 페이즈는 30초 지속, 나머지는 3분
-      phaseUpdateNotification(user, nextPhase, this.nextPhaseAt, changedPositions);
+      phaseUpdateNotification(playerList, nextPhase, this.nextPhaseAt, changedPositions);
       return true;
     }
 
     return false; // Phase 변경 실패 시 false 반환
   }
 }
-import { CHARACTER_STATE_TYPE, CHARACTER_TYPE } from '../../constants/user.enum.js';
-import CardData from '../card/cardData.class.js';
-import { CARD_TYPE } from '../../constants/card.enum.js';
 
 export default Game;

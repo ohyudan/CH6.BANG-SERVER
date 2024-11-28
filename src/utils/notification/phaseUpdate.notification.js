@@ -4,13 +4,13 @@ import Game from '../../model/game/game.class';
 
 /**
  * 페이즈 업데이트 알림 데이터를 생성
- * @param {Array} users 유저 리스트
+ * @param {Array} players 유저 리스트
  * @param {Number} phaseType 변경될 페이즈 타입
  * @param {Number} nextPhaseAt 해당 페이즈 지속시간
  * @param {Array} characterPositions 지정한 캐릭터 위치 정보
  */
-const phaseUpdateNotification = (users, phaseType, nextPhaseAt, characterPositions) => {
-  users.forEach((values, key) => {
+const phaseUpdateNotification = (players, phaseType, nextPhaseAt, characterPositions) => {
+  players.forEach((values, key) => {
     const S2CPhaseUpdateNotification = {
       phaseType: phaseType,
       nextPhaseAt: nextPhaseAt,

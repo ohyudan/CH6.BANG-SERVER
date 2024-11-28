@@ -1,7 +1,30 @@
+import HANDLER_IDS from '../../constants/handlerIds';
+
+/**
+ * 게임 시작 알림 생성
+ * @param {Array} playerList 플레이어 리스트
+ * @param {Object} returns 알람 데이터
+ */
 const userUpdateNotification = (playerList) => {
-  roomPlayList.forEach((values, key) => {
+  const playerArray = [];
+
+  playerList.forEach((values, key) => {
+    playerArray.push(values.makeRawObject());
+  });
+
+  playerList.forEach((values, key) => {
     const S2CUserUpdateNotification = {
-    }
+      users: playerArray,
+    };
+    const gamePacket = { userUpdateNotification: S2CUserUpdateNotification };
+
+    const result = createResponse(
+      HANDLER_IDS.USER_UPDATE_NOTIFICATION,
+      values.socket.version,
+      values.socket.sequence,
+      gamePacket,
+    );
+    values.socket.write(result);
   });
 };
 
