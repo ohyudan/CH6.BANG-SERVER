@@ -1,6 +1,4 @@
-const userUpdateNotification = (room) => {
-  const roomPlayList = room.getAllPlayers();
-
+const userUpdateNotification = (playerList) => {
   roomPlayList.forEach((values, key) => {
     const S2CUserUpdateNotification = {
     }
