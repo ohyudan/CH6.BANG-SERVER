@@ -1,5 +1,5 @@
-import HANDLER_IDS from '../../constants/handlerIds';
-import { createResponse } from '../response/createResponse';
+import HANDLER_IDS from '../../constants/handlerIds.js';
+import { createResponse } from '../response/createResponse.js';
 
 /**
  * 게임 시작 알림 생성
