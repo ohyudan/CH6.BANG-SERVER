@@ -2,7 +2,7 @@ import bigBbangNotification from '../../utils/notification/card/bigBbang.notific
 import { CARD_TYPE } from '../../constants/card.enum.js';
 import equip from '../../utils/card/equip.js';
 import weapon from '../../utils/card/weapon.js';
-import guerrilla from '../../utils/card/guerrilla.js';
+import guerrillaNotification from '../../utils/notification/card/guerrilla.notification.js';
 
 const cardTypeAction = {
   [CARD_TYPE.BBANG]: {},
@@ -11,7 +11,7 @@ const cardTypeAction = {
   [CARD_TYPE.VACCINE]: {},
   [CARD_TYPE.CALL_119]: {},
   [CARD_TYPE.DEATH_MATCH]: {},
-  [CARD_TYPE.GUERRILLA]: { Action: guerrilla },
+  [CARD_TYPE.GUERRILLA]: { Action: guerrillaNotification },
   [CARD_TYPE.ABSORB]: {},
   [CARD_TYPE.HALLUCINATION]: {},
   [CARD_TYPE.FLEA_MARKET]: {},
