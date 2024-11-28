@@ -16,7 +16,7 @@ class Phase {
 
   startPhase() {
     this.phaseType.setPhase(PHASE_TYPE.DAY);
-    this.nextPhaseAt = Date.now() + 180000;
+    this.nextPhaseAt = Date.now() + 30000;
   }
 
   /**
@@ -29,7 +29,7 @@ class Phase {
     // if (this.roomState.getCurrentStateData() !== STATE.INGAME) {
     //   return false; // INGAME 상태가 아니면 업데이트 불가
     // }
-    const currentPhase = this.phaseType.getCurrentPhase();
+    const currentPhase = this.phaseType.phase;
     let nextPhase;
 
     // 현재 Phase에 따라 다음 Phase 결정
@@ -47,11 +47,10 @@ class Phase {
     let changedPositions = new Map();
     if (nextPhase === PHASE_TYPE.END) {
       // 현재 플레이어 캐릭터의 위치
-      // users로 플레이어 class객체의 함수를 쓸 수 있는지 판단
-      for (i = 0; i < playerList.length; i++) {
-        let position = { id: playerList[i].id, x: playerList[i].getX(), y: playerList[i].getY() };
+      playerList.forEach((value, key) => {
+        let position = { id: value.id, x: value.getX(), y: value.getY() };
         changedPositions.push(position);
-      }
+      });
     } else {
       // 1. 위치 재조정
       // 2. 자신의 hp이하의 카드 버리기 >> 밤이 끝날때
@@ -65,89 +64,89 @@ class Phase {
       const characterPositions = gameAssets.characterPositionData.position;
       // 위치 정보 셔플링 및 유저 위치 설정
       const selectedPositions = new Set();
-      while (selectedPositions.size < playerList.length) {
+      while (selectedPositions.size < ArrayPlayerList.length) {
         const randId = Math.floor(Math.random() * characterPositions.length);
         selectedPositions.add(characterPositions[randId]);
       }
 
       const posArr = [...selectedPositions];
-      for (i = 0; i < playerList.length; i++) {
-        let position = { id: playerList[i].id, x: posArr[i].x, y: posArr[y] };
+      for (let i = 0; i < ArrayPlayerList.length; i++) {
+        let position = { id: ArrayPlayerList[i].id, x: posArr[i].x, y: posArr[y] };
         changedPositions.push(position);
       }
 
       // 낮 시작시 자신의 핸드가 자신의 체력 이상이면 랜덤으로 체력 수치만큼 카드를 버리도록 조정
-      for (i = 0; i < playerList.length; i++) {
-        if (playerList[i].handCardsCount > playerList[i].hp) {
-          while (playerList[i].handCards.length < playerList[i].hp) {
-            let DestroyCards = playerList[i].handCards.splice(
-              Math.floor(Math.random() * playerList[i].handCards.length),
+      for (let i = 0; i < ArrayPlayerList.length; i++) {
+        if (ArrayPlayerList[i].handCardsCount > ArrayPlayerList[i].hp) {
+          while (ArrayPlayerList[i].handCards.length < ArrayPlayerList[i].hp) {
+            let DestroyCards = ArrayPlayerList[i].handCards.splice(
+              Math.floor(Math.random() * ArrayPlayerList[i].handCards.length),
               1,
             )[0];
-            // console.log('id', playerList[i].id, '버려진 카드', DestroyCards);
+            // console.log('id', ArrayPlayerList[i].id, '버려진 카드', DestroyCards);
           }
         }
       }
 
       // 플레이어의 디버프를 체크 한 후 해당 디버프 적용
-      for (i = 0; i < playerList.length; i++) {
+      for (let i = 0; i < ArrayPlayerList.length; i++) {
         // 감옥
-        if (playerList[i].characterData.debuffs === CARD_TYPE.CONTAINMENT_UNIT) {
+        if (ArrayPlayerList[i].characterData.debuffs === CARD_TYPE.CONTAINMENT_UNIT) {
           const random = Math.random() * 100;
           if (random < 75) {
-            playerList[i].setCharacterStateType(CHARACTER_STATE_TYPE.CONTAINED);
+            ArrayPlayerList[i].setCharacterStateType(CHARACTER_STATE_TYPE.CONTAINED);
           } else {
-            playerList[i].setCharacterStateType(CHARACTER_STATE_TYPE.NONE_CHARACTER_STATE);
-            playerList[i].removeDebuff(CARD_TYPE.CONTAINMENT_UNIT);
+            ArrayPlayerList[i].setCharacterStateType(CHARACTER_STATE_TYPE.NONE_CHARACTER_STATE);
+            ArrayPlayerList[i].removeDebuff(CARD_TYPE.CONTAINMENT_UNIT);
           }
           // 위성 폭탄
-        } else if (playerList[i].characterData.debuffs === CARD_TYPE.SATELLITE_TARGET) {
+        } else if (ArrayPlayerList[i].characterData.debuffs === CARD_TYPE.SATELLITE_TARGET) {
           const random = Math.random() * 100;
           if (random < 3) {
-            playerList[i].decreaseHp();
-            playerList[i].decreaseHp();
-            playerList[i].decreaseHp();
-            playerList[i].removeDebuff(CARD_TYPE.SATELLITE_TARGET);
+            ArrayPlayerList[i].decreaseHp();
+            ArrayPlayerList[i].decreaseHp();
+            ArrayPlayerList[i].decreaseHp();
+            ArrayPlayerList[i].removeDebuff(CARD_TYPE.SATELLITE_TARGET);
           } else {
-            playerList[i].removeDebuff(CARD_TYPE.SATELLITE_TARGET);
-            if (i !== playerList.length - 1) {
-              playerList[i + 1].addDebuff(CARD_TYPE.SATELLITE_TARGET);
+            ArrayPlayerList[i].removeDebuff(CARD_TYPE.SATELLITE_TARGET);
+            if (i !== ArrayPlayerList.length - 1) {
+              ArrayPlayerList[i + 1].addDebuff(CARD_TYPE.SATELLITE_TARGET);
             } else {
-              playerList[0].addDebuff(CARD_TYPE.SATELLITE_TARGET);
+              ArrayPlayerList[0].addDebuff(CARD_TYPE.SATELLITE_TARGET);
             }
           }
         }
       }
 
       // 카드를 2장씩 드로우
-      for (i = 0; i < playerList.length; i++) {
-        playerList[i].characterData.handCards.push(room.cardDraw(playerList[i]));
-        playerList[i].characterData.handCards.push(room.cardDraw(playerList[i]));
+      for (let i = 0; i < ArrayPlayerList.length; i++) {
+        ArrayPlayerList[i].characterData.handCards.push(room.cardDraw(ArrayPlayerList[i]));
+        ArrayPlayerList[i].characterData.handCards.push(room.cardDraw(ArrayPlayerList[i]));
       }
 
       // 빵야 횟수 초기화
-      for (i = 0; i < playerList.length; i++) {
+      for (let i = 0; i < ArrayPlayerList.length; i++) {
         if (
-          playerList[i].characterData.characterType === CHARACTER_TYPE.RED ||
-          playerList[i].characterData.weapon === CARD_TYPE.AUTO_RIFLE
+          ArrayPlayerList[i].characterData.characterType === CHARACTER_TYPE.RED ||
+          ArrayPlayerList[i].characterData.weapon === CARD_TYPE.AUTO_RIFLE
         ) {
-          playerList[i].setBbangCount(99);
-        } else if (playerList[i].characterData.weapon === CARD_TYPE.HAND_GUN) {
-          playerList[i].setBbangCount(2);
+          ArrayPlayerList[i].setBbangCount(99);
+        } else if (ArrayPlayerList[i].characterData.weapon === CARD_TYPE.HAND_GUN) {
+          ArrayPlayerList[i].setBbangCount(2);
         } else {
-          playerList[i].setBbangCount(1);
+          ArrayPlayerList[i].setBbangCount(1);
         }
       }
 
       // 캐릭터 정보 업데이트
-      userUpdateNotification(playerList);
+      userUpdateNotification(ArrayPlayerList);
     }
 
     // Phase 변경 및 다음 상태 전환 시간 설정
     // 이후 notification
     if (this.phaseType.setPhase(nextPhase)) {
-      this.nextPhaseAt = nextPhase === PHASE_TYPE.END ? Date.now() + 30000 : Date.now() + 180000; // END 페이즈는 30초 지속, 나머지는 3분
-      phaseUpdateNotification(playerList, nextPhase, this.nextPhaseAt, changedPositions);
+      this.nextPhaseAt = nextPhase === PHASE_TYPE.END ? Date.now() + 10000 : Date.now() + 30000; // END 페이즈는 30초 지속, 나머지는 3분
+      phaseUpdateNotification(ArrayPlayerList, nextPhase, this.nextPhaseAt, changedPositions);
       return true;
     }
 

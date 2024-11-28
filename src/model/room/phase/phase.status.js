@@ -1,4 +1,4 @@
-import { PHASE_TYPE } from '../../../constants/room.enum';
+import { PHASE_TYPE } from '../../../constants/room.enum.js';
 
 class PhaseType {
   constructor() {
@@ -25,7 +25,7 @@ class PhaseType {
    * 현재 상태 반환 메서드
    * @returns {number} 현재 Phase
    */
-  getCurrentPhase() {
+  get phase() {
     return this._phase;
   }
 }
