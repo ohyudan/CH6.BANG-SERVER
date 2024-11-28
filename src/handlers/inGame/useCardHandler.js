@@ -49,7 +49,7 @@ const useCardHandler = async ({ socket, payload }) => {
         HANDLER_IDS.USE_CARD_RESPONSE,
         socket.version,
         socket.sequence,
-        useCardResponse,
+        gamePacket,
       );
       socket.write(result);
     }
