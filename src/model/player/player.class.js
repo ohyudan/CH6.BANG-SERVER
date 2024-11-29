@@ -128,9 +128,9 @@ class Player extends Observable {
    */
   // 캐릭터의 손패(카드) 제거
   removeHandCard(cardType) {
-    const { result, index } = this.characterData.getCardsearch(cardType);
+    const { card, index } = this.characterData.getCardsearch(cardType);
     if (!(result == null)) {
-      this.notifyObservers('removeHandCard', result);
+      this.notifyObservers('removeHandCard', card);
 
       this.characterData.handCards.splice(index, 1);
       return true;

@@ -4,7 +4,7 @@ import roomList from '../../../model/room/roomList.class.js';
 import playerList from '../../../model/player/playerList.class.js';
 import { CARD_TYPE } from '../../../constants/card.enum.js';
 import HANDLER_IDS from '../../../constants/handlerIds.js';
-
+import { CHARACTER_STATE_TYPE } from '../../../constants/user.enum.js';
 // 실드 검사하고 있지 않음
 const bigBbangNotification = ({ socket, cardType, targetUserId }) => {
   const useCardPlayer = playerList.getPlayer(socket.id);
@@ -13,14 +13,13 @@ const bigBbangNotification = ({ socket, cardType, targetUserId }) => {
   let failCode = null;
   let success = null;
   //const backupPlayerData = room.getAllPlayers(); // 얕은 복사 의미 없음 추후 더 고려해서 작성
-  const userMakeData = [];
-
+  let userMakeData = [];
   const S2CUseCardNotification = {
-    cardType: cardType,
+    cardType: CARD_TYPE.BIG_BBANG,
     userId: socket.id,
-    targetUserId: targetUserId.low,
+    targetUserId: useCardPlayer.id,
   };
-
+  //효과 보내고 -> 적용 -> 완
   try {
     roomInJoinPlayerList.forEach((player) => {
       if (!(socket.id === player.id)) {
@@ -33,9 +32,20 @@ const bigBbangNotification = ({ socket, cardType, targetUserId }) => {
           gamePacket,
         );
         player.socket.write(result);
-        player.decreaseHp();
+        player.characterData.stateInfo.state = CHARACTER_STATE_TYPE.BIG_BBANG_TARGET;
+        //player.characterData.stateInfo.nextState = CHARACTER_STATE_TYPE.NONE_CHARACTER_STATE;
+        //player.characterData.stateInfo.nextStateAt = Date.now() + 6000;
+        //player.characterData.stateInfo.state = 0;
+
+        //player.decreaseHp();
+        userMakeData.push(player.makeRawObject());
+      } else {
+        player.characterData.stateInfo.state = CHARACTER_STATE_TYPE.BIG_BBANG_SHOOTER;
+        //player.characterData.stateInfo.nextState = CHARACTER_STATE_TYPE.NONE_CHARACTER_STATE;
+        //player.characterData.stateInfo.nextStateAt = 0;
+        //player.characterData.stateInfo.state = 0;
+        userMakeData.push(player.makeRawObject());
       }
-      userMakeData.push(player.makeRawObject());
     });
 
     roomInJoinPlayerList.forEach((values) => {
@@ -51,6 +61,7 @@ const bigBbangNotification = ({ socket, cardType, targetUserId }) => {
       );
       values.socket.write(result);
     });
+
     success = true;
     failCode = createFailCode(0);
     useCardPlayer.removeHandCard(CARD_TYPE.BIG_BBANG);
