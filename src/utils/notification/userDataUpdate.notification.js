@@ -1,0 +1,42 @@
+import HANDLER_IDS from '../../constants/handlerIds.js';
+import { createResponse } from '../response/createResponse.js';
+
+/**
+ * 게임 시작 알림 생성
+ * @param {Array} playerList 플레이어 리스트
+ * @param {Object} returns 알람 데이터
+ */
+const userUpdateNotification = (room) => {
+  const roomPlayList = room.getAllPlayers();
+  const playerArray = [];
+  roomPlayList.forEach((values, key) => {
+    playerArray.push(values.makeRawObject());
+  });
+  roomPlayList.forEach((values, key) => {
+    room.getAllPlayers();
+    const S2CUserUpdateNotification = {
+      user: playerArray,
+    };
+    const gamePacket = { userUpdateNotification: S2CUserUpdateNotification };
+
+    const result = createResponse(
+      HANDLER_IDS.USER_UPDATE_NOTIFICATION,
+      values.socket.version,
+      values.socket.sequence,
+      gamePacket,
+    );
+    values.socket.write(result);
+  });
+};
+
+export default userUpdateNotification;
+
+// message UserData {
+//     int64 id = 1;
+//     string nickname = 2;
+//     CharacterData character = 3;
+// }
+
+// message S2CUserUpdateNotification {
+//     repeated UserData user = 1;
+// }
