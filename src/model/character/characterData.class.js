@@ -26,14 +26,14 @@ class CharacterData {
   /**
    *
    * @param {cardType} cardType 카드 타입
-   * @returns result,index
+   * @returns card,index
    */
   getCardsearch(cardType) {
     const index = this.handCards.findIndex((card) => card.type == cardType);
 
     if (index !== -1) {
-      const result = this.handCards[index];
-      return { result, index };
+      const card = this.handCards[index];
+      return { card, index };
     } else {
       // 조건에 맞는 카드가 없으면
       return null;
