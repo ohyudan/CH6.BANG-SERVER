@@ -3,6 +3,7 @@ import roomList from '../room/roomList.class.js';
 import Position from './position.class.js';
 import { Observable } from '../observer/observer.js';
 import CardData from '../card/cardData.class.js';
+import PlayerStateManager from './playerStateManager.class.js';
 
 class Player extends Observable {
   constructor(id, nickname, socket) {
@@ -15,6 +16,7 @@ class Player extends Observable {
     this.characterData = new CharacterData(); // CharacterData 객체 생성
 
     this.position = new Position(); // Position 객체 생성
+    this.playerStateManager = new PlayerStateManager();
   }
   get id() {
     return this._id;
@@ -224,6 +226,27 @@ class Player extends Observable {
         };
       }
     });
+  }
+
+  setTimer() {
+    if (this.characterData.stateInfo.nextStateAt > Date.now()) {
+      console.log('인터벌 반복');
+    } else {
+      
+      this.characterData.stateInfo.state = 0;
+      this.characterData.stateInfo.nextState = 0;
+      this.characterData.stateInfo.nextStateAt = 0;
+      this.characterData.stateInfo.stateTargetUserId = 0;
+
+      console.log('반복 종료');
+      const room = roomList.getRoom(this.currentRoomId);
+
+      this.playerStateManager.removeTimerPlayerState();
+    }
+  }
+
+  setPlayerStateInterval() {
+    this.playerStateManager.setTimerPlayerState(this.setTimer.bind(this), 1000);
   }
 
   notifyObservers(event, data) {
