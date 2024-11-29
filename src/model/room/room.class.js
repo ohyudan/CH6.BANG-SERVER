@@ -1,9 +1,12 @@
 import { RoomStateType } from './room.status.js';
 import { ROOM_STATE } from '../../constants/room.enum.js';
 import playerList from '../player/playerList.class.js';
-import { Observable } from '../observer/observer.js';
+//import { Observable } from '../observer/observer.js';
+import { ObservableObserver } from '../observer/observer.js';
 import loadCardInit from '../../utils/cardDeck.js';
-class Room extends Observable {
+import random from 'lodash/random.js';
+import CardData from '../../model/card/cardData.class.js';
+class Room extends ObservableObserver {
   constructor(id, ownerId, name, maxUserNum) {
     super();
     this._id = id; // 방 아이디
@@ -72,7 +75,7 @@ class Room extends Observable {
       return false;
     }
     this._playerList.set(player.id, player);
-
+    player.addObserver(this);
     return true;
   }
   /**
@@ -81,11 +84,16 @@ class Room extends Observable {
    * @returns {bool} 성공 시 true  실패 시 false
    */
   subPlayer(player) {
+    if (!this._playerList.has(player.id)) {
+      return false;
+    }
     this._playerList.delete(player.id);
+    player.removeObserver(this);
+    player.currentRoomId = null;
     if (this._playerList.size === 0) {
       this.notifyObservers('roomEmpty', this);
     }
-    //return true;
+    return true;
   }
   getAllPlayers() {
     return this._playerList;
@@ -118,16 +126,31 @@ class Room extends Observable {
     return this._deck;
   }
   //카드를 뽑는 함수 앞에서 제거한만큼 뒤에 다시 append해준다.
-  cardDraw(count) {
-    const card = [];
-    for (let i = 0; i < count; i++) {
-      const drawCard = this._deck.removeFront();
-      const handCards = drawCard.getcardData();
-      card.push(handCards);
+  cardDraw(player) {
+    const drawCard = this._deck.removeFront();
+    return drawCard;
+  }
+
+  deckUseCardAdd(card) {
+    const size = this._deck.getSize();
+    const randomNumber = random(0, size);
+    this._deck.insert(card, randomNumber);
+    return null;
+  }
+
+  update(event, data) {
+    let result;
+    switch (event) {
+      case 'addHandCard':
+        result = this.cardDraw(data);
+        return result;
+        break;
+      case 'removeHandCard':
+        result = this.deckUseCardAdd(data);
+        return result;
+      default:
+        break;
     }
-    return card;
-    //console.log(transformData(card));
-    //return transformData(card);
   }
 }
 
