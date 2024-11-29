@@ -9,9 +9,7 @@ import HANDLER_IDS from '../../../constants/handlerIds.js';
 const guerrillaNotification = ({ socket, cardType, targetUserId }) => {
   const user = playerList.getPlayer(socket.id); // socket.id로 Player를 검색
   const room = roomList.getRoom(user.currentRoomId); // 방 정보
-
-  const inGameUsers = Array.from(room.getAllPlayers().values()); // 방의 모든 플레이어
-  const targetUsers = inGameUsers.filter((player) => player.id !== socket.id); // 자신을 제외한 다른 플레이어
+  const inGameUsers = room.getAllPlayers(); // 방의 모든 플레이어
   let failCode = null;
   let success = null;
   const userMakeData = [];
@@ -19,11 +17,13 @@ const guerrillaNotification = ({ socket, cardType, targetUserId }) => {
   const S2CUseCardNotification = {
     cardType: cardType,
     userId: socket.id,
-    targetUserId: null,
+    targetUserId: targetUserId.low, // 타겟이 없으면 0으로 설정
   };
   try {
-    // GUERRILLA 카드 사용 처리
-    targetUsers.forEach((player) => {
+    user.removeHandCard(CARD_TYPE.GUERRILLA); // 카드안사라져서 try catch 맨 위로 올림
+
+    // GUERRILLA 카드 사용 처리 (모든 플레이어에게 사용된 카드 알림 전송)
+    inGameUsers.forEach((player) => {
       const gamePacket = { useCardNotification: S2CUseCardNotification };
 
       const result = createResponse(
@@ -33,7 +33,9 @@ const guerrillaNotification = ({ socket, cardType, targetUserId }) => {
         gamePacket,
       );
       player.socket.write(result);
-      player.decreaseHp();
+      if (socket.id !== player.id) {
+        player.decreaseHp(); // 피해를 입힘
+      }
 
       // 플레이어 데이터 저장
       userMakeData.push(player.makeRawObject());
@@ -55,7 +57,6 @@ const guerrillaNotification = ({ socket, cardType, targetUserId }) => {
     });
     success = true;
     failCode = createFailCode(0);
-    user.removeHandCard(CARD_TYPE.GUERRILLA);
   } catch (err) {
     console.error(`GUERRILLA 실행 중 에러 발생: ${err.message}`);
     success = false;
