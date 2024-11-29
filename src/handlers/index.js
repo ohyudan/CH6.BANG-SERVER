@@ -13,6 +13,7 @@ import gamePrepareHandler from './gameStatus/gamePrepare.handler.js';
 import gameStartHandler from './gameStatus/gameStart.handler.js';
 import positionUpdateHandler from './inGame/positionUpdate.handler.js';
 import useCardHandler from './inGame/useCardHandler.js';
+import destroyCardHandler from './inGame/destroyCard.handler.js';
 const packetTypes = {
   [HANDLER_IDS.REGISTER_REQUEST]: {
     packetType: registerHandler,
@@ -57,6 +58,10 @@ const packetTypes = {
   [HANDLER_IDS.USE_CARD_REQUEST]: {
     packetType: useCardHandler,
     protoType: 'C2SUseCardRequest',
+  },
+  [HANDLER_IDS.DESTROY_CARD_REQUEST]: {
+    packetType: destroyCardHandler,
+    protoType: 'C2SdestroyCardRequest',
   },
 };
 /**
