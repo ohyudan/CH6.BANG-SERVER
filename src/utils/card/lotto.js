@@ -7,21 +7,27 @@
     import { createResponse } from '../../utils/response/createResponse.js';
 
     //타겟이 로또npc  targetUserId 필요없는것 같기도.
-    const lotto = ({ socket, cardType,targetUserId }) => {
+    const lotto = ({ socket, cardType }) => {
 
     const user = playerList.getPlayer(socket.id);
     const room = roomList.getRoom(user.currentRoomId);
     //const targetUser = playerList.getPlayer(targetUserId.low);
-        console.log(targetUserId);
     //3장 드로우및 핸드수 증가.
-    user.addHandCardArr(room.cardDraw(3));
-    user.increaseHandCardsCountParam(3);
+    const card=room.cardDraw(3);
+    for(let i=0;i<3;i++)
+    {
+        user.addHandCard(card[i]);
+        user.increaseHandCardsCount();
+    }
+    // user.addHandCard(room.cardDraw(3));
+    // user.increaseHandCardsCountParam(3);
 
     const inGameUsers = Array.from(room.getAllPlayers().values());
 
     const S2CUseCardNotification = {
         cardType: cardType,
         userId: user.id,
+        targetUserId:0,
     };
 
     inGameUsers.forEach((player) => {
@@ -36,7 +42,7 @@
 
         player.socket.write(useCardNotification);
 
-        const S2CUserUpdateNotification = { user: player.id };
+        const S2CUserUpdateNotification = { user: player.getAllUsersData()};
 
         const updatePacket = { userUpdateNotification: S2CUserUpdateNotification };
 
