@@ -140,19 +140,14 @@ class Room extends ObservableObserver {
     this._deck.insert(card, randomNumber);
     return null;
   }
-
-  /**
-   * 페이즈 지정하기   *
-   * @param {number} enum_nubmer
-   * @returns 결과
-   */
+  
   startPhase() {
     this._phase.startPhase();
-    setTimeout(() => this.changePhase(), 3000);
+    setTimeout(() => this.changePhase(), this._phase.nextPhaseAt - Date.now());
   }
 
   changePhase() {
-    this._phase.updatePhase(this._playerList);
+    this._phase.updatePhase(this._id);
     setTimeout(() => this.changePhase(), this._phase.nextPhaseAt - Date.now());
   }
 
