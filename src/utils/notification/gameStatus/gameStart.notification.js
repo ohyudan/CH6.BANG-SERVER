@@ -17,7 +17,7 @@ const GameStartNotification = (room, characterPositions) => {
     room.getAllPlayers();
     const S2CGameStartNotification = {
       gameState: {
-        phaseType: room._phase.phaseType,
+        phaseType: PHASE_TYPE.DAY,
         nextPhaseAt: room._phase.nextPhaseAt,
       },
       users: playerArray, // 사용자 정보
