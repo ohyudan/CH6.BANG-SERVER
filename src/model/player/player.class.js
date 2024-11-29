@@ -171,6 +171,11 @@ class Player extends Observable {
     this.characterData.handCardsCount -= 1;
   }
 
+  // 손패 매개변수 만큼 카드 수 감소
+  decreaseHandCardsCountParam(count) {
+    this.characterData.handCardsCount -= count;
+  }
+
   // Player 데이터 직렬화
   makeRawObject() {
     return {
