@@ -6,14 +6,14 @@ import { createResponse } from '../response/createResponse.js';
  * @param {Array} playerList 플레이어 리스트
  * @param {Object} returns 알람 데이터
  */
-const userUpdateNotification = (playerList) => {
+const userUpdateNotification = (room) => {
+  const roomPlayList = room.getAllPlayers();
   const playerArray = [];
-
-  playerList.forEach((values, key) => {
+  roomPlayList.forEach((values, key) => {
     playerArray.push(values.makeRawObject());
   });
-
-  playerList.forEach((values, key) => {
+  roomPlayList.forEach((values, key) => {
+    room.getAllPlayers();
     const S2CUserUpdateNotification = {
       users: playerArray,
     };
