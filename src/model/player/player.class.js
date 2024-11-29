@@ -113,9 +113,7 @@ class Player extends Observable {
   addHandCard() {
     const card = this.notifyObservers('addHandCard', this);
     if (!(card == null)) {
-      console.log(card);
       this.characterData.handCards.push(card);
-      console.log(this.characterData.handCards);
       return true;
     } else {
       return false;
