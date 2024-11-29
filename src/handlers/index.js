@@ -53,6 +53,10 @@ const packetTypes = {
     packetType: roomJoinRamdomHandler,
     ptoroType: 'C2SJoinRandomRoomRequest',
   },
+  [HANDLER_IDS.USE_CARD_REQUEST]: {
+    packetType: useCardHandler,
+    protoType: 'C2SUseCardRequest',
+  },
   [HANDLER_IDS.POSITION_UPDATE_REQUEST]: {
     packetType: positionUpdateHandler,
     protoType: 'C2SPositionUpdateRequest',
