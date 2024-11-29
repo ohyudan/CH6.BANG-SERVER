@@ -3,12 +3,12 @@ import { CARD_TYPE } from '../../constants/card.enum.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import cardTypeAction from './cardIndex.js';
 import createFailCode from '../../utils/response/createFailCode.js';
-import roomList from '../../model/room/roomList.class.js';
 
+// 쉴드 미처리  사망 미처리
 const useCardHandler = async ({ socket, payload }) => {
   const { cardType, targetUserId } = payload;
 
-  const cardActionFunction = cardTypeAction[cardType].Action;
+  const cardActionFunction = cardTypeAction[cardType].action;
   try {
     if (!cardActionFunction) {
       console.error('카드 타입이 없음');
@@ -32,11 +32,15 @@ const useCardHandler = async ({ socket, payload }) => {
        *  false or true 반환할 것
        *  failcode 마찬가지
        */
-      const { success, failCode } = await cardActionFunction({ socket, cardType, targetUserId });
 
+      const { success, failCode } = await cardActionFunction({
+        socket,
+        cardType,
+        targetUserId,
+      });
       const S2CUseCardResponse = {
-        success: success,
-        failCode: failCode,
+        success: true, //success,
+        failCode: 0, //failCode,
       };
       const gamePacket = {
         useCardResponse: S2CUseCardResponse,
