@@ -16,8 +16,8 @@ const GameStartNotification = (room, characterPositions) => {
   roomPlayList.forEach((values, key) => {
     const S2CGameStartNotification = {
       gameState: {
-        phaseType: PHASE_TYPE.DAY, // DAY 페이즈
-        nextPhaseAt: Date.now() + 180000, // 3분 후
+        phaseType: PHASE_TYPE.DAY,
+        nextPhaseAt: room._phase.nextPhaseAt,
       },
       users: playerArray, // 사용자 정보
       characterPositions: characterPositions, // 캐릭터 위치 정보

@@ -6,7 +6,8 @@ import playerList from '../../model/player/playerList.class.js';
 import roomList from '../../model/room/roomList.class.js';
 //import { Packets } from '../../init/loadProtos.js';
 import { getGameAssets } from '../../init/loadGameAssets.js';
-import { ROOM_STATE } from '../../constants/room.enum.js';
+import { PHASE_TYPE, ROOM_STATE } from '../../constants/room.enum.js';
+
 const gameStartHandler = async ({ socket }) => {
   try {
     let success = true;
@@ -40,6 +41,8 @@ const gameStartHandler = async ({ socket }) => {
       const randId = Math.floor(Math.random() * characterPositions.length);
       selectedPositions.add(characterPositions[randId]);
     }
+
+    room.startPhase();
 
     const posArr = [...selectedPositions];
     inGameUsers.forEach((user, i) => {
