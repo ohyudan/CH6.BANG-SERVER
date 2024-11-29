@@ -6,6 +6,7 @@ import { ObservableObserver } from '../observer/observer.js';
 import loadCardInit from '../../utils/cardDeck.js';
 import random from 'lodash/random.js';
 import CardData from '../../model/card/cardData.class.js';
+
 class Room extends ObservableObserver {
   constructor(id, ownerId, name, maxUserNum) {
     super();

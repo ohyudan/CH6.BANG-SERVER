@@ -17,7 +17,11 @@ const packetNames = {
     CharacterStateType: 'user.CharacterStateType',
     RoleType: 'user.RoleType',
   },
-  card: {},
+  card: {
+    ReactionType: 'card.ReactionType',
+    CardType: 'card.CardType',
+    SelectCardType: 'card.SelectCardType',
+  },
 };
 
 export default packetNames;
