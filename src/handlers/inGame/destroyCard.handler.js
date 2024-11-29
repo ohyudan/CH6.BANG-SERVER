@@ -5,16 +5,18 @@ import userUpdateNotification from '../../utils/notification/userDataUpdate.noti
 import { createResponse } from '../../utils/response/createResponse.js';
 
 const destroyCardHandler = async ({ socket, payload }) => {
-  const destroyCards = payload; // 버릴 카드의 배열[{ cardType, count }, { cardType, count }] 
+  const { destroyCards } = payload; // 버릴 카드의 배열[{ cardType, count }, { cardType, count }]
 
   const player = playerList.getPlayer(socket.id);
 
-  destroyCards.forEach((value, key) => {
-    player.removeHandCard(value)
-    player.decreaseHandCardsCount()
+  destroyCards.forEach((value) => {
+    player.removeHandCard(value.type);
+    player.decreaseHandCardsCount();
   });
 
-  const S2CDestroyCardResponse = { CardData: player.handCards }; // 버린 이후 가지고 있는 카드
+  console.log(player.characterData.handCards);
+
+  const S2CDestroyCardResponse = { handCards: player.characterData.handCards }; // 버린 이후 가지고 있는 카드
   const gamePacket = { destroyCardResponse: S2CDestroyCardResponse };
   const response = createResponse(
     HANDLER_IDS.DESTROY_CARD_RESPONSE,
@@ -23,10 +25,10 @@ const destroyCardHandler = async ({ socket, payload }) => {
     gamePacket,
   );
 
-  socket.write(response)
-  const roomId = player.currentRoomId()
-  const room = roomList.getRoom(roomId)
-  userUpdateNotification(room)
+  socket.write(response);
+  const roomId = player.currentRoomId();
+  const room = roomList.getRoom(roomId);
+  userUpdateNotification(room);
 };
 
 export default destroyCardHandler;
