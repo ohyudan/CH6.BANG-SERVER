@@ -4,10 +4,11 @@ import { CARD_TYPE } from '../../constants/card.enum.js';
 import bbang from '../../utils/card/bbang.js';
 import weapon from '../../utils/card/weapon.js';
 import equip from '../../utils/card/equip.js';
+import lotto from '../../utils/card/lotto.js';
 
 const cardTypeAction = {
-  [CARD_TYPE.BBANG]: { Action: bbang },
-  [CARD_TYPE.BIG_BBANG]: { Action: bigBbangNotification },
+  [CARD_TYPE.BBANG]: { action: bbang },
+  [CARD_TYPE.BIG_BBANG]: { action: bigBbangNotification },
   [CARD_TYPE.SHIELD]: { action: shieldNotification },
   [CARD_TYPE.VACCINE]: {},
   [CARD_TYPE.CALL_119]: {},

@@ -56,7 +56,7 @@ const bbang = ({ socket, cardType, targetUserId }) => {
   // 제거한 카드 룸의 덱에 추가
   room.deckUseCardAdd(CARD_TYPE.BBANG);
 
-  // // 쉴드가 1개라도 있으면 대처가능 UI 발생 클라에서 처리
+  // // 쉴드가 1개라도 있으면 대처가능 UI 발생은 클라에서 처리
   // if (targetUser.characterData.handCards.find((card) => card.type === CARD_TYPE.SHIELD)) {
     user.setCharacterStateType(CHARACTER_STATE_TYPE.BBANG_SHOOTER);
     user.setStateTargetUserId(targetUser.id);
