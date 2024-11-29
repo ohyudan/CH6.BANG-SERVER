@@ -17,7 +17,7 @@ const vaccineNotification = ({ socket, cardType, targetUserId }) => {
   const S2CUseCardNotification = {
     cardType: cardType,
     userId: socket.id,
-    targetUserId: targetUserId,
+    targetUserId: socket.id,
   };
 
   try {
