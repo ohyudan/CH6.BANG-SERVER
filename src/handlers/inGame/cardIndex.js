@@ -1,4 +1,4 @@
-import bigBbangNotification from '../../utils/notification/card/bigBbang.notification.js';
+import { bigBbangNotification } from '../../utils/notification/card/bigBbang.notification.js';
 import shieldNotification from '../../utils/notification/card/shield.notification.js';
 import { CARD_TYPE } from '../../constants/card.enum.js';
 import equip from '../../utils/card/equip.js';

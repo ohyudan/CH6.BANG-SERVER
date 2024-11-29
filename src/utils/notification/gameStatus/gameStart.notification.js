@@ -14,7 +14,6 @@ const GameStartNotification = (room, characterPositions) => {
     playerArray.push(values.makeRawObject());
   });
   roomPlayList.forEach((values, key) => {
-    room.getAllPlayers();
     const S2CGameStartNotification = {
       gameState: {
         phaseType: PHASE_TYPE.DAY, // DAY 페이즈

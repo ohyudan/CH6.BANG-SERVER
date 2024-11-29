@@ -4,9 +4,9 @@ import roomList from '../../../model/room/roomList.class.js';
 import playerList from '../../../model/player/playerList.class.js';
 import { CARD_TYPE } from '../../../constants/card.enum.js';
 import HANDLER_IDS from '../../../constants/handlerIds.js';
-
-const shieldNotification = ({ socket, cardType, targetUserId }) => {
-  console.log(cardType, targetUserId);
+import { CHARACTER_STATE_TYPE } from '../../../constants/user.enum.js';
+const shieldNotification = async ({ socket, cardType, targetUserId }) => {
+  //console.log(cardType, targetUserId);
   const useCardPlayer = playerList.getPlayer(socket.id);
   const room = roomList.getRoom(useCardPlayer.currentRoomId);
   const roomInJoinPlayerList = room.getAllPlayers();
@@ -28,32 +28,34 @@ const shieldNotification = ({ socket, cardType, targetUserId }) => {
 
         const result = createResponse(
           HANDLER_IDS.USE_CARD_NOTIFICATION,
-          player.socket.version,
-          player.socket.sequence,
+          socket.version,
+          socket.sequence,
           gamePacket,
         );
+
         player.socket.write(result);
-        //player.decreaseHp();
+      } else {
+        player.setCharacterStateType(CHARACTER_STATE_TYPE.NONE_CHARACTER_STATE);
+        player.removeHandCard(CARD_TYPE.SHIELD);
       }
       userMakeData.push(player.makeRawObject());
     });
 
-    // roomInJoinPlayerList.forEach((values) => {
-    //   const S2CUserUpdateNotification = {
-    //     user: userMakeData,
-    //   };
-    //   const gamePacket = { userUpdateNotification: S2CUserUpdateNotification };
-    //   const result = createResponse(
-    //     HANDLER_IDS.USER_UPDATE_NOTIFICATION,
-    //     socket.version,
-    //     socket.sequence,
-    //     gamePacket,
-    //   );
-    //   values.socket.write(result);
-    // });
-    // success = true;
-    // failCode = createFailCode(0);
-    // useCardPlayer.removeHandCard(CARD_TYPE.SHIELD);
+    roomInJoinPlayerList.forEach((values) => {
+      const S2CUserUpdateNotification = {
+        user: userMakeData,
+      };
+      const gamePacket = { userUpdateNotification: S2CUserUpdateNotification };
+      const result = createResponse(
+        HANDLER_IDS.USER_UPDATE_NOTIFICATION,
+        socket.version,
+        socket.sequence,
+        gamePacket,
+      );
+      values.socket.write(result);
+    });
+    success = true;
+    failCode = createFailCode(0);
   } catch (err) {
     success = false;
     failCode = createFailCode(1);

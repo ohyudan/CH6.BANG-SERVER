@@ -129,7 +129,7 @@ class Player extends Observable {
   // 캐릭터의 손패(카드) 제거
   removeHandCard(cardType) {
     const { card, index } = this.characterData.getCardsearch(cardType);
-    if (!(result == null)) {
+    if (!(card == null)) {
       this.notifyObservers('removeHandCard', card);
 
       this.characterData.handCards.splice(index, 1);
@@ -202,7 +202,7 @@ class Player extends Observable {
             stateInfo: user.characterData.stateInfo,
             equips: user.characterData.equips,
             debuffs: user.characterData.debuffs,
-            handCards: user.characterData.handCards,
+            handCards: user.characterData.getAllhandCard(),
             bbangCount: user.characterData.bbangCount,
             handCardsCount: user.characterData.handCardsCount,
           },

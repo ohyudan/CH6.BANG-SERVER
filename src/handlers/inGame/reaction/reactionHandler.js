@@ -1,7 +1,7 @@
 import playerList from '../../../model/player/playerList.class.js';
 import roomList from '../../../model/room/roomList.class.js';
 import reactionAction from './reactionIndex.js';
-import bigBnangTargetNotification from '../../../utils/notification/state/bigBnangTarget.notification.js';
+import bigBnangTargetNotification from '../../../utils/notification/state/bigBbangTarget.notification.js';
 import { createResponse } from '../../../utils/response/createResponse.js';
 import createFailCode from '../../../utils/response/createFailCode.js';
 import HANDLER_IDS from '../../../constants/handlerIds.js';
@@ -11,9 +11,10 @@ const reactionHandler = async ({ socket, payload }) => {
   const player = playerList.getPlayer(socket.id);
   const state_Type = player.characterData.stateInfo.state;
 
+  // 해당 상태로 판단
   const reactionActionFunction = reactionAction[state_Type].action;
 
-  const { success, failCode } = await reactionActionFunction(reactionType);
+  const { success, failCode } = await reactionActionFunction({ socket, player, reactionType });
 
   const S2CReactionResponse = {
     success: true, //success,
