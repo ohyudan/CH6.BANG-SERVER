@@ -61,7 +61,7 @@ const packetTypes = {
   },
   [HANDLER_IDS.DESTROY_CARD_REQUEST]: {
     packetType: destroyCardHandler,
-    protoType: 'C2SdestroyCardRequest',
+    protoType: 'C2SDestroyCardRequest',
   },
 };
 /**
