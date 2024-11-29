@@ -76,14 +76,12 @@ class Phase {
       roomPlayList.forEach((value, key) => {
         if (value.characterData.handCardsCount > value.characterData.hp) {
           const needDestroyCardsCount = value.characterData.handCardsCount - value.characterData.hp;
-          for (let i = 0;i < needDestroyCardsCount;i++) {
-            const randId = Math.floor(Math.random() * value.characterData.handCards.length)
-            const randCard = value.characterData.handCards[randId]            
-            value.removeHandCard(randCard._type)
+          for (let i = 0; i < needDestroyCardsCount; i++) {
+            const randId = Math.floor(Math.random() * value.characterData.handCards.length);
+            const randCard = value.characterData.handCards[randId];
+            value.removeHandCard(randCard._type);
           }
-          value.decreaseHandCardsCountParam(
-            needDestroyCardsCount,
-          );
+          value.decreaseHandCardsCountParam(needDestroyCardsCount);
         }
       });
 
@@ -143,8 +141,10 @@ class Phase {
     // 이후 notification
     this.phaseType.setPhase(nextPhase);
     this.nextPhaseAt = nextPhase === PHASE_TYPE.END ? Date.now() + 30000 : Date.now() + 180000; // END 페이즈는 30초 지속, 나머지는 3분
+    
+    userUpdateNotification(room)
     phaseUpdateNotification(roomPlayList, nextPhase, this.nextPhaseAt, changedPositions);
-    userUpdateNotification(room);
+
     return true;
   }
 }
