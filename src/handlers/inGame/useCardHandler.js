@@ -53,8 +53,6 @@ const useCardHandler = async ({ socket, payload }) => {
         gamePacket,
       );
       socket.write(result);
-
-      userUpdateNotification
     }
   } catch (err) {
     console.error(err);

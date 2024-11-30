@@ -25,7 +25,19 @@ const bbang = ({ socket, cardType, targetUserId }) => {
     if (user.characterData.weapon === CARD_TYPE.HAND_GUN && user.characterData.bbangCount >= 2) {
       console.log('발사 실패: 핸드건은 2발로 제한');
 
-      userUpdateNotification(room);
+      // 사용자만 정보 업데이트 -> 클라이언트에서 사용한 카드가 사라지지 않게 업데이트 하는 것
+      const S2CUserUpdateNotification = { user: user.getAllUsersData() };
+
+      const updatePacket = { userUpdateNotification: S2CUserUpdateNotification };
+
+      const userUpdateNotification = createResponse(
+        HANDLER_IDS.USER_UPDATE_NOTIFICATION,
+        socket.version,
+        socket.sequence,
+        updatePacket,
+      );
+
+      socket.write(userUpdateNotification);
 
       return { success: false, failCode: createFailCode(14) };
     }
@@ -34,7 +46,19 @@ const bbang = ({ socket, cardType, targetUserId }) => {
     if (user.characterData.weapon !== CARD_TYPE.HAND_GUN && user.characterData.bbangCount >= 1) {
       console.log('발사 실패: 이 무기는 1발로 제한');
 
-      userUpdateNotification(room);
+      // 사용자만 정보 업데이트
+      const S2CUserUpdateNotification = { user: user.getAllUsersData() };
+
+      const updatePacket = { userUpdateNotification: S2CUserUpdateNotification };
+
+      const userUpdateNotification = createResponse(
+        HANDLER_IDS.USER_UPDATE_NOTIFICATION,
+        socket.version,
+        socket.sequence,
+        updatePacket,
+      );
+
+      socket.write(userUpdateNotification);
 
       return { success: false, failCode: createFailCode(14) };
     }
@@ -56,17 +80,21 @@ const bbang = ({ socket, cardType, targetUserId }) => {
   // 제거한 카드 룸의 덱에 추가
   room.deckUseCardAdd(CARD_TYPE.BBANG);
 
-  // // 쉴드가 1개라도 있으면 대처가능 UI 발생은 클라에서 처리
+  // 개구리군이랑 오토쉴드 적용도 클라에서 처리되는지 확인 필요 -> 안되는거 확인 서버에서 처리할 필요가 있을듯
+  
+
+  // // 쉴드가 1개라도 있으면 대처가능 UI 발생은 클라에서 처리되는 것 확인 완료 // 상어군일경우도 클라에서 처리되는거 확인완료
+
   // if (targetUser.characterData.handCards.find((card) => card.type === CARD_TYPE.SHIELD)) {
-    user.setCharacterStateType(CHARACTER_STATE_TYPE.BBANG_SHOOTER);
-    user.setStateTargetUserId(targetUser.id);
+  // user.setCharacterStateType(CHARACTER_STATE_TYPE.BBANG_SHOOTER);
+  // user.setStateTargetUserId(targetUser.id);
   //   user.setNextCharacterStateType(CHARACTER_STATE_TYPE.NONE_CHARACTER_STATE);
   //   user.setNextStateAt(Date.now() + 10000);
 
-    targetUser.setCharacterStateType(CHARACTER_STATE_TYPE.BBANG_TARGET);
-    targetUser.setStateTargetUserId(user.id);
-    // targetUser.setNextCharacterStateType(CHARACTER_STATE_TYPE.NONE_CHARACTER_STATE);
-    //   targetUser.setNextStateAt(Date.now() + 10000);
+  targetUser.setCharacterStateType(CHARACTER_STATE_TYPE.BBANG_TARGET);
+  targetUser.setStateTargetUserId(user.id);
+  // targetUser.setNextCharacterStateType(CHARACTER_STATE_TYPE.NONE_CHARACTER_STATE);
+  //   targetUser.setNextStateAt(Date.now() + 10000);
   // }
 
   // targetUser.decreaseHp();
