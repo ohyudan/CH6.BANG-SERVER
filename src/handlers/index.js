@@ -13,6 +13,9 @@ import gamePrepareHandler from './gameStatus/gamePrepare.handler.js';
 import gameStartHandler from './gameStatus/gameStart.handler.js';
 import positionUpdateHandler from './inGame/positionUpdate.handler.js';
 import useCardHandler from './inGame/useCardHandler.js';
+import reactionHandler from './inGame/reaction/ReactionHandler.js';
+
+import destroyCardHandler from './inGame/destroyCard.handler.js';
 const packetTypes = {
   [HANDLER_IDS.REGISTER_REQUEST]: {
     packetType: registerHandler,
@@ -50,6 +53,10 @@ const packetTypes = {
     packetType: roomJoinRamdomHandler,
     ptoroType: 'C2SJoinRandomRoomRequest',
   },
+  [HANDLER_IDS.USE_CARD_REQUEST]: {
+    packetType: useCardHandler,
+    protoType: 'C2SUseCardRequest',
+  },
   [HANDLER_IDS.POSITION_UPDATE_REQUEST]: {
     packetType: positionUpdateHandler,
     protoType: 'C2SPositionUpdateRequest',
@@ -57,6 +64,14 @@ const packetTypes = {
   [HANDLER_IDS.USE_CARD_REQUEST]: {
     packetType: useCardHandler,
     protoType: 'C2SUseCardRequest',
+  },
+  [HANDLER_IDS.REACTION_REQUEST]: {
+    packetType: reactionHandler,
+    protoType: 'C2SReactionrequest',
+  },
+  [HANDLER_IDS.DESTROY_CARD_REQUEST]: {
+    packetType: destroyCardHandler,
+    protoType: 'C2SDestroyCardRequest',
   },
 };
 /**

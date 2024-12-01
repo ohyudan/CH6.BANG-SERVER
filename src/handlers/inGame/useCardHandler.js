@@ -8,7 +8,7 @@ import createFailCode from '../../utils/response/createFailCode.js';
 const useCardHandler = async ({ socket, payload }) => {
   const { cardType, targetUserId } = payload;
 
-  const cardActionFunction = cardTypeAction[cardType].Action;
+  const cardActionFunction = cardTypeAction[cardType].action;
   try {
     if (!cardActionFunction) {
       console.error('카드 타입이 없음');
@@ -32,15 +32,15 @@ const useCardHandler = async ({ socket, payload }) => {
        *  false or true 반환할 것
        *  failcode 마찬가지
        */
+
       const { success, failCode } = await cardActionFunction({
         socket,
         cardType,
         targetUserId,
       });
-
       const S2CUseCardResponse = {
-        success: success,
-        failCode: failCode,
+        success: true, //success,
+        failCode: 0, //failCode,
       };
       const gamePacket = {
         useCardResponse: S2CUseCardResponse,

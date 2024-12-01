@@ -24,4 +24,9 @@ const CARD_TYPE = {
   SATELLITE_TARGET: 22, // 1장
   BOMB: 23, // 1장
 };
-export { CARD_TYPE };
+
+const REACTION_TYPE = {
+  NONE_REACTION: 0,
+  NOT_USE_CARD: 1,
+};
+export { CARD_TYPE, REACTION_TYPE };

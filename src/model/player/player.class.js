@@ -104,6 +104,11 @@ class Player extends Observable {
     this.characterData.debuffs.push(debuff);
   }
 
+  // 캐릭터의 디버프 제거 (phaseBranch에서 추가함)
+  removeDebuff(debuff) {
+    this.characterData.debuffs = this.characterData.debuffs.filter((buff) => buff !== debuff);
+  }
+
   // 캐릭터의 손패(카드) 추가
   /**
    *
@@ -128,9 +133,9 @@ class Player extends Observable {
    */
   // 캐릭터의 손패(카드) 제거
   removeHandCard(cardType) {
-    const { result, index } = this.characterData.getCardsearch(cardType);
-    if (!(result == null)) {
-      this.notifyObservers('removeHandCard', result);
+    const { card, index } = this.characterData.getCardsearch(cardType);
+    if (!(card == null)) {
+      this.notifyObservers('removeHandCard', card);
 
       this.characterData.handCards.splice(index, 1);
       return true;
@@ -141,6 +146,11 @@ class Player extends Observable {
   // 빵야 사용 횟수 증가
   increaseBbangCount() {
     this.characterData.bbangCount += 1;
+  }
+
+  // 빵야 사용 횟수 지정 (phaseBranch에서 추가함)
+  setBbangCount(count) {
+    this.characterData.bbangCount = count;
   }
 
   // 빵야 사용 횟수 감소
@@ -159,6 +169,11 @@ class Player extends Observable {
   // 손패 카드 수 감소
   decreaseHandCardsCount() {
     this.characterData.handCardsCount -= 1;
+  }
+
+  // 손패 매개변수 만큼 카드 수 감소
+  decreaseHandCardsCountParam(count) {
+    this.characterData.handCardsCount -= count;
   }
 
   // Player 데이터 직렬화
@@ -202,7 +217,7 @@ class Player extends Observable {
             stateInfo: user.characterData.stateInfo,
             equips: user.characterData.equips,
             debuffs: user.characterData.debuffs,
-            handCards: user.characterData.handCards,
+            handCards: user.characterData.getAllhandCard(),
             bbangCount: user.characterData.bbangCount,
             handCardsCount: user.characterData.handCardsCount,
           },
