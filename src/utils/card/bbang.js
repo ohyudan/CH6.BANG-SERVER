@@ -13,7 +13,7 @@ const bbang = ({ socket, cardType, targetUserId }) => {
   const targetUser = playerList.getPlayer(targetUserId.low);
   const inGameUsers = Array.from(room.getAllPlayers().values());
 
-  // 만약 내가 현피 상태라면? 다른 처리가 필요할듯
+  // 현피 상태? 게릴라? 다른 처리가 필요할듯
   // if (user.characterData.stateInfo.state === CHARACTER_STATE_TYPE.DEATH_MATCH_TURN_STATE?.DEATH_MATCH_STATE) {}
 
   // 타겟 유저가 현재 NONE 상태일 때 발사 가능하게 처리 // 이거 클라에서 어떻게 처리되는지 확인필요 -> 클라에서 발사가 안되면 처리할 필요x
