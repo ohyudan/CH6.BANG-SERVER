@@ -66,10 +66,12 @@ class Phase {
         selectedPositions.add(characterPositions[randId]);
       }
 
+      let i = 0
       const posArr = [...selectedPositions];
-      roomPlayList.forEach((value, key) => {
-        let position = { id: value.id, x: posArr[value.id - 1].x, y: posArr[value.id - 1].y };
+      roomPlayList.forEach((value) => {
+        let position = { id: value.id, x: posArr[i].x, y: posArr[i].y };
         changedPositions.push(position);
+        i++
       });
 
       // 낮 시작시 자신의 핸드가 자신의 체력 이상이면 랜덤으로 체력 수치만큼 카드를 버리도록 조정
