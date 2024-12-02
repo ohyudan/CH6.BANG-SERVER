@@ -38,17 +38,24 @@ const bbangTargetNotification = async ({ socket, player, reactionType }) => {
       // 사망한 유저와 mask유저가 동일하면 계산x
       if (player !== maskUser && maskUser && player.characterData.handCardsCount > 0) {
         // 사망한 유저의 카드를 mask 캐릭터에게 전달
-        console.log(player.characterData.handCards.length);
-        for (let i = 0; i < player.characterData.handCards.length; i++) {
-          const cardData = player.characterData.handCards[0];
-          maskUser.characterData.handCards.push(cardData);
+        player.characterData.handCards.forEach((card) => {
+          maskUser.characterData.handCards.push(card);
           maskUser.increaseHandCardsCount();
-          player.characterData.handCards.splice(0, 1);
-          player.decreaseHandCardsCount();
-        }
+        });
+        player.characterData.handCards.splice(0);
+        player.characterData.handCardsCount = 0;
       }
 
-      // 죽은 유저 처리 방법이 필ㄹ요?
+      // 사망한 유저에 따라 게임 엔드 처리?
+
+      // 마스크맨 없으면 죽은 사람 카드 룸 덱으로 반환
+      if (!maskUser && player.characterData.handCardsCount > 0) {
+        player.characterData.handCards.forEach((card) => {
+          room.deckUseCardAdd(card);
+        });
+        player.characterData.handCards.splice(0);
+        player.characterData.handCardsCount = 0;
+      }
     }
 
     // 피격자가 생존했고, 피격자의 캐릭터가 말랑이라면 -> 받은 데미지 만큼 카드 드로우
@@ -70,9 +77,6 @@ const bbangTargetNotification = async ({ socket, player, reactionType }) => {
       targetUser.characterData.handCardsCount > 0
     ) {
       // 공격자의 핸드에서 1장 가져옴
-      // 랜덤 인덱스로 1장
-      // const randomIndex = Math.floor(Math.random()*targetUser.characterData.handCards.length);
-      // const cardData = targetUser.characterData.handCards[randomIndex];
       const cardData = targetUser.characterData.handCards[0];
       player.characterData.handCards.push(cardData);
       player.increaseHandCardsCount();
@@ -80,8 +84,6 @@ const bbangTargetNotification = async ({ socket, player, reactionType }) => {
       targetUser.decreaseHandCardsCount();
     }
 
-    console.log(player.characterData.handCards);
-    console.log(targetUser.characterData.handCards);
     userUpdateNotification(room);
   } catch (err) {
     console.error(err);
