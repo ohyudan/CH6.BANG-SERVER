@@ -1,4 +1,4 @@
-import { CARD_TYPE } from '../../constants/card.enum.js';
+import { ANIMATION_TYPE, CARD_TYPE } from '../../constants/card.enum.js';
 import HANDLER_IDS from '../../constants/handlerIds.js';
 import { CHARACTER_STATE_TYPE, CHARACTER_TYPE } from '../../constants/user.enum.js';
 import playerList from '../../model/player/playerList.class.js';
@@ -100,8 +100,6 @@ const bbang = ({ socket, cardType, targetUserId }) => {
 
           socket.write(userUpdateNotification);
 
-          // userUpdateNotification(room);
-
           return { success: false, failCode: createFailCode(14) };
         }
 
@@ -125,8 +123,6 @@ const bbang = ({ socket, cardType, targetUserId }) => {
           );
 
           socket.write(userUpdateNotification);
-
-          // userUpdateNotification(room);
 
           return { success: false, failCode: createFailCode(14) };
         }
@@ -165,6 +161,11 @@ const bbang = ({ socket, cardType, targetUserId }) => {
             targetUserId: targetUser.id,
           };
 
+          const S2CAnimationNotification = {
+            userId: targetUserId.low,
+            animationType: ANIMATION_TYPE.SHIELD_ANIMATION,
+          }
+
           inGameUsers.forEach((player) => {
             const gamePacket = { useCardNotification: S2CUseCardNotification };
 
@@ -176,6 +177,17 @@ const bbang = ({ socket, cardType, targetUserId }) => {
             );
 
             player.socket.write(useCardNotification);
+
+            const animationPacket = { animationNotification: S2CAnimationNotification };
+
+            const animationNotification = createResponse(
+              HANDLER_IDS.ANIMATION_NOTIFICATION,
+              player.socket.version,
+              player.socket.sequence,
+              animationPacket,
+            );
+
+            player.socket.write(animationNotification);
           });
 
           userUpdateNotification(room);
@@ -195,8 +207,13 @@ const bbang = ({ socket, cardType, targetUserId }) => {
           const S2CUseCardNotification = {
             cardType: cardType,
             userId: user.id,
-            targetUserId: targetUser.id,
+            targetUserId: targetUserId.low,
           };
+
+          const S2CAnimationNotification = {
+            userId: targetUserId.low,
+            animationType: ANIMATION_TYPE.SHIELD_ANIMATION,
+          }
 
           inGameUsers.forEach((player) => {
             const gamePacket = { useCardNotification: S2CUseCardNotification };
@@ -209,6 +226,17 @@ const bbang = ({ socket, cardType, targetUserId }) => {
             );
 
             player.socket.write(useCardNotification);
+
+            const animationPacket = { animationNotification: S2CAnimationNotification };
+
+            const animationNotification = createResponse(
+              HANDLER_IDS.ANIMATION_NOTIFICATION,
+              player.socket.version,
+              player.socket.sequence,
+              animationPacket,
+            );
+
+            player.socket.write(animationNotification);
           });
 
           userUpdateNotification(room);
@@ -230,7 +258,7 @@ const bbang = ({ socket, cardType, targetUserId }) => {
       const S2CUseCardNotification = {
         cardType: cardType,
         userId: user.id,
-        targetUserId: targetUser.id,
+        targetUserId: targetUserId.low,
       };
 
       inGameUsers.forEach((player) => {

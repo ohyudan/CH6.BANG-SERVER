@@ -1,3 +1,4 @@
+import { CARD_TYPE } from '../../constants/card.enum.js';
 import HANDLER_IDS from '../../constants/handlerIds.js';
 import playerList from '../../model/player/playerList.class.js';
 import roomList from '../../model/room/roomList.class.js';
@@ -14,16 +15,10 @@ const equip = ({ socket, cardType, targetUserId }) => {
     return { success: false, failCode: createFailCode(11) };
   }
 
-  if (useEquip.count >= 2) {
-    useEquip.count--;
-    user.characterData.handCardsCount--;
-  } else {
-    const equipIndex = user.characterData.handCards.findIndex((card) => card.type === cardType);
-    user.characterData.handCards.splice(equipIndex, 1);
-    user.characterData.handCardsCount--;
-  }
 
-  // 사용한 카드를 룸의 덱에 추가 필요
+  // 사용한 카드를 룸의 덱에 추가
+  user.removeHandCard(cardType);
+  user.characterData.handCardsCount--;
 
   // 사용한 방어구를 equips 배열에 추가
   const findEquip = user.characterData.equips.includes(cardType);
@@ -31,14 +26,14 @@ const equip = ({ socket, cardType, targetUserId }) => {
     user.characterData.equips.push(useEquip.type);
   }
 
-  console.log(user.characterData.equips);
+  // console.log(user.characterData.equips);
 
   const inGameUsers = Array.from(room.getAllPlayers().values());
 
   const S2CUseCardNotification = {
     cardType: cardType,
     userId: user.id,
-    targetUserId: 0,
+    targetUserId: targetUserId.low,
   };
 
   inGameUsers.forEach((player) => {
