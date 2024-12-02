@@ -1,7 +1,6 @@
 import { RoomStateType } from './room.status.js';
-import { PHASE_TYPE, ROOM_STATE } from '../../constants/room.enum.js';
+import { ROOM_STATE } from '../../constants/room.enum.js';
 import playerList from '../player/playerList.class.js';
-//import { Observable } from '../observer/observer.js';
 import { ObservableObserver } from '../observer/observer.js';
 import loadCardInit from '../../utils/cardDeck.js';
 import random from 'lodash/random.js';
@@ -140,7 +139,7 @@ class Room extends ObservableObserver {
     this._deck.insert(card, randomNumber);
     return null;
   }
-  
+
   startPhase() {
     this._phase.startPhase();
     setTimeout(() => this.changePhase(), this._phase.nextPhaseAt - Date.now());

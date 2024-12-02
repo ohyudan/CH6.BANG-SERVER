@@ -1,5 +1,6 @@
 import envFiles from '../constants/env.js';
 import { HEADER, TOTAL_LENGTH } from '../constants/header.js';
+
 export const Config = {
   SERVER: {
     HOST: envFiles.SERVER.HOST,
@@ -23,7 +24,10 @@ export const Config = {
     HOST: envFiles.DB1.HOST,
     PORT: envFiles.DB1.PORT,
   },
-
+  PHASE: {
+    AFTER: 15000,
+    END: 30000,
+  },
   MAX_SEQUENCE_DIFF: 5,
 
   SALTROUNDS: 10,
