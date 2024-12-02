@@ -1,14 +1,15 @@
 import { bigBbangNotification } from '../../utils/notification/card/bigBbang.notification.js';
 import shieldNotification from '../../utils/notification/card/shield.notification.js';
 import { CARD_TYPE } from '../../constants/card.enum.js';
-import equip from '../../utils/card/equip.js';
+import bbang from '../../utils/card/bbang.js';
 import weapon from '../../utils/card/weapon.js';
+import equip from '../../utils/card/equip.js';
 import vaccineNotification from '../../utils/notification/card/vaccine.notification.js';
 import call119Notification from '../../utils/notification/card/call119.notification.js';
 import lotto from '../../utils/card/lotto.js';
 
 const cardTypeAction = {
-  [CARD_TYPE.BBANG]: {},
+  [CARD_TYPE.BBANG]: { action: bbang },
   [CARD_TYPE.BIG_BBANG]: { action: bigBbangNotification },
   [CARD_TYPE.SHIELD]: { action: shieldNotification },
   [CARD_TYPE.VACCINE]: { action: vaccineNotification },
