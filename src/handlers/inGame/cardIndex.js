@@ -15,7 +15,7 @@ const cardTypeAction = {
   [CARD_TYPE.VACCINE]: { action: vaccineNotification },
   [CARD_TYPE.CALL_119]: { action: call119Notification },
   [CARD_TYPE.DEATH_MATCH]: {},
-  [CARD_TYPE.GUERRILLA]: { Action: guerrillaNotification },
+  [CARD_TYPE.GUERRILLA]: { action: guerrillaNotification },
   [CARD_TYPE.ABSORB]: {},
   [CARD_TYPE.HALLUCINATION]: {},
   [CARD_TYPE.FLEA_MARKET]: {},
