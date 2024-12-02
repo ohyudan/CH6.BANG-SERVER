@@ -6,6 +6,7 @@ import weapon from '../../utils/card/weapon.js';
 import vaccineNotification from '../../utils/notification/card/vaccine.notification.js';
 import call119Notification from '../../utils/notification/card/call119.notification.js';
 import lotto from '../../utils/card/lotto.js';
+import maturitySaving from '../../utils/card/maturitySaving.js';
 
 const cardTypeAction = {
   [CARD_TYPE.BBANG]: {},
@@ -18,7 +19,7 @@ const cardTypeAction = {
   [CARD_TYPE.ABSORB]: {},
   [CARD_TYPE.HALLUCINATION]: {},
   [CARD_TYPE.FLEA_MARKET]: {},
-  [CARD_TYPE.MATURED_SAVINGS]: {},
+  [CARD_TYPE.MATURED_SAVINGS]: {action: maturitySaving},
   [CARD_TYPE.WIN_LOTTERY]: { action: lotto },
   [CARD_TYPE.SNIPER_GUN]: { action: weapon },
   [CARD_TYPE.HAND_GUN]: { action: weapon },
