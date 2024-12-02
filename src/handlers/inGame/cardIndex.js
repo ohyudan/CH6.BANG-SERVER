@@ -7,6 +7,7 @@ import equip from '../../utils/card/equip.js';
 import vaccineNotification from '../../utils/notification/card/vaccine.notification.js';
 import call119Notification from '../../utils/notification/card/call119.notification.js';
 import lotto from '../../utils/card/lotto.js';
+import guerrillaNotification from '../../utils/notification/card/guerrilla.notification.js';
 
 const cardTypeAction = {
   [CARD_TYPE.BBANG]: { action: bbang },
@@ -15,7 +16,7 @@ const cardTypeAction = {
   [CARD_TYPE.VACCINE]: { action: vaccineNotification },
   [CARD_TYPE.CALL_119]: { action: call119Notification },
   [CARD_TYPE.DEATH_MATCH]: {},
-  [CARD_TYPE.GUERRILLA]: {},
+  [CARD_TYPE.GUERRILLA]: { action: guerrillaNotification },
   [CARD_TYPE.ABSORB]: {},
   [CARD_TYPE.HALLUCINATION]: {},
   [CARD_TYPE.FLEA_MARKET]: {},

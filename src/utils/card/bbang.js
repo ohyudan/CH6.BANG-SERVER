@@ -14,16 +14,57 @@ const bbang = ({ socket, cardType, targetUserId }) => {
   const inGameUsers = Array.from(room.getAllPlayers().values());
 
   // 타겟 유저가 현재 NONE 상태일 때 발사 가능하게 처리
-  if (!targetUser) {
+  if (user.characterData.stateInfo.state === CHARACTER_STATE_TYPE.GUERRILLA_TARGET) {
     // 타겟 유저가 없으면 -> 게릴라, 현피
 
-    // 현재 유저가 NONE 상태라면 타겟 유저 데이터가 존재해야 정상
-    if (user.characterData.stateInfo.state === CHARACTER_STATE_TYPE.NONE_CHARACTER_STATE) {
-      return {
-        success: false,
-        failCode: createFailCode(9),
+    const roomInJoinPlayerList = room.getAllPlayers();
+    const userMakeData = [];
+
+    const S2CUseCardNotification = {
+      cardType: cardType,
+      userId: socket.id,
+      targetUserId: targetUserId.low,
+    };
+
+    roomInJoinPlayerList.forEach((player) => {
+      if (!(socket.id === player.id)) {
+        const gamePacket = { useCardNotification: S2CUseCardNotification };
+
+        const result = createResponse(
+          HANDLER_IDS.USE_CARD_NOTIFICATION,
+          socket.version,
+          socket.sequence,
+          gamePacket,
+        );
+
+        player.socket.write(result);
+      } else {
+        player.setCharacterStateType(CHARACTER_STATE_TYPE.NONE_CHARACTER_STATE);
+        player.removeHandCard(CARD_TYPE.BBANG);
+      }
+      userMakeData.push(player.makeRawObject());
+    });
+
+    roomInJoinPlayerList.forEach((values) => {
+      const S2CUserUpdateNotification = {
+        user: userMakeData,
       };
-    }
+      const gamePacket = { userUpdateNotification: S2CUserUpdateNotification };
+      const result = createResponse(
+        HANDLER_IDS.USER_UPDATE_NOTIFICATION,
+        socket.version,
+        socket.sequence,
+        gamePacket,
+      );
+      values.socket.write(result);
+    });
+    // 현재 유저가 NONE 상태라면 타겟 유저 데이터가 존재해야 정상
+    // if (user.characterData.stateInfo.state === CHARACTER_STATE_TYPE.NONE_CHARACTER_STATE) {
+    //   return {
+    //     success: false,
+    //     failCode: createFailCode(9),
+    //   };
+    // }
   } else {
     // 타겟 유저가 존재할 때 -> 현재 유저의 상태가 NONE이고 상대가 NONE이면 발사 진행
     if (
@@ -108,7 +149,7 @@ const bbang = ({ socket, cardType, targetUserId }) => {
       user.increaseBbangCount();
 
       // 제거한 카드 룸의 덱에 추가
-      room.deckUseCardAdd(CARD_TYPE.BBANG);
+      // room.deckUseCardAdd(CARD_TYPE.BBANG);
 
       // 개구리군이랑 오토쉴드 적용도 클라에서 처리되는지 확인 필요 -> 안되는거 확인 서버에서 처리할 필요가 있을듯
       // 상대 캐릭터가 개구리군일 경우
