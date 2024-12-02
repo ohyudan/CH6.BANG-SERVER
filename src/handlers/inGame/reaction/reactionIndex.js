@@ -9,7 +9,7 @@ const reactionAction = {
   },
   [CHARACTER_STATE_TYPE.BBANG_TARGET]: {
     action: bbangTargetNotification,
-  }
+  },
   [CHARACTER_STATE_TYPE.GUERRILLA_TARGET]: {
     action: guerrillaTargetNotification,
   },
