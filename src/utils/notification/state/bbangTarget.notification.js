@@ -11,14 +11,15 @@ import { CARD_TYPE } from '../../../constants/card.enum.js';
 const bbangTargetNotification = async ({ socket, player, reactionType }) => {
   try {
     const room = roomList.getRoom(player.currentRoomId);
-    const targetUser = playerList.getPlayer(player.characterData.stateTargetUserId);
+    const targetUser = playerList.getPlayer(player.characterData.stateInfo.stateTargetUserId);
+    const inGameUsers = Array.from(room.getAllPlayers().values());
 
     // 공격자의 무기가 D이글인지 아닌지로 받을 데미지 변동
     // 피해받기 전 체력 기록
     const playerHp = player.characterData.hp;
     if (targetUser.characterData.weapon === CARD_TYPE.DESERT_EAGLE) player.decreaseHp();
     player.decreaseHp();
-    if(player.characterData.hp < 0) player.setHp(0);
+    if (player.characterData.hp < 0) player.setHp(0);
 
     player.setCharacterStateType(CHARACTER_STATE_TYPE.NONE_CHARACTER_STATE);
     player.setStateTargetUserId(0);
@@ -26,26 +27,35 @@ const bbangTargetNotification = async ({ socket, player, reactionType }) => {
     const getDamage = playerHp - player.characterData.hp; // 받은 데미지 -> 말랑 데미지 계산에 사용
 
     // 피격자가 사망했고, 게임 내에 가면군 유저가 존재한다면 -> 사망한 피격자의 카드들을 가면군에게 전달
-    const maskUser = room.users.find((user) => user.characterData.characterType === CHARACTER_TYPE.MASK);
+    const maskUser = inGameUsers.find(
+      (user) => user.characterData.characterType === CHARACTER_TYPE.MASK,
+    );
 
-    if(player.characterData.hp <= 0 && maskUser) {
-      // 사망한 유저의 카드를 mask 캐릭터에게 전달
+    // 피격자가 사망했으면
+    if (player.characterData.hp <= 0) {
+      // if () 사망한 유저에 따라 다른 유저들 승리조건 탐색?
 
-      for (let i = 0; i < player.characterData.handCards.length; i++) {
-        const cardData = player.characterData.handCards[0];
-        maskUser.characterData.handCards.push(cardData);
-        maskUser.increaseHandCardsCount();
-        player.characterData.handCards.splice(0, 1);
-        player.decreaseHandCardsCount();
+      // 사망한 유저와 mask유저가 동일하면 계산x
+      if (player !== maskUser && maskUser && player.characterData.handCardsCount > 0) {
+        // 사망한 유저의 카드를 mask 캐릭터에게 전달
+        console.log(player.characterData.handCards.length);
+        for (let i = 0; i < player.characterData.handCards.length; i++) {
+          const cardData = player.characterData.handCards[0];
+          maskUser.characterData.handCards.push(cardData);
+          maskUser.increaseHandCardsCount();
+          player.characterData.handCards.splice(0, 1);
+          player.decreaseHandCardsCount();
+        }
       }
 
-      userUpdateNotification(room);
-      // 위 조건을 만족할 시 아래 과정은 생략
-      return;
+      // 죽은 유저 처리 방법이 필ㄹ요?
     }
 
     // 피격자가 생존했고, 피격자의 캐릭터가 말랑이라면 -> 받은 데미지 만큼 카드 드로우
-    if (player.characterData.characterType === CHARACTER_TYPE.MALANG) {
+    if (
+      player.characterData.hp > 0 &&
+      player.characterData.characterType === CHARACTER_TYPE.MALANG
+    ) {
       for (let i = 0; i < getDamage; i++) {
         // 덱에서 카드 드로우
         player.addHandCard();
@@ -54,17 +64,24 @@ const bbangTargetNotification = async ({ socket, player, reactionType }) => {
     }
 
     // 피격자가 생존했고, 피격자의 캐릭터가 슬라임이라면 -> 공격자의 핸드 카드를 1장 랜덤으로 훔침
-    if (player.characterData.characterType === CHARACTER_TYPE.PINK_SLIME) {
+    if (
+      player.characterData.hp > 0 &&
+      player.characterData.characterType === CHARACTER_TYPE.PINK_SLIME &&
+      targetUser.characterData.handCardsCount > 0
+    ) {
       // 공격자의 핸드에서 1장 가져옴
-      // 랜덤 인덱스로 1장 
-      const randomIndex = Math.floor(Math.random()*targetUser.characterData.handCards.length);
-      const cardData = targetUser.characterData.handCards[randomIndex];
+      // 랜덤 인덱스로 1장
+      // const randomIndex = Math.floor(Math.random()*targetUser.characterData.handCards.length);
+      // const cardData = targetUser.characterData.handCards[randomIndex];
+      const cardData = targetUser.characterData.handCards[0];
       player.characterData.handCards.push(cardData);
       player.increaseHandCardsCount();
-      targetUser.characterData.handCards.splice(randomIndex, 1);
+      targetUser.characterData.handCards.splice(0, 1);
       targetUser.decreaseHandCardsCount();
     }
 
+    console.log(player.characterData.handCards);
+    console.log(targetUser.characterData.handCards);
     userUpdateNotification(room);
   } catch (err) {
     console.error(err);
