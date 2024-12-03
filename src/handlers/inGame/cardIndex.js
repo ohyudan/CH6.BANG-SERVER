@@ -8,6 +8,7 @@ import vaccineNotification from '../../utils/notification/card/vaccine.notificat
 import call119Notification from '../../utils/notification/card/call119.notification.js';
 import lotto from '../../utils/card/lotto.js';
 import guerrillaNotification from '../../utils/notification/card/guerrilla.notification.js';
+import maturitySaving from '../../utils/card/maturitySaving.js';
 
 const cardTypeAction = {
   [CARD_TYPE.BBANG]: { action: bbang },
