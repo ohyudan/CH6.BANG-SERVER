@@ -40,6 +40,7 @@ const shieldNotification = async ({ socket, cardType, targetUserId }) => {
       } else {
         player.setCharacterStateType(CHARACTER_STATE_TYPE.NONE_CHARACTER_STATE);
         player.removeHandCard(CARD_TYPE.SHIELD);
+        player.characterData.handCardsCount--;
       }
       userMakeData.push(player.makeRawObject());
     });
@@ -59,10 +60,12 @@ const shieldNotification = async ({ socket, cardType, targetUserId }) => {
       );
       //values.socket.write(animationPacket);
       values.socket.write(result);
+
+      setTimeout(() => {
+        value.socket.write(animationPacket);
+      }, 2000);
     });
-    roomInJoinPlayerList.forEach((value) => {
-      value.socket.write(animationPacket);
-    });
+
     success = true;
     failCode = createFailCode(0);
   } catch (err) {
