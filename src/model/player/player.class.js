@@ -233,6 +233,8 @@ class Player extends Observable {
             stateInfo: user.characterData.stateInfo,
             equips: user.characterData.equips,
             debuffs: user.characterData.debuffs,
+            // 현피 도중 데미지를 주는쪽의 카드가 사라지는 현상이 발생해서, 다른 유저의 카드도 전부 받아주는걸로 했습니다.
+            handCards: user.characterData.getAllhandCard(),
             bbangCount: user.characterData.bbangCount,
             handCardsCount: user.characterData.handCardsCount,
           },
