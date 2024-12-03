@@ -9,7 +9,6 @@ import call119Notification from '../../utils/notification/card/call119.notificat
 import lotto from '../../utils/card/lotto.js';
 import guerrillaNotification from '../../utils/notification/card/guerrilla.notification.js';
 import deathMatchNotification from '../../utils/notification/card/deathMatch.notification.js';
-import bbang from '../../utils/card/bbang.js';
 
 const cardTypeAction = {
   [CARD_TYPE.BBANG]: { action: bbang },
