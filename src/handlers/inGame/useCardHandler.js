@@ -3,6 +3,7 @@ import { CARD_TYPE } from '../../constants/card.enum.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import cardTypeAction from './cardIndex.js';
 import createFailCode from '../../utils/response/createFailCode.js';
+import userUpdateNotification from '../../utils/notification/userDataUpdate.notification.js';
 
 // 쉴드 미처리  사망 미처리
 const useCardHandler = async ({ socket, payload }) => {
@@ -14,8 +15,8 @@ const useCardHandler = async ({ socket, payload }) => {
       console.error('카드 타입이 없음');
 
       const S2CUseCardResponse = {
-        success: success,
-        failCode: failCode,
+        success: false,
+        failCode: createFailCode(11),
       };
       const gamePacket = {
         useCardResponse: S2CUseCardResponse,

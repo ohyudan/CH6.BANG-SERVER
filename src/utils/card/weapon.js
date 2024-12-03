@@ -14,16 +14,9 @@ const weapon = ({ socket, cardType, targetUserId }) => {
     return { success: false, failCode: createFailCode(11) };
   }
 
-  if (useWeapon.count >= 2) {
-    useWeapon.count--;
-    user.characterData.handCardsCount--;
-  } else {
-    const weaponIndex = user.characterData.handCards.findIndex((card) => card.type === cardType);
-    user.characterData.handCards.splice(weaponIndex, 1);
-    user.characterData.handCardsCount--;
-  }
-
-  // 사용한 카드를 룸의 덱에 추가해야하는데.. 자료?구조
+  // 사용한 카드를 룸의 덱에 추가
+  user.removeHandCard(cardType);
+  user.characterData.handCardsCount--;
 
   user.characterData.weapon = useWeapon.type;
 
@@ -32,7 +25,7 @@ const weapon = ({ socket, cardType, targetUserId }) => {
   const S2CUseCardNotification = {
     cardType: cardType,
     userId: user.id,
-    targetUserId: 0,
+    targetUserId: targetUserId.low,
   };
 
   inGameUsers.forEach((player) => {
