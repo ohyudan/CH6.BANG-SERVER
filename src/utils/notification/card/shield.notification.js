@@ -62,7 +62,7 @@ const shieldNotification = async ({ socket, cardType, targetUserId }) => {
       values.socket.write(result);
 
       setTimeout(() => {
-        value.socket.write(animationPacket);
+        values.socket.write(animationPacket);
       }, 2000);
     });
 
