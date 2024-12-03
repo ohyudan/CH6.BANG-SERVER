@@ -6,9 +6,11 @@ import weapon from '../../utils/card/weapon.js';
 import vaccineNotification from '../../utils/notification/card/vaccine.notification.js';
 import call119Notification from '../../utils/notification/card/call119.notification.js';
 import lotto from '../../utils/card/lotto.js';
+import deathMatchNotification from '../../utils/notification/card/deathMatch.notification.js';
+import bbang from '../../utils/card/bbang.js';
 
 const cardTypeAction = {
-  [CARD_TYPE.BBANG]: {},
+  [CARD_TYPE.BBANG]: { action: bbang },
   [CARD_TYPE.BIG_BBANG]: { Action: bigBbangNotification },
   [CARD_TYPE.SHIELD]: {},
   [CARD_TYPE.VACCINE]: { Action: vaccineNotification },
@@ -17,7 +19,7 @@ const cardTypeAction = {
   [CARD_TYPE.SHIELD]: { action: shieldNotification },
   [CARD_TYPE.VACCINE]: {},
   [CARD_TYPE.CALL_119]: {},
-  [CARD_TYPE.DEATH_MATCH]: {},
+  [CARD_TYPE.DEATH_MATCH]: { action: deathMatchNotification },
   [CARD_TYPE.GUERRILLA]: {},
   [CARD_TYPE.ABSORB]: {},
   [CARD_TYPE.HALLUCINATION]: {},
