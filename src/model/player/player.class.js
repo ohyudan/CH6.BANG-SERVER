@@ -205,7 +205,7 @@ class Player extends Observable {
     const inGameUsers = Array.from(room.getAllPlayers().values());
 
     return inGameUsers.map((user) => {
-      if (user.id === this._id) {
+      if (user.id === this.id) {
         return {
           id: user.id,
           nickname: user.nickname,
