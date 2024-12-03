@@ -45,7 +45,7 @@ const loginHandler = async ({ socket, payload }) => {
         myInfo: {
           id: user.id,
           nickname: user.nickname,
-          character: null,
+          character: 0,
         },
         GlobalFailCode: failCode,
       };

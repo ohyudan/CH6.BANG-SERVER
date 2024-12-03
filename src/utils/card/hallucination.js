@@ -6,23 +6,22 @@ import roomList from '../../model/room/roomList.class.js';
 import createFailCode from '../response/createFailCode.js';
 import { createResponse } from '../response/createResponse.js';
 
-//타겟이 은행npc  targetUserId 필요없는것 같기도.
-const maturitySaving = ({ socket, cardType }) => {
 
+const hallucination = ({ socket, cardType,targetUserId }) => {
+console.time("신기루.");
 const user = playerList.getPlayer(socket.id);
 const room = roomList.getRoom(user.currentRoomId);
-//const targetUser = playerList.getPlayer(targetUserId.low);
-//3장 드로우및 핸드수 증가.
-const card=room.cardDraw(2);
-for(let i=0;i<2;i++)
-{
-    user.addHandCard(card[i]);
-    user.increaseHandCardsCount();
-}
+const targetUser = playerList.getPlayer(targetUserId.low);
+const userState=user.characterData.stateInfo.state;
+const targetUserState=targetUser.characterData.stateInfo.state;
+//13 신기루 시전
+//14 신기루 대상
+user.setCharacterStateType(CHARACTER_STATE_TYPE.HALLUCINATING);
+targetUser.setCharacterStateType(CHARACTER_STATE_TYPE.HALLUCINATION_TARGET);
+console.log(`유저의 상태:  ${user.characterData.stateInfo.state}
+             타겟의 상태: ${targetUser.characterData.stateInfo.state}`);
 
-//핸드에서 해당카드제거 및 핸드수 줄임
-user.removeHandCard(CARD_TYPE.MATURED_SAVINGS);
-user.characterData.handCardsCount--;
+
 const inGameUsers = Array.from(room.getAllPlayers().values());
 
 const S2CUseCardNotification = {
@@ -56,11 +55,11 @@ inGameUsers.forEach((player) => {
 
     player.socket.write(userUpdateNotification);
 });
-
+console.timeEnd("신기루.");
 return {
     success: true,
     failCode: createFailCode(0),
 };
 };
 
-export default maturitySaving;
+export default hallucination;
