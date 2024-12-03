@@ -5,6 +5,9 @@ import playerList from '../../../model/player/playerList.class.js';
 import { CARD_TYPE } from '../../../constants/card.enum.js';
 import HANDLER_IDS from '../../../constants/handlerIds.js';
 import { CHARACTER_STATE_TYPE } from '../../../constants/user.enum.js';
+import animation from '../../response/createAnimation.js';
+import { ANIMATION_TYPE } from '../../../constants/user.enum.js';
+
 const shieldNotification = async ({ socket, cardType, targetUserId }) => {
   //console.log(cardType, targetUserId);
   const useCardPlayer = playerList.getPlayer(socket.id);
@@ -12,7 +15,7 @@ const shieldNotification = async ({ socket, cardType, targetUserId }) => {
   const roomInJoinPlayerList = room.getAllPlayers();
   let failCode = null;
   let success = null;
-  //const backupPlayerData = room.getAllPlayers(); // 얕은 복사 의미 없음 추후 더 고려해서 작성
+
   const userMakeData = [];
 
   const S2CUseCardNotification = {
@@ -41,6 +44,8 @@ const shieldNotification = async ({ socket, cardType, targetUserId }) => {
       userMakeData.push(player.makeRawObject());
     });
 
+    const animationPacket = animation(socket, useCardPlayer, ANIMATION_TYPE.SHIELD_ANIMATION);
+
     roomInJoinPlayerList.forEach((values) => {
       const S2CUserUpdateNotification = {
         user: userMakeData,
@@ -52,7 +57,11 @@ const shieldNotification = async ({ socket, cardType, targetUserId }) => {
         socket.sequence,
         gamePacket,
       );
+      //values.socket.write(animationPacket);
       values.socket.write(result);
+    });
+    roomInJoinPlayerList.forEach((value) => {
+      value.socket.write(animationPacket);
     });
     success = true;
     failCode = createFailCode(0);
@@ -64,3 +73,7 @@ const shieldNotification = async ({ socket, cardType, targetUserId }) => {
 };
 
 export default shieldNotification;
+// message S2CAnimationNotification {
+//   int64 userId = 1;
+//   AnimationType animationType = 2;
+// }

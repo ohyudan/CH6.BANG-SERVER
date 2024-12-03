@@ -25,7 +25,7 @@ export const Config = {
     PORT: envFiles.DB1.PORT,
   },
   PHASE: {
-    AFTER: 15000,
+    AFTER: 150000,
     END: 30000,
   },
   MAX_SEQUENCE_DIFF: 5,
