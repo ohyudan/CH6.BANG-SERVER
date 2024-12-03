@@ -7,7 +7,7 @@
     import { createResponse } from '../../utils/response/createResponse.js';
 
     //타겟이 로또npc  targetUserId 필요없는것 같기도.
-    const lotto = ({ socket, cardType }) => {
+    const lotto = ({ socket, cardType,targetuserId }) => {
 
     const user = playerList.getPlayer(socket.id);
     const room = roomList.getRoom(user.currentRoomId);
@@ -30,7 +30,7 @@
     const S2CUseCardNotification = {
         cardType: cardType,
         userId: user.id,
-        targetUserId:0,
+        targetUserId:socket.id,
     };
 
     inGameUsers.forEach((player) => {

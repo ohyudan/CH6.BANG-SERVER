@@ -28,7 +28,7 @@ const inGameUsers = Array.from(room.getAllPlayers().values());
 const S2CUseCardNotification = {
     cardType: cardType,
     userId: user.id,
-    targetUserId:0,
+    targetUserId:socket.id,
 };
 
 inGameUsers.forEach((player) => {
