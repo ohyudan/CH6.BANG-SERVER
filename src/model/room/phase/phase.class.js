@@ -68,17 +68,17 @@ class Phase {
       const selectedPositions = new Set();
       const ArrayPlayerList = [...roomPlayList];
       while (selectedPositions.size < ArrayPlayerList.length) {
-        //const randId = Math.floor(Math.random() * characterPositions.length);
+        // const randId = Math.floor(Math.random() * characterPositions.length);
         const randId = random(0, characterPositions.length);
         selectedPositions.add(characterPositions[randId]);
       }
 
-      let i = 0;;
+      let i = 0;
       const posArr = [...selectedPositions];
       roomPlayList.forEach((value) => {
         let position = { id: value.id, x: posArr[i].x, y: posArr[i].y };
         changedPositions.push(position);
-        i++;;
+        i++;
       });
 
       // 낮 시작시 자신의 핸드가 자신의 체력 이상이면 랜덤으로 체력 수치만큼 카드를 버리도록 조정
@@ -86,7 +86,7 @@ class Phase {
         if (value.characterData.handCardsCount > value.characterData.hp) {
           const needDestroyCardsCount = value.characterData.handCardsCount - value.characterData.hp;
           for (let i = 0; i < needDestroyCardsCount; i++) {
-            //const randId = Math.floor(Math.random() * value.characterData.handCards.length);
+            // const randId = Math.floor(Math.random() * value.characterData.handCards.length);
             const randId = random(0, value.characterData.handCards.length);
             const randCard = value.characterData.handCards[randId];
             value.removeHandCard(randCard._type);
@@ -96,8 +96,8 @@ class Phase {
       });
 
       // 플레이어의 디버프를 체크 한 후 해당 디버프 적용
-      roomPlayList.forEach((value, key) => {        
-          //const randomId = Math.random() * 100;          
+      roomPlayList.forEach((value, key) => {
+        //const randomId = Math.random() * 100;
         if (value.characterData.debuffs.includes(CARD_TYPE.CONTAINMENT_UNIT)) {
           const randomId = random(0, 100);
           // 감옥
@@ -116,11 +116,11 @@ class Phase {
         idArray.push(value.id);
       });
 
+      let playerIdNumber
       roomPlayList.forEach((value, key) => {
         if (value.characterData.debuffs.includes(CARD_TYPE.SATELLITE_TARGET)) {
           const randomId = random(0, 100);
           // 위성 폭탄
-          console.log('위성이 있는데요', randomId, value.id);
           if (randomId < 3) {
             value.decreaseHp();
             value.decreaseHp();
@@ -128,15 +128,24 @@ class Phase {
             value.removeDebuff(CARD_TYPE.SATELLITE_TARGET);
           } else {
             value.removeDebuff(CARD_TYPE.SATELLITE_TARGET);
-            // id 순서가 최대가 아닐 때
-            const playerIdNumber = idArray.indexOf(value.id);
-            const nextPlayerIdNumber = idArray[playerIdNumber + 1];
-            const nextPlayer = playerList.getPlayer(nextPlayerIdNumber);
-            nextPlayer.addDebuff(CARD_TYPE.SATELLITE_TARGET);
-            // id 순서가 제일 끝자리일 때
+            playerIdNumber = idArray.indexOf(value.id);
           }
         }
       });
+
+      console.log(idArray);
+      console.log(playerIdNumber);
+      // id 순서가 최대가 아닐 때
+      if (playerIdNumber < idArray.length - 1) {
+        const nextPlayerIdNumber = idArray[playerIdNumber + 1];
+        const nextPlayer = playerList.getPlayer(nextPlayerIdNumber);
+        nextPlayer.addDebuff(CARD_TYPE.SATELLITE_TARGET);
+        // id 순서가 제일 끝자리일 때
+      } else {
+        const firstPlayerIdNumber = idArray[0];
+        const firstPlayer = playerList.getPlayer(firstPlayerIdNumber);
+        firstPlayer.addDebuff(CARD_TYPE.SATELLITE_TARGET);
+      }
 
       // 카드를 2장씩 드로우
       roomPlayList.forEach((value, key) => {
@@ -168,7 +177,6 @@ class Phase {
         ? Date.now() + Config.PHASE.END
         : Date.now() + Config.PHASE.AFTER;
 
-    
     phaseUpdateNotification(roomPlayList, nextPhase, this.nextPhaseAt, changedPositions);
     userUpdateNotification(room);
 
