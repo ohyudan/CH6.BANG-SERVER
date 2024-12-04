@@ -9,7 +9,7 @@ import call119Notification from '../../utils/notification/card/call119.notificat
 import lotto from '../../utils/card/lotto.js';
 import guerrillaNotification from '../../utils/notification/card/guerrilla.notification.js';
 import deathMatchNotification from '../../utils/notification/card/deathMatch.notification.js';
-import bbang from '../../utils/card/bbang.js';
+import debuff from '../../utils/card/debuff.js';
 
 const cardTypeAction = {
   [CARD_TYPE.BBANG]: { action: bbang },
@@ -36,8 +36,8 @@ const cardTypeAction = {
   [CARD_TYPE.RADAR]: { action: equip },
   [CARD_TYPE.AUTO_SHIELD]: { action: equip },
   [CARD_TYPE.STEALTH_SUIT]: { action: equip },
-  [CARD_TYPE.CONTAINMENT_UNIT]: {},
-  [CARD_TYPE.SATELLITE_TARGET]: {},
-  [CARD_TYPE.BOMB]: {},
+  [CARD_TYPE.CONTAINMENT_UNIT]: { action: debuff },
+  [CARD_TYPE.SATELLITE_TARGET]: { action: debuff },
+  [CARD_TYPE.BOMB]: { action: debuff },
 };
 export default cardTypeAction;
