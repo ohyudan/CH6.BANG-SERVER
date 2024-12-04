@@ -121,7 +121,7 @@ class Phase {
         if (value.characterData.debuffs.includes(CARD_TYPE.SATELLITE_TARGET)) {
           const randomId = random(0, 100);
           // 위성 폭탄
-          if (randomId < 90) {
+          if (randomId < 3) {
             value.decreaseHp();
             value.decreaseHp();
             value.decreaseHp();
