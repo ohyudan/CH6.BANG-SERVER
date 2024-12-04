@@ -8,13 +8,15 @@ import { createResponse } from '../response/createResponse.js';
 const debuff = ({ socket, cardType, targetUserId }) => {
   const user = playerList.getPlayer(socket.id);
   const room = roomList.getRoom(user.currentRoomId);
-  const targetUser = playerList.getPlayer(targetUserId.low)
+  const targetUser = playerList.getPlayer(targetUserId.low);
 
-  targetUser.addDebuff(cardType)
-  
+  if (!targetUser.characterData.debuffs.includes(cardType)) {
+    targetUser.addDebuff(cardType);
+  }
+
   user.removeHandCard(cardType);
   user.characterData.handCardsCount--;
- 
+
   const inGameUsers = Array.from(room.getAllPlayers().values());
 
   const S2CUseCardNotification = {
