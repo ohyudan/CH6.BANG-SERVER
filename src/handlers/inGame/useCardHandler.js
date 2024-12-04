@@ -10,7 +10,6 @@ const useCardHandler = async ({ socket, payload }) => {
   const { cardType, targetUserId } = payload;
 
   const cardActionFunction = cardTypeAction[cardType].action;
-  console.log(cardActionFunction);
   try {
     if (!cardActionFunction) {
       console.error('카드 타입이 없음');
