@@ -116,12 +116,12 @@ class Phase {
         idArray.push(value.id);
       });
 
-      let playerIdNumber
+      let playerIdNumber;
       roomPlayList.forEach((value, key) => {
         if (value.characterData.debuffs.includes(CARD_TYPE.SATELLITE_TARGET)) {
           const randomId = random(0, 100);
           // 위성 폭탄
-          if (randomId < 3) {
+          if (randomId < 90) {
             value.decreaseHp();
             value.decreaseHp();
             value.decreaseHp();
