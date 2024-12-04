@@ -3,7 +3,7 @@ import HANDLER_IDS from '../../constants/handlerIds.js';
 import createFailCode from '../../utils/response/createFailCode.js';
 import roomList from '../../model/room/roomList.class.js';
 import playerList from '../../model/player/playerList.class.js';
-import roomJoinNotifcation from '../../utils/notification/roomJoin.notification.js';
+import roomJoinNotifcation from '../../utils/notification/room/roomJoin.notification.js';
 
 const roomJoinHandler = async ({ socket, payload }) => {
   const { roomId } = payload;

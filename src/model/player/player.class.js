@@ -1,26 +1,20 @@
-class Player {
+import CharacterData from '../character/characterData.class.js';
+import roomList from '../room/roomList.class.js';
+import Position from './position.class.js';
+import { Observable } from '../observer/observer.js';
+import CardData from '../card/cardData.class.js';
+
+class Player extends Observable {
   constructor(id, nickname, socket) {
+    super();
     this._id = id;
     this._nickname = nickname;
     this.socket = socket;
     this._currentRoomId = null;
-    this.CharacterData = {
-      CharacterType: undefined,
-      RoleType: undefined,
-      hp: undefined,
-      weapon: undefined,
-      CharacterStateInfoData: undefined,
-      equips: [],
-      debuffers: [],
-      CardData: [],
-      bbangCount: undefined,
-      handCardCount: undefined,
-    };
-    this.UserData = {
-      id: this._id,
-      nickname: this._nickname,
-      CharacterData: this.CharacterData,
-    };
+
+    this.characterData = new CharacterData(); // CharacterData 객체 생성
+
+    this.position = new Position(); // Position 객체 생성
   }
   get id() {
     return this._id;
@@ -30,6 +24,252 @@ class Player {
   }
   get currentRoomId() {
     return this._currentRoomId;
+  }
+  get nickname() {
+    return this._nickname;
+  }
+  // 위치 업데이트
+  updatePosition(x, y) {
+    this.position.x = x;
+    this.position.y = y;
+  }
+
+  // 플레이어의 x 좌표 반환
+  getX() {
+    return this.position.x;
+  }
+
+  // 플레이어의 y 좌표 반환
+  getY() {
+    return this.position.y;
+  }
+
+  // 캐릭터 타입 설정
+  setCharacterType(characterType) {
+    this.characterData.characterType = characterType;
+  }
+
+  // 캐릭터 역할 설정
+  setCharacterRoleType(roleType) {
+    this.characterData.roleType = roleType;
+  }
+
+  // 캐릭터의 체력(HP) 설정
+  setHp(hp) {
+    this.characterData.hp = hp;
+  }
+
+  // 캐릭터의 체력 증가
+  increaseHp() {
+    this.characterData.hp += 1;
+  }
+
+  // 캐릭터의 체력 감소
+  decreaseHp() {
+    this.characterData.hp -= 1;
+  }
+
+  // 캐릭터가 사용하는 무기 설정
+  setWeapon(weapon) {
+    this.characterData.weapon = weapon;
+  }
+
+  // 현재 캐릭터 상태 설정
+  setCharacterStateType(characterStateType) {
+    this.characterData.stateInfo.state = characterStateType;
+  }
+
+  // 캐릭터의 다음 상태 설정
+  setNextCharacterStateType(nextStateType) {
+    this.characterData.stateInfo.nextState = nextStateType;
+  }
+
+  // 다음 상태로 변경될 시각 설정 (타임스탬프)
+  setNextStateAt(nextStateAt) {
+    this.characterData.stateInfo.nextStateAt = nextStateAt;
+  }
+
+  // 상태 변경의 대상 사용자 ID 설정
+  setStateTargetUserId(targetUserId) {
+    this.characterData.stateInfo.stateTargetUserId = targetUserId;
+  }
+
+  // 캐릭터의 장비 추가
+  addEquip(equip) {
+    this.characterData.equips.push(equip);
+  }
+
+  // 캐릭터의 디버프 추가
+  addDebuff(debuff) {
+    this.characterData.debuffs.push(debuff);
+  }
+
+  // 캐릭터의 디버프 제거 (phaseBranch에서 추가함)
+  removeDebuff(debuff) {
+    this.characterData.debuffs = this.characterData.debuffs.filter((buff) => buff !== debuff);
+  }
+
+  // 캐릭터의 손패(카드) 추가
+  /**
+   *
+   * @param {Card} card
+   *
+   */
+  addHandCard() {
+    const card = this.notifyObservers('addHandCard', this);
+    if (!(card == null)) {
+      this.characterData.handCards.push(card);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   *
+   * @param {CardType} CardType CardType
+   *
+   * 덱으로 반환 필요
+   */
+  // 캐릭터의 손패(카드) 제거
+  removeHandCard(cardType) {
+    const { card, index } = this.characterData.getCardsearch(cardType);
+    if (!(card == null)) {
+      this.notifyObservers('removeHandCard', card);
+
+      this.characterData.handCards.splice(index, 1);
+      return true;
+    }
+    return false;
+  }
+
+  // 캐릭터의 무기 제거
+  removeWeapon() {
+    if (this.characterData.weapon !== 0) {
+      const card = new CardData(this.characterData.weapon);
+      this.notifyObservers('removeHandCard', card);
+
+      this.characterData.weapon = 0;
+      return true;
+    }
+    return false;
+  }
+
+  // 캐릭터의 장비 제거
+  removeEquip(cardType) {
+    const equipIndex = this.characterData.equips.findIndex((equip) => equip === cardType);
+    if (equipIndex) {
+      const card = new CardData(cardType);
+      this.notifyObservers('removeHandCard', card);
+
+      this.characterData.equips.splice(equipIndex, 1);
+      return true;
+    }
+    return false;
+  }
+
+  // 빵야 사용 횟수 증가
+  increaseBbangCount() {
+    this.characterData.bbangCount += 1;
+  }
+
+  // 빵야 사용 횟수 지정 (phaseBranch에서 추가함)
+  setBbangCount(count) {
+    this.characterData.bbangCount = count;
+  }
+
+  // 빵야 사용 횟수 감소
+  decreaseBbangCount() {
+    this.characterData.bbangCount -= 1;
+  }
+
+  // 손패 카드 수 증가
+  increaseHandCardsCount() {
+    this.characterData.handCardsCount += 1;
+  }
+  // 손패 매개변수 만큼 카드 수 증가
+  increaseHandCardsCountParam(count) {
+    this.characterData.handCardsCount += count;
+  }
+  // 손패 카드 수 감소
+  decreaseHandCardsCount() {
+    this.characterData.handCardsCount -= 1;
+  }
+
+  // 손패 매개변수 만큼 카드 수 감소
+  decreaseHandCardsCountParam(count) {
+    this.characterData.handCardsCount -= count;
+  }
+
+  // Player 데이터 직렬화
+  makeRawObject() {
+    return {
+      id: this._id,
+      nickname: this._nickname,
+      character: {
+        characterType: this.characterData.characterType,
+        roleType: this.characterData.roleType,
+        hp: this.characterData.hp,
+        weapon: this.characterData.weapon,
+        stateInfo: {
+          state: this.characterData.stateInfo.state,
+          nextState: this.characterData.stateInfo.nextState,
+          nextStateAt: this.characterData.stateInfo.nextStateAt,
+          stateTargetUserId: this.characterData.stateInfo.stateTargetUserId,
+        },
+        equips: this.characterData.equips,
+        debuffs: this.characterData.debuffs,
+        handCards: this.characterData.getAllhandCard(),
+        bbangCount: this.characterData.bbangCount,
+        handCardsCount: this.characterData.handCardsCount,
+      },
+    };
+  }
+  getAllUsersData() {
+    const room = roomList.getRoom(this._currentRoomId);
+    const inGameUsers = Array.from(room.getAllPlayers().values());
+
+    return inGameUsers.map((user) => {
+      if (user.id === this.id) {
+        return {
+          id: user.id,
+          nickname: user.nickname,
+          character: {
+            characterType: user.characterData.characterType,
+            roleType: user.characterData.roleType,
+            hp: user.characterData.hp,
+            weapon: user.characterData.weapon,
+            stateInfo: user.characterData.stateInfo,
+            equips: user.characterData.equips,
+            debuffs: user.characterData.debuffs,
+            handCards: user.characterData.getAllhandCard(),
+            bbangCount: user.characterData.bbangCount,
+            handCardsCount: user.characterData.handCardsCount,
+          },
+        };
+      } else {
+        return {
+          id: user.id,
+          nickname: user.nickname,
+          character: {
+            characterType: user.characterData.characterType,
+            hp: user.characterData.hp,
+            weapon: user.characterData.weapon,
+            stateInfo: user.characterData.stateInfo,
+            equips: user.characterData.equips,
+            debuffs: user.characterData.debuffs,
+            // 현피 도중 데미지를 주는쪽의 카드가 사라지는 현상이 발생해서, 다른 유저의 카드도 전부 받아주는걸로 했습니다.
+            handCards: user.characterData.getAllhandCard(),
+            bbangCount: user.characterData.bbangCount,
+            handCardsCount: user.characterData.handCardsCount,
+          },
+        };
+      }
+    });
+  }
+
+  notifyObservers(event, data) {
+    return this.observers.map((observer) => observer.update(event, data))[0];
   }
 }
 export default Player;

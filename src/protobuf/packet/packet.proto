@@ -12,11 +12,6 @@ message CardData {
     int32 count = 2;
 }
 
-message GameStateData {
-    PhaseType phaseType = 1; // DAY 1, EVENING 2, END 3 (하루 종료시 카드 버리는 턴)
-    int64 nextPhaseAt = 2; // 다음 페이즈 시작 시점(밀리초 타임스탬프)
-}
-
 /* 
     패킷 명세
 */
@@ -241,11 +236,6 @@ message S2CWarningNotification {
     int64 expectedAt = 2; // 밀리초 타임스탬프
 }
 
-message S2CAnimationNotification {
-    int64 userId = 1;
-    AnimationType animationType = 2;
-}
-
 // 최상위 GamePacket 메시지
 message GamePacket {
     oneof payload {
@@ -349,52 +339,6 @@ enum WinType {
     TARGET_AND_BODYGUARD_WIN = 0;
     HITMAN_WIN = 1;
     PSYCHOPATH_WIN = 2;
-}
-
-enum CardType {
-    NONE = 0;
-    BBANG = 1; // 20장
-    BIG_BBANG = 2; // 1장
-    SHIELD = 3; // 10장
-    VACCINE = 4; // 6장
-    CALL_119 = 5; // 2장
-    DEATH_MATCH = 6; // 4장
-    GUERRILLA = 7; // 1장
-    ABSORB = 8; // 4장
-    HALLUCINATION = 9; // 4장
-    FLEA_MARKET = 10; // 3장
-    MATURED_SAVINGS = 11; // 2장
-    WIN_LOTTERY = 12; // 1장
-    SNIPER_GUN = 13; // 1장
-    HAND_GUN = 14; // 2장
-    DESERT_EAGLE = 15; // 3장
-    AUTO_RIFLE = 16; // 2장
-    LASER_POINTER = 17; // 1장
-    RADAR = 18; // 1장
-    AUTO_SHIELD = 19; // 2장
-    STEALTH_SUIT = 20; // 2장
-    CONTAINMENT_UNIT = 21; // 3장
-    SATELLITE_TARGET = 22; // 1장
-    BOMB = 23; // 1장
-}
-
-enum PhaseType {
-    NONE_PHASE = 0;
-    DAY = 1;
-    EVENING = 2;
-    END = 3;
-}
-
-enum ReactionType {
-    NONE_REACTION = 0;
-    NOT_USE_CARD = 1;
-}
-
-enum SelectCardType {
-    HAND = 0;
-    EQUIP = 1;
-    WEAPON = 2;
-    DEBUFF = 3;
 }
 
 enum AnimationType {

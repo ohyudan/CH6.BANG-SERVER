@@ -1,5 +1,5 @@
-import HANDLER_IDS from '../../constants/handlerIds.js';
-import { createResponse } from '../response/createResponse.js';
+import HANDLER_IDS from '../../../constants/handlerIds.js';
+import { createResponse } from '../../response/createResponse.js';
 
 export const roomLeaveNotifcation = (room, leaveUser) => {
   const roomPlayList = room.getAllPlayers();

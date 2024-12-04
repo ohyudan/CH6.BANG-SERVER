@@ -1,6 +1,6 @@
 import HANDLER_IDS from '../../constants/handlerIds.js';
 import { createResponse } from '../../utils/response/createResponse.js';
-import roomLeaveNotifcation from '../../utils/notification/roomLeave.notification.js';
+import roomLeaveNotifcation from '../../utils/notification/room/roomLeave.notification.js';
 import roomList from '../../model/room/roomList.class.js';
 import playerList from '../../model/player/playerList.class.js';
 import createFailCode from '../../utils/response/createFailCode.js';

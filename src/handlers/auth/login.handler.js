@@ -45,7 +45,7 @@ const loginHandler = async ({ socket, payload }) => {
         myInfo: {
           id: user.id,
           nickname: user.nickname,
-          character: null,
+          character: 0,
         },
         GlobalFailCode: failCode,
       };
@@ -60,7 +60,6 @@ const loginHandler = async ({ socket, payload }) => {
       );
       // 동시 접속 중인지 확인
       socket.id = user.id;
-      console.log(playerList.getPlayer(socket.id));
       playerList.addPlayer(user.id, user.nickname, socket);
       socket.write(result);
     }

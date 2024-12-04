@@ -9,6 +9,13 @@ import roomCreateHander from './room/roomCreateHandler.js';
 import roomJoinHandler from './room/roomJoinHandler.js';
 import roomLeaveHandler from './room/roomLeaveHandler.js';
 import roomJoinRamdomHandler from './room/roomJoinRamdomHandler.js';
+import gamePrepareHandler from './gameStatus/gamePrepare.handler.js';
+import gameStartHandler from './gameStatus/gameStart.handler.js';
+import positionUpdateHandler from './inGame/positionUpdate.handler.js';
+import useCardHandler from './inGame/useCardHandler.js';
+import reactionHandler from './inGame/reaction/reactionHandler.js';
+import destroyCardHandler from './inGame/destroyCard.handler.js';
+import cardSelectHandler from './inGame/cardSelect.handler.js';
 
 const packetTypes = {
   [HANDLER_IDS.REGISTER_REQUEST]: {
@@ -18,6 +25,14 @@ const packetTypes = {
   [HANDLER_IDS.LOGIN_REQUEST]: {
     packetType: loginHandler,
     protoType: 'C2SLoginRequest',
+  },
+  [HANDLER_IDS.GAME_PREPARE_REQUEST]: {
+    packetType: gamePrepareHandler,
+    protoType: 'C2SGamePrepareRequest',
+  },
+  [HANDLER_IDS.GAME_START_REQUEST]: {
+    packetType: gameStartHandler,
+    protoType: 'C2SGameStartRequest',
   },
   [HANDLER_IDS.GET_ROOM_LIST_REQUEST]: {
     packetType: roomListGetHandler,
@@ -38,6 +53,26 @@ const packetTypes = {
   [HANDLER_IDS.JOIN_RANDOM_ROOM_REQUEST]: {
     packetType: roomJoinRamdomHandler,
     ptoroType: 'C2SJoinRandomRoomRequest',
+  },
+  [HANDLER_IDS.POSITION_UPDATE_REQUEST]: {
+    packetType: positionUpdateHandler,
+    protoType: 'C2SPositionUpdateRequest',
+  },
+  [HANDLER_IDS.USE_CARD_REQUEST]: {
+    packetType: useCardHandler,
+    protoType: 'C2SUseCardRequest',
+  },
+  [HANDLER_IDS.REACTION_REQUEST]: {
+    packetType: reactionHandler,
+    protoType: 'C2SReactionrequest',
+  },
+  [HANDLER_IDS.DESTROY_CARD_REQUEST]: {
+    packetType: destroyCardHandler,
+    protoType: 'C2SDestroyCardRequest',
+  },
+  [HANDLER_IDS.CARD_SELECT_REQUEST]: {
+    packetType: cardSelectHandler,
+    protoType: 'C2SCardSelectRequest',
   },
 };
 /**
