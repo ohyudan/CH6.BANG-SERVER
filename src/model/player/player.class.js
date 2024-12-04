@@ -143,6 +143,31 @@ class Player extends Observable {
     return false;
   }
 
+  // 캐릭터의 무기 제거
+  removeWeapon() {
+    if (this.characterData.weapon !== 0) {
+      const card = new CardData(this.characterData.weapon);
+      this.notifyObservers('removeHandCard', card);
+
+      this.characterData.weapon = 0;
+      return true;
+    }
+    return false;
+  }
+
+  // 캐릭터의 장비 제거
+  removeEquip(cardType) {
+    const equipIndex = this.characterData.equips.findIndex((equip) => equip === cardType);
+    if (equipIndex) {
+      const card = new CardData(cardType);
+      this.notifyObservers('removeHandCard', card);
+
+      this.characterData.equips.splice(equipIndex, 1);
+      return true;
+    }
+    return false;
+  }
+
   // 빵야 사용 횟수 증가
   increaseBbangCount() {
     this.characterData.bbangCount += 1;
@@ -233,6 +258,8 @@ class Player extends Observable {
             stateInfo: user.characterData.stateInfo,
             equips: user.characterData.equips,
             debuffs: user.characterData.debuffs,
+            // 현피 도중 데미지를 주는쪽의 카드가 사라지는 현상이 발생해서, 다른 유저의 카드도 전부 받아주는걸로 했습니다.
+            handCards: user.characterData.getAllhandCard(),
             bbangCount: user.characterData.bbangCount,
             handCardsCount: user.characterData.handCardsCount,
           },

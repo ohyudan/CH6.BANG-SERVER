@@ -1,3 +1,4 @@
+import { CARD_TYPE } from '../../constants/card.enum.js';
 import HANDLER_IDS from '../../constants/handlerIds.js';
 import playerList from '../../model/player/playerList.class.js';
 import roomList from '../../model/room/roomList.class.js';
@@ -14,31 +15,27 @@ const equip = ({ socket, cardType, targetUserId }) => {
     return { success: false, failCode: createFailCode(11) };
   }
 
-  if (useEquip.count >= 2) {
-    useEquip.count--;
-    user.characterData.handCardsCount--;
-  } else {
-    const equipIndex = user.characterData.handCards.findIndex((card) => card.type === cardType);
-    user.characterData.handCards.splice(equipIndex, 1);
-    user.characterData.handCardsCount--;
-  }
 
-  // 사용한 카드를 룸의 덱에 추가 필요
-
-  // 사용한 방어구를 equips 배열에 추가
+  // 사용한 방어구를 equips 배열에 추가 -> 이미 장착한 상태인지 구별
   const findEquip = user.characterData.equips.includes(cardType);
   if (!findEquip) {
-    user.characterData.equips.push(useEquip.type);
+    user.characterData.equips.push(useEquip.type); // 장비 장착
+
+    const cardIndex = user.characterData.handCards.findIndex((card) => card.type === cardType);
+    user.characterData.handCards.splice(cardIndex, 1); // 장비 카드를 손에서만 제거
+  } else {
+    // 이미 장착한 방어구면 바로 덱으로 반환
+    user.removeHandCard(cardType);
   }
 
-  console.log(user.characterData.equips);
-
+  user.characterData.handCardsCount--;
+  
   const inGameUsers = Array.from(room.getAllPlayers().values());
 
   const S2CUseCardNotification = {
     cardType: cardType,
     userId: user.id,
-    targetUserId: 0,
+    targetUserId: targetUserId.low,
   };
 
   inGameUsers.forEach((player) => {

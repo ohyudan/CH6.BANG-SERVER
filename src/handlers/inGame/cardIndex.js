@@ -1,4 +1,4 @@
-import { bigBbangNotification } from '../../utils/notification/card/bigBbang.notification.js';
+import bigBbangNotification from '../../utils/notification/card/bigBbang.notification.js';
 import shieldNotification from '../../utils/notification/card/shield.notification.js';
 import { CARD_TYPE } from '../../constants/card.enum.js';
 import bbang from '../../utils/card/bbang.js';
@@ -8,18 +8,24 @@ import vaccineNotification from '../../utils/notification/card/vaccine.notificat
 import call119Notification from '../../utils/notification/card/call119.notification.js';
 import lotto from '../../utils/card/lotto.js';
 import guerrillaNotification from '../../utils/notification/card/guerrilla.notification.js';
+import deathMatchNotification from '../../utils/notification/card/deathMatch.notification.js';
+import absorbNotification from '../../utils/notification/card/absorb.notification.js';
 import maturitySaving from '../../utils/card/maturitySaving.js';
 import hallucination from '../../utils/card/hallucination.js';
 
 const cardTypeAction = {
   [CARD_TYPE.BBANG]: { action: bbang },
+  [CARD_TYPE.BIG_BBANG]: { Action: bigBbangNotification },
+  [CARD_TYPE.SHIELD]: {},
+  [CARD_TYPE.VACCINE]: { Action: vaccineNotification },
+  [CARD_TYPE.CALL_119]: { Action: call119Notification },
   [CARD_TYPE.BIG_BBANG]: { action: bigBbangNotification },
   [CARD_TYPE.SHIELD]: { action: shieldNotification },
   [CARD_TYPE.VACCINE]: { action: vaccineNotification },
   [CARD_TYPE.CALL_119]: { action: call119Notification },
-  [CARD_TYPE.DEATH_MATCH]: {},
+  [CARD_TYPE.DEATH_MATCH]: { action: deathMatchNotification },
   [CARD_TYPE.GUERRILLA]: { action: guerrillaNotification },
-  [CARD_TYPE.ABSORB]: {},
+  [CARD_TYPE.ABSORB]: { action: absorbNotification },
   [CARD_TYPE.HALLUCINATION]: {action: hallucination},
   [CARD_TYPE.FLEA_MARKET]: {},
   [CARD_TYPE.MATURED_SAVINGS]: {action: maturitySaving},

@@ -40,3 +40,8 @@ enum SelectCardType {
     WEAPON = 2;
     DEBUFF = 3;
 }
+
+message S2CAnimationNotification {
+    int64 userId = 1;
+    AnimationType animationType = 2;
+}

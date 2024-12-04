@@ -71,7 +71,7 @@ const bigBbangNotification = async ({ socket, cardType, targetUserId }) => {
   return { success, failCode };
 };
 
-export { bigBbangNotification };
+export default bigBbangNotification;
 // message S2CUseCardNotification {
 //     CardType cardType = 1;
 //     int64 userId = 2;

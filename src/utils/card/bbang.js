@@ -1,6 +1,6 @@
 import { CARD_TYPE } from '../../constants/card.enum.js';
 import HANDLER_IDS from '../../constants/handlerIds.js';
-import { CHARACTER_STATE_TYPE, CHARACTER_TYPE } from '../../constants/user.enum.js';
+import { CHARACTER_STATE_TYPE, CHARACTER_TYPE, ANIMATION_TYPE } from '../../constants/user.enum.js';
 import playerList from '../../model/player/playerList.class.js';
 import roomList from '../../model/room/roomList.class.js';
 import createFailCode from '../../utils/response/createFailCode.js';
@@ -65,6 +65,54 @@ const bbang = ({ socket, cardType, targetUserId }) => {
     //     failCode: createFailCode(9),
     //   };
     // }
+  } // 현피 진행
+  else if (user.characterData.stateInfo.state === CHARACTER_STATE_TYPE.DEATH_MATCH_TURN_STATE) {
+    user.setCharacterStateType(CHARACTER_STATE_TYPE.DEATH_MATCH_STATE);
+    targetUser.setCharacterStateType(CHARACTER_STATE_TYPE.DEATH_MATCH_TURN_STATE);
+    user.setNextStateAt(10000);
+    targetUser.setNextStateAt(10000);
+    user.setStateTargetUserId(targetUser.id);
+    targetUser.setStateTargetUserId(user.id);
+
+    user.removeHandCard(CARD_TYPE.BBANG);
+    user.characterData.handCardsCount--;
+
+    const S2CUseCardNotification = {
+      cardType: cardType,
+      userId: user.id,
+      targetUserId: targetUserId,
+    };
+
+    inGameUsers.forEach((player) => {
+      const gamePacket = { useCardNotification: S2CUseCardNotification };
+
+      const useCardNotification = createResponse(
+        HANDLER_IDS.USE_CARD_NOTIFICATION,
+        player.socket.version,
+        player.socket.sequence,
+        gamePacket,
+      );
+
+      player.socket.write(useCardNotification);
+
+      const S2CUserUpdateNotification = { user: player.getAllUsersData() };
+
+      const updatePacket = { userUpdateNotification: S2CUserUpdateNotification };
+
+      const userUpdateNotification = createResponse(
+        HANDLER_IDS.USER_UPDATE_NOTIFICATION,
+        player.socket.version,
+        player.socket.sequence,
+        updatePacket,
+      );
+
+      player.socket.write(userUpdateNotification);
+    });
+
+    return {
+      success: true,
+      failCode: createFailCode(0),
+    };
   } else {
     // 타겟 유저가 존재할 때 -> 현재 유저의 상태가 NONE이고 상대가 NONE이면 발사 진행
     if (
@@ -100,8 +148,6 @@ const bbang = ({ socket, cardType, targetUserId }) => {
 
           socket.write(userUpdateNotification);
 
-          // userUpdateNotification(room);
-
           return { success: false, failCode: createFailCode(14) };
         }
 
@@ -125,8 +171,6 @@ const bbang = ({ socket, cardType, targetUserId }) => {
           );
 
           socket.write(userUpdateNotification);
-
-          // userUpdateNotification(room);
 
           return { success: false, failCode: createFailCode(14) };
         }
@@ -165,6 +209,11 @@ const bbang = ({ socket, cardType, targetUserId }) => {
             targetUserId: targetUser.id,
           };
 
+          const S2CAnimationNotification = {
+            userId: targetUserId.low,
+            animationType: ANIMATION_TYPE.SHIELD_ANIMATION,
+          };
+
           inGameUsers.forEach((player) => {
             const gamePacket = { useCardNotification: S2CUseCardNotification };
 
@@ -176,6 +225,17 @@ const bbang = ({ socket, cardType, targetUserId }) => {
             );
 
             player.socket.write(useCardNotification);
+
+            const animationPacket = { animationNotification: S2CAnimationNotification };
+
+            const animationNotification = createResponse(
+              HANDLER_IDS.ANIMATION_NOTIFICATION,
+              player.socket.version,
+              player.socket.sequence,
+              animationPacket,
+            );
+
+            player.socket.write(animationNotification);
           });
 
           userUpdateNotification(room);
@@ -195,7 +255,12 @@ const bbang = ({ socket, cardType, targetUserId }) => {
           const S2CUseCardNotification = {
             cardType: cardType,
             userId: user.id,
-            targetUserId: targetUser.id,
+            targetUserId: targetUserId.low,
+          };
+
+          const S2CAnimationNotification = {
+            userId: targetUserId.low,
+            animationType: ANIMATION_TYPE.SHIELD_ANIMATION,
           };
 
           inGameUsers.forEach((player) => {
@@ -209,6 +274,17 @@ const bbang = ({ socket, cardType, targetUserId }) => {
             );
 
             player.socket.write(useCardNotification);
+
+            const animationPacket = { animationNotification: S2CAnimationNotification };
+
+            const animationNotification = createResponse(
+              HANDLER_IDS.ANIMATION_NOTIFICATION,
+              player.socket.version,
+              player.socket.sequence,
+              animationPacket,
+            );
+
+            player.socket.write(animationNotification);
           });
 
           userUpdateNotification(room);
@@ -230,7 +306,7 @@ const bbang = ({ socket, cardType, targetUserId }) => {
       const S2CUseCardNotification = {
         cardType: cardType,
         userId: user.id,
-        targetUserId: targetUser.id,
+        targetUserId: targetUserId.low,
       };
 
       inGameUsers.forEach((player) => {
