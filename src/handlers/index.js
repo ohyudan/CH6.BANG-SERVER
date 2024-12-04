@@ -14,9 +14,9 @@ import gameStartHandler from './gameStatus/gameStart.handler.js';
 import positionUpdateHandler from './inGame/positionUpdate.handler.js';
 import useCardHandler from './inGame/useCardHandler.js';
 import reactionHandler from './inGame/reaction/ReactionHandler.js';
+
 import destroyCardHandler from './inGame/destroyCard.handler.js';
 import cardSelectHandler from './inGame/cardSelect.handler.js';
-
 const packetTypes = {
   [HANDLER_IDS.REGISTER_REQUEST]: {
     packetType: registerHandler,
@@ -70,10 +70,10 @@ const packetTypes = {
     packetType: destroyCardHandler,
     protoType: 'C2SDestroyCardRequest',
   },
-  [HANDLER_IDS.CARD_SELECT_REQUEST]: {
-    packetType: cardSelectHandler,
-    protoType: 'C2SCardSelectRequest',
-  },
+  [HANDLER_IDS.CARD_SELECT_REQUEST]:{
+    packetType:cardSelectHandler,
+    protoType:'C2SCardSelectRequest',
+  }
 };
 /**
  * 패킷타입에 맞는 핸들러로 분배해주는 함수
