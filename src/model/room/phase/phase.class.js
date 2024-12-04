@@ -117,6 +117,7 @@ class Phase {
       });
 
       let playerIdNumber;
+      let moveSattlelite = false;
       roomPlayList.forEach((value, key) => {
         if (value.characterData.debuffs.includes(CARD_TYPE.SATELLITE_TARGET)) {
           const randomId = random(0, 100);
@@ -129,22 +130,22 @@ class Phase {
           } else {
             value.removeDebuff(CARD_TYPE.SATELLITE_TARGET);
             playerIdNumber = idArray.indexOf(value.id);
+            moveSattlelite = true;
           }
         }
       });
 
-      console.log(idArray);
-      console.log(playerIdNumber);
-      // id 순서가 최대가 아닐 때
-      if (playerIdNumber < idArray.length - 1) {
-        const nextPlayerIdNumber = idArray[playerIdNumber + 1];
-        const nextPlayer = playerList.getPlayer(nextPlayerIdNumber);
-        nextPlayer.addDebuff(CARD_TYPE.SATELLITE_TARGET);
-        // id 순서가 제일 끝자리일 때
-      } else {
-        const firstPlayerIdNumber = idArray[0];
-        const firstPlayer = playerList.getPlayer(firstPlayerIdNumber);
-        firstPlayer.addDebuff(CARD_TYPE.SATELLITE_TARGET);
+      if (moveSattlelite) {
+        if (playerIdNumber < idArray.length - 1) {
+          const nextPlayerIdNumber = idArray[playerIdNumber + 1];
+          const nextPlayer = playerList.getPlayer(nextPlayerIdNumber);
+          nextPlayer.addDebuff(CARD_TYPE.SATELLITE_TARGET);
+        } else {
+          // id 순서가 제일 끝자리일 때
+          const firstPlayerIdNumber = idArray[0];
+          const firstPlayer = playerList.getPlayer(firstPlayerIdNumber);
+          firstPlayer.addDebuff(CARD_TYPE.SATELLITE_TARGET);
+        }
       }
 
       // 카드를 2장씩 드로우
@@ -156,16 +157,7 @@ class Phase {
 
       // 빵야 횟수 초기화
       roomPlayList.forEach((value, key) => {
-        if (
-          value.characterData.characterType === CHARACTER_TYPE.RED ||
-          value.characterData.weapon === CARD_TYPE.AUTO_RIFLE
-        ) {
-          value.setBbangCount(99);
-        } else if (value.characterData.weapon === CARD_TYPE.HAND_GUN) {
-          value.setBbangCount(2);
-        } else {
-          value.setBbangCount(1);
-        }
+        value.setBbangCount(0);
       });
     }
 
