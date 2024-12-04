@@ -75,10 +75,10 @@ export const gamePrepareHandler = async ({ socket, payload }) => {
     // 카드 배분
     inGameUsers.forEach((user) => {
       // 1. 임시로 사람별 패 구성
-      for (let i = 0; i < user.characterData.hp; i++) {
+      for (let i = 0; i < user.characterData.hp + 2; i++) {
         user.addHandCard();
       }
-      user.increaseHandCardsCountParam(user.characterData.hp);
+      user.increaseHandCardsCountParam(user.characterData.hp + 2);
     });
 
     /**

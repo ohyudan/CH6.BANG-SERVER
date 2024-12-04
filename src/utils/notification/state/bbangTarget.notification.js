@@ -5,6 +5,7 @@ import HANDLER_IDS from '../../../constants/handlerIds.js';
 import userUpdateNotification from '../user/userUpdate.notification.js';
 import playerList from '../../../model/player/playerList.class.js';
 import { CARD_TYPE } from '../../../constants/card.enum.js';
+import CardData from '../../../model/card/cardData.class.js';
 
 // state가 bbangTarget인 상태에서 피해 받기를 선택하면 실행되는 코드
 // 상어군으로 공격하면 쉴드가 1개 이하일때 자동으로 피해받기에 들어가지는 것 확인 완료
@@ -36,25 +37,61 @@ const bbangTargetNotification = async ({ socket, player, reactionType }) => {
       // if () 사망한 유저에 따라 다른 유저들 승리조건 탐색?
 
       // 사망한 유저와 mask유저가 동일하면 계산x
-      if (player !== maskUser && maskUser && player.characterData.handCardsCount > 0) {
+      if (player !== maskUser && maskUser) {
         // 사망한 유저의 카드를 mask 캐릭터에게 전달
-        player.characterData.handCards.forEach((card) => {
-          maskUser.characterData.handCards.push(card);
+
+        // 손에 있는 카드 처리
+        if (player.characterData.handCardsCount > 0) {
+          player.characterData.handCards.forEach((card) => {
+            maskUser.characterData.handCards.push(card);
+            maskUser.increaseHandCardsCount();
+          });
+          player.characterData.handCards.splice(0);
+          player.characterData.handCardsCount = 0;
+        }
+
+        // 장착한 무기 처리
+        if (player.characterData.weapon !== 0) {
+          maskUser.characterData.handCards.push(new CardData(player.characterData.weapon));
           maskUser.increaseHandCardsCount();
-        });
-        player.characterData.handCards.splice(0);
-        player.characterData.handCardsCount = 0;
+          player.characterData.weapon = 0;
+        }
+
+        // 장착한 장비 처리
+        if (player.characterData.equips.length > 0) {
+          player.characterData.equips.forEach((equip) => {
+            maskUser.characterData.handCards.push(new CardData(equip));
+            maskUser.increaseHandCardsCount();
+          });
+          player.characterData.equips.splice(0);
+        }
       }
 
       // 사망한 유저에 따라 게임 엔드 처리?
 
       // 마스크맨 없으면 죽은 사람 카드 룸 덱으로 반환
-      if (!maskUser && player.characterData.handCardsCount > 0) {
-        player.characterData.handCards.forEach((card) => {
-          room.deckUseCardAdd(card);
-        });
-        player.characterData.handCards.splice(0);
-        player.characterData.handCardsCount = 0;
+      if (!maskUser) {
+        // 손에 있는 카드 처리
+        if (player.characterData.handCards.length > 0) {
+          player.characterData.handCards.forEach((card) => {
+            player.removeHandCard(card);
+          });
+          player.characterData.handCardsCount = 0;
+        }
+
+        // 장착한 무기 처리
+        if (player.characterData.weapon !== 0) {
+          player.removeWeapon();
+        }
+
+        // 장착한 장비 처리
+        if (player.characterData.equips.length > 0) {
+          player.characterData.equips.forEach((equip) => {
+            const card = new CardData(equip);
+            player.notifyObservers('removeHandCard', card);
+          });
+          player.characterData.equips.splice(0);
+        }
       }
     }
 
