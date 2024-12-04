@@ -148,7 +148,6 @@ class Room extends ObservableObserver {
 
   changePhase() {
     this._phase.updatePhase(this._id);
-    setTimeout(() => this.changePhase(), this._phase.nextPhaseAt - Date.now());
   }
 
   update(event, data) {
