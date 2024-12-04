@@ -29,4 +29,5 @@ const REACTION_TYPE = {
   NONE_REACTION: 0,
   NOT_USE_CARD: 1,
 };
+
 export { CARD_TYPE, REACTION_TYPE };

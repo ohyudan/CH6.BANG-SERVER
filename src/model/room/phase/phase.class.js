@@ -5,6 +5,8 @@ import { CHARACTER_STATE_TYPE, CHARACTER_TYPE } from '../../../constants/user.en
 import { CARD_TYPE } from '../../../constants/card.enum.js';
 import { PHASE_TYPE } from '../../../constants/room.enum.js';
 import roomList from '../roomList.class.js';
+import Config from '../../../config/config.js';
+import random from 'lodash/random.js';
 import userUpdateNotification from '../../../utils/notification/user/userUpdate.notification.js';
 import playerList from '../../player/playerList.class.js';
 
@@ -16,7 +18,7 @@ class Phase {
 
   startPhase() {
     this.phaseType.setPhase(PHASE_TYPE.DAY);
-    this.nextPhaseAt = Date.now() + 20000;
+    this.nextPhaseAt = Date.now() + Config.PHASE.AFTER;
   }
 
   /**
@@ -66,16 +68,17 @@ class Phase {
       const selectedPositions = new Set();
       const ArrayPlayerList = [...roomPlayList];
       while (selectedPositions.size < ArrayPlayerList.length) {
-        const randId = Math.floor(Math.random() * characterPositions.length);
+        //const randId = Math.floor(Math.random() * characterPositions.length);
+        const randId = random(0, characterPositions.length);
         selectedPositions.add(characterPositions[randId]);
       }
 
-      let i = 0;
+      let i = 0;;
       const posArr = [...selectedPositions];
       roomPlayList.forEach((value) => {
         let position = { id: value.id, x: posArr[i].x, y: posArr[i].y };
         changedPositions.push(position);
-        i++;
+        i++;;
       });
 
       // 낮 시작시 자신의 핸드가 자신의 체력 이상이면 랜덤으로 체력 수치만큼 카드를 버리도록 조정
@@ -83,7 +86,8 @@ class Phase {
         if (value.characterData.handCardsCount > value.characterData.hp) {
           const needDestroyCardsCount = value.characterData.handCardsCount - value.characterData.hp;
           for (let i = 0; i < needDestroyCardsCount; i++) {
-            const randId = Math.floor(Math.random() * value.characterData.handCards.length);
+            //const randId = Math.floor(Math.random() * value.characterData.handCards.length);
+            const randId = random(0, value.characterData.handCards.length);
             const randCard = value.characterData.handCards[randId];
             value.removeHandCard(randCard._type);
           }
@@ -92,10 +96,10 @@ class Phase {
       });
 
       // 플레이어의 디버프를 체크 한 후 해당 디버프 적용
-      roomPlayList.forEach((value, key) => {
+      roomPlayList.forEach((value, key) => {        
+          //const randomId = Math.random() * 100;          
         if (value.characterData.debuffs.includes(CARD_TYPE.CONTAINMENT_UNIT)) {
-          const randomId = Math.random() * 100;
-          console.log('감옥이 있는데요', randomId, value.id);
+          const randomId = random(0, 100);
           // 감옥
           if (randomId < 75) {
             value.setCharacterStateType(CHARACTER_STATE_TYPE.CONTAINED);
@@ -114,7 +118,7 @@ class Phase {
 
       roomPlayList.forEach((value, key) => {
         if (value.characterData.debuffs.includes(CARD_TYPE.SATELLITE_TARGET)) {
-          const randomId = Math.random() * 100;
+          const randomId = random(0, 100);
           // 위성 폭탄
           console.log('위성이 있는데요', randomId, value.id);
           if (randomId < 3) {
@@ -159,8 +163,12 @@ class Phase {
     // Phase 변경 및 다음 상태 전환 시간 설정
     // 이후 notification
     this.phaseType.setPhase(nextPhase);
-    this.nextPhaseAt = nextPhase === PHASE_TYPE.END ? Date.now() + 20000 : Date.now() + 20000; // END 페이즈는 30초 지속, 나머지는 3분
+    this.nextPhaseAt =
+      nextPhase === PHASE_TYPE.END
+        ? Date.now() + Config.PHASE.END
+        : Date.now() + Config.PHASE.AFTER;
 
+    
     phaseUpdateNotification(roomPlayList, nextPhase, this.nextPhaseAt, changedPositions);
     userUpdateNotification(room);
 

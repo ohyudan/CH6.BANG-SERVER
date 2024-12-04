@@ -1,4 +1,4 @@
-import { bigBbangNotification } from '../../utils/notification/card/bigBbang.notification.js';
+import bigBbangNotification from '../../utils/notification/card/bigBbang.notification.js';
 import shieldNotification from '../../utils/notification/card/shield.notification.js';
 import { CARD_TYPE } from '../../constants/card.enum.js';
 import bbang from '../../utils/card/bbang.js';
@@ -10,6 +10,7 @@ import lotto from '../../utils/card/lotto.js';
 import guerrillaNotification from '../../utils/notification/card/guerrilla.notification.js';
 import deathMatchNotification from '../../utils/notification/card/deathMatch.notification.js';
 import debuff from '../../utils/card/debuff.js';
+import absorbNotification from '../../utils/notification/card/absorb.notification.js';
 
 const cardTypeAction = {
   [CARD_TYPE.BBANG]: { action: bbang },
@@ -23,7 +24,7 @@ const cardTypeAction = {
   [CARD_TYPE.CALL_119]: { action: call119Notification },
   [CARD_TYPE.DEATH_MATCH]: { action: deathMatchNotification },
   [CARD_TYPE.GUERRILLA]: { action: guerrillaNotification },
-  [CARD_TYPE.ABSORB]: {},
+  [CARD_TYPE.ABSORB]: { action: absorbNotification },
   [CARD_TYPE.HALLUCINATION]: {},
   [CARD_TYPE.FLEA_MARKET]: {},
   [CARD_TYPE.MATURED_SAVINGS]: {},
