@@ -14,10 +14,15 @@ const weapon = ({ socket, cardType, targetUserId }) => {
     return { success: false, failCode: createFailCode(11) };
   }
 
-  // 사용한 카드를 룸의 덱에 추가
-  user.removeHandCard(cardType);
+  // 사용한 카드를 손에서 제거, 덱으로 보내는 건 x
+  const useWeaponIndex = user.characterData.handCards.findIndex((card) => card.type === cardType);
+  user.characterData.handCards.splice(useWeaponIndex, 1);
   user.characterData.handCardsCount--;
 
+  // 이미 장착된 상태라면 기존 장착 카드를 덱으로 보내야함
+  if (user.characterData.weapon !== 0) {
+    user.removeWeapon();
+  }
   user.characterData.weapon = useWeapon.type;
 
   const inGameUsers = Array.from(room.getAllPlayers().values());

@@ -9,6 +9,7 @@ import call119Notification from '../../utils/notification/card/call119.notificat
 import lotto from '../../utils/card/lotto.js';
 import guerrillaNotification from '../../utils/notification/card/guerrilla.notification.js';
 import deathMatchNotification from '../../utils/notification/card/deathMatch.notification.js';
+import absorbNotification from '../../utils/notification/card/absorb.notification.js';
 
 const cardTypeAction = {
   [CARD_TYPE.BBANG]: { action: bbang },
@@ -22,7 +23,7 @@ const cardTypeAction = {
   [CARD_TYPE.CALL_119]: { action: call119Notification },
   [CARD_TYPE.DEATH_MATCH]: { action: deathMatchNotification },
   [CARD_TYPE.GUERRILLA]: { action: guerrillaNotification },
-  [CARD_TYPE.ABSORB]: {},
+  [CARD_TYPE.ABSORB]: { action: absorbNotification },
   [CARD_TYPE.HALLUCINATION]: {},
   [CARD_TYPE.FLEA_MARKET]: {},
   [CARD_TYPE.MATURED_SAVINGS]: {},
