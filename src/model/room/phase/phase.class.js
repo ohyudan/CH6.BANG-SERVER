@@ -116,7 +116,7 @@ class Phase {
         idArray.push(value.id);
       });
 
-      let playerIdNumber
+      let playerIdNumber;
       roomPlayList.forEach((value, key) => {
         if (value.characterData.debuffs.includes(CARD_TYPE.SATELLITE_TARGET)) {
           const randomId = random(0, 100);
