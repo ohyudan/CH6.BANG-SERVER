@@ -106,19 +106,30 @@ class Phase {
         }
       });
 
+      // 플레이어 id의 순서를 만들어 내기 위한 작성
+      let idArray = [];
+      roomPlayList.forEach((value) => {
+        idArray.push(value.id);
+      });
+
       roomPlayList.forEach((value, key) => {
         if (value.characterData.debuffs.includes(CARD_TYPE.SATELLITE_TARGET)) {
           const randomId = Math.random() * 100;
           // 위성 폭탄
           console.log('위성이 있는데요', randomId, value.id);
-          if (randomId < 97) {
+          if (randomId < 3) {
             value.decreaseHp();
             value.decreaseHp();
             value.decreaseHp();
             value.removeDebuff(CARD_TYPE.SATELLITE_TARGET);
           } else {
             value.removeDebuff(CARD_TYPE.SATELLITE_TARGET);
-            // 다음 id의 유저에게 해당 디버프 추가
+            // id 순서가 최대가 아닐 때
+            const playerIdNumber = idArray.indexOf(value.id);
+            const nextPlayerIdNumber = idArray[playerIdNumber + 1];
+            const nextPlayer = playerList.getPlayer(nextPlayerIdNumber);
+            nextPlayer.addDebuff(CARD_TYPE.SATELLITE_TARGET);
+            // id 순서가 제일 끝자리일 때
           }
         }
       });
@@ -141,8 +152,6 @@ class Phase {
           value.setBbangCount(2);
         } else {
           value.setBbangCount(1);
-          let nextPlayer;
-          
         }
       });
     }
@@ -152,8 +161,8 @@ class Phase {
     this.phaseType.setPhase(nextPhase);
     this.nextPhaseAt = nextPhase === PHASE_TYPE.END ? Date.now() + 20000 : Date.now() + 20000; // END 페이즈는 30초 지속, 나머지는 3분
 
-    userUpdateNotification(room);
     phaseUpdateNotification(roomPlayList, nextPhase, this.nextPhaseAt, changedPositions);
+    userUpdateNotification(room);
 
     setTimeout(() => room.changePhase(), this.nextPhaseAt - Date.now());
 
