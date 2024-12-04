@@ -86,6 +86,7 @@ class Phase {
             const randId = random(0, value.characterData.handCards.length);
             const randCard = value.characterData.handCards[randId];
             value.removeHandCard(randCard._type);
+            // Cannot read properties of undefined (reading '_type')
           }
           value.decreaseHandCardsCountParam(needDestroyCardsCount);
         }

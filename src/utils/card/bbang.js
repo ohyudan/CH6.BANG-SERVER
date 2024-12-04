@@ -69,8 +69,8 @@ const bbang = ({ socket, cardType, targetUserId }) => {
   else if (user.characterData.stateInfo.state === CHARACTER_STATE_TYPE.DEATH_MATCH_TURN_STATE) {
     user.setCharacterStateType(CHARACTER_STATE_TYPE.DEATH_MATCH_STATE);
     targetUser.setCharacterStateType(CHARACTER_STATE_TYPE.DEATH_MATCH_TURN_STATE);
-    user.setNextStateAt(10000);
-    targetUser.setNextStateAt(10000);
+    //user.setNextStateAt(10000);
+    //targetUser.setNextStateAt(10000);
     user.setStateTargetUserId(targetUser.id);
     targetUser.setStateTargetUserId(user.id);
 

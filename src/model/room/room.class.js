@@ -128,7 +128,7 @@ class Room extends ObservableObserver {
     return this._deck;
   }
   //카드를 뽑는 함수 앞에서 제거한만큼 뒤에 다시 append해준다.
-  cardDraw(player) {
+  cardDraw() {
     const drawCard = this._deck.removeFront();
     return drawCard;
   }
@@ -156,7 +156,6 @@ class Room extends ObservableObserver {
       case 'addHandCard':
         result = this.cardDraw(data);
         return result;
-        break;
       case 'removeHandCard':
         result = this.deckUseCardAdd(data);
         return result;

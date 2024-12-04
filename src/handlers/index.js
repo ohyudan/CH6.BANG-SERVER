@@ -14,8 +14,9 @@ import gameStartHandler from './gameStatus/gameStart.handler.js';
 import positionUpdateHandler from './inGame/positionUpdate.handler.js';
 import useCardHandler from './inGame/useCardHandler.js';
 import reactionHandler from './inGame/reaction/ReactionHandler.js';
-
 import destroyCardHandler from './inGame/destroyCard.handler.js';
+import fleaMaketHanlder from './inGame/fleamarketHandler.js';
+
 const packetTypes = {
   [HANDLER_IDS.REGISTER_REQUEST]: {
     packetType: registerHandler,
@@ -68,6 +69,10 @@ const packetTypes = {
   [HANDLER_IDS.DESTROY_CARD_REQUEST]: {
     packetType: destroyCardHandler,
     protoType: 'C2SDestroyCardRequest',
+  },
+  [HANDLER_IDS.FLEA_MARKET_PICK_REQUEST]: {
+    packetType: fleaMaketHanlder,
+    protoType: 'C2SFleaMarketPickRequest',
   },
 };
 /**

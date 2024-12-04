@@ -13,12 +13,12 @@ const deathMatchReactionNotification = ({ socket, player, reactionType }) => {
 
     user.decreaseHp();
     user.setCharacterStateType(user.characterData.stateInfo.nextState);
-    user.setNextStateAt(0);
+    //user.setNextStateAt(0);
 
     const targetUser = playerList.getPlayer(user.characterData.stateInfo.stateTargetUserId);
 
     targetUser.setCharacterStateType(targetUser.characterData.stateInfo.nextState);
-    targetUser.setNextStateAt(0);
+    //targetUser.setNextStateAt(0);
 
     const inGameUsers = Array.from(room.getAllPlayers().values());
 
