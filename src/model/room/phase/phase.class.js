@@ -1,11 +1,12 @@
 import { PhaseType } from './phase.status.js';
 import phaseUpdateNotification from '../../../utils/notification/phaseUpdate.notification.js';
 import { getGameAssets } from '../../../init/loadGameAssets.js';
-import userUpdateNotification from '../../../utils/notification/userDataUpdate.notification.js';
 import { CHARACTER_STATE_TYPE, CHARACTER_TYPE } from '../../../constants/user.enum.js';
 import { CARD_TYPE } from '../../../constants/card.enum.js';
 import { PHASE_TYPE } from '../../../constants/room.enum.js';
 import roomList from '../roomList.class.js';
+import userUpdateNotification from '../../../utils/notification/user/userUpdate.notification.js';
+import playerList from '../../player/playerList.class.js';
 
 class Phase {
   constructor() {
@@ -15,7 +16,7 @@ class Phase {
 
   startPhase() {
     this.phaseType.setPhase(PHASE_TYPE.DAY);
-    this.nextPhaseAt = Date.now() + 180000;
+    this.nextPhaseAt = Date.now() + 20000;
   }
 
   /**
@@ -27,6 +28,9 @@ class Phase {
     const currentPhase = this.phaseType.phase;
     let nextPhase;
     const room = roomList.getRoom(roomId);
+    if (!room) {
+      return false;
+    }
     const roomPlayList = room.getAllPlayers();
     // 현재 Phase에 따라 다음 Phase 결정
     switch (currentPhase) {
@@ -66,12 +70,12 @@ class Phase {
         selectedPositions.add(characterPositions[randId]);
       }
 
-      let i = 0
+      let i = 0;
       const posArr = [...selectedPositions];
       roomPlayList.forEach((value) => {
         let position = { id: value.id, x: posArr[i].x, y: posArr[i].y };
         changedPositions.push(position);
-        i++
+        i++;
       });
 
       // 낮 시작시 자신의 핸드가 자신의 체력 이상이면 랜덤으로 체력 수치만큼 카드를 버리도록 조정
@@ -89,8 +93,9 @@ class Phase {
 
       // 플레이어의 디버프를 체크 한 후 해당 디버프 적용
       roomPlayList.forEach((value, key) => {
-        if (value.characterData.debuffs === CARD_TYPE.CONTAINMENT_UNIT) {
+        if (value.characterData.debuffs.includes(CARD_TYPE.CONTAINMENT_UNIT)) {
           const randomId = Math.random() * 100;
+          console.log('감옥이 있는데요', randomId, value.id);
           // 감옥
           if (randomId < 75) {
             value.setCharacterStateType(CHARACTER_STATE_TYPE.CONTAINED);
@@ -98,21 +103,22 @@ class Phase {
             value.setCharacterStateType(CHARACTER_STATE_TYPE.NONE_CHARACTER_STATE);
             value.removeDebuff(CARD_TYPE.CONTAINMENT_UNIT);
           }
-        } else if (value.characterData.debuffs === CARD_TYPE.SATELLITE_TARGET) {
+        }
+      });
+
+      roomPlayList.forEach((value, key) => {
+        if (value.characterData.debuffs.includes(CARD_TYPE.SATELLITE_TARGET)) {
           const randomId = Math.random() * 100;
           // 위성 폭탄
-          if (randomId < 3) {
+          console.log('위성이 있는데요', randomId, value.id);
+          if (randomId < 97) {
             value.decreaseHp();
             value.decreaseHp();
             value.decreaseHp();
             value.removeDebuff(CARD_TYPE.SATELLITE_TARGET);
           } else {
             value.removeDebuff(CARD_TYPE.SATELLITE_TARGET);
-            // if (i !== ArrayPlayerList.length - 1) {
-            //   ArrayPlayerList[i + 1].addDebuff(CARD_TYPE.SATELLITE_TARGET);
-            // } else {
-            //   ArrayPlayerList[0].addDebuff(CARD_TYPE.SATELLITE_TARGET);
-            // }
+            // 다음 id의 유저에게 해당 디버프 추가
           }
         }
       });
@@ -135,6 +141,8 @@ class Phase {
           value.setBbangCount(2);
         } else {
           value.setBbangCount(1);
+          let nextPlayer;
+          
         }
       });
     }
@@ -142,10 +150,12 @@ class Phase {
     // Phase 변경 및 다음 상태 전환 시간 설정
     // 이후 notification
     this.phaseType.setPhase(nextPhase);
-    this.nextPhaseAt = nextPhase === PHASE_TYPE.END ? Date.now() + 30000 : Date.now() + 180000; // END 페이즈는 30초 지속, 나머지는 3분
-    
-    userUpdateNotification(room)
+    this.nextPhaseAt = nextPhase === PHASE_TYPE.END ? Date.now() + 20000 : Date.now() + 20000; // END 페이즈는 30초 지속, 나머지는 3분
+
+    userUpdateNotification(room);
     phaseUpdateNotification(roomPlayList, nextPhase, this.nextPhaseAt, changedPositions);
+
+    setTimeout(() => room.changePhase(), this.nextPhaseAt - Date.now());
 
     return true;
   }
