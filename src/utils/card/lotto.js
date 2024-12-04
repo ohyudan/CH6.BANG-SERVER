@@ -7,7 +7,7 @@
     import { createResponse } from '../../utils/response/createResponse.js';
 
     //타겟이 로또npc  targetUserId 필요없는것 같기도.
-    const lotto = ({ socket, cardType }) => {
+    const lotto = ({ socket, cardType,targetuserId }) => {
 
     const user = playerList.getPlayer(socket.id);
     const room = roomList.getRoom(user.currentRoomId);
@@ -19,20 +19,23 @@
         user.addHandCard(card[i]);
         user.increaseHandCardsCount();
     }
-    // user.addHandCard(room.cardDraw(3));
-    // user.increaseHandCardsCountParam(3);
+    
+    //핸드에서 해당 카드 제거
+    user.removeHandCard(CARD_TYPE.WIN_LOTTERY);
+    user.characterData.handCardsCount--;
+
 
     const inGameUsers = Array.from(room.getAllPlayers().values());
 
     const S2CUseCardNotification = {
         cardType: cardType,
         userId: user.id,
-        targetUserId:0,
+        targetUserId:socket.id,
     };
 
     inGameUsers.forEach((player) => {
         const gamePacket = { useCardNotification: S2CUseCardNotification };
-
+        
         const useCardNotification = createResponse(
         HANDLER_IDS.USE_CARD_NOTIFICATION,
         player.socket.version,

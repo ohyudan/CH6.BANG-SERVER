@@ -11,6 +11,8 @@ import guerrillaNotification from '../../utils/notification/card/guerrilla.notif
 import deathMatchNotification from '../../utils/notification/card/deathMatch.notification.js';
 import debuff from '../../utils/card/debuff.js';
 import absorbNotification from '../../utils/notification/card/absorb.notification.js';
+import maturitySaving from '../../utils/card/maturitySaving.js';
+import hallucination from '../../utils/card/hallucination.js';
 
 const cardTypeAction = {
   [CARD_TYPE.BBANG]: { action: bbang },
@@ -25,9 +27,9 @@ const cardTypeAction = {
   [CARD_TYPE.DEATH_MATCH]: { action: deathMatchNotification },
   [CARD_TYPE.GUERRILLA]: { action: guerrillaNotification },
   [CARD_TYPE.ABSORB]: { action: absorbNotification },
-  [CARD_TYPE.HALLUCINATION]: {},
+  [CARD_TYPE.HALLUCINATION]: {action: hallucination},
   [CARD_TYPE.FLEA_MARKET]: {},
-  [CARD_TYPE.MATURED_SAVINGS]: {},
+  [CARD_TYPE.MATURED_SAVINGS]: {action: maturitySaving},
   [CARD_TYPE.WIN_LOTTERY]: { action: lotto },
   [CARD_TYPE.SNIPER_GUN]: { action: weapon },
   [CARD_TYPE.HAND_GUN]: { action: weapon },
