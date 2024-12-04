@@ -13,7 +13,7 @@ import gamePrepareHandler from './gameStatus/gamePrepare.handler.js';
 import gameStartHandler from './gameStatus/gameStart.handler.js';
 import positionUpdateHandler from './inGame/positionUpdate.handler.js';
 import useCardHandler from './inGame/useCardHandler.js';
-import reactionHandler from './inGame/reaction/ReactionHandler.js';
+import reactionHandler from './inGame/reaction/reactionHandler.js';
 import destroyCardHandler from './inGame/destroyCard.handler.js';
 import cardSelectHandler from './inGame/cardSelect.handler.js';
 

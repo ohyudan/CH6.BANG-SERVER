@@ -1,13 +1,14 @@
 import { PhaseType } from './phase.status.js';
 import phaseUpdateNotification from '../../../utils/notification/phaseUpdate.notification.js';
 import { getGameAssets } from '../../../init/loadGameAssets.js';
-import userUpdateNotification from '../../../utils/notification/userDataUpdate.notification.js';
 import { CHARACTER_STATE_TYPE, CHARACTER_TYPE } from '../../../constants/user.enum.js';
 import { CARD_TYPE } from '../../../constants/card.enum.js';
 import { PHASE_TYPE } from '../../../constants/room.enum.js';
 import roomList from '../roomList.class.js';
 import Config from '../../../config/config.js';
 import random from 'lodash/random.js';
+import userUpdateNotification from '../../../utils/notification/user/userUpdate.notification.js';
+import playerList from '../../player/playerList.class.js';
 
 class Phase {
   constructor() {
@@ -29,6 +30,9 @@ class Phase {
     const currentPhase = this.phaseType.phase;
     let nextPhase;
     const room = roomList.getRoom(roomId);
+    if (!room) {
+      return false;
+    }
     const roomPlayList = room.getAllPlayers();
     // 현재 Phase에 따라 다음 Phase 결정
     switch (currentPhase) {
@@ -64,7 +68,7 @@ class Phase {
       const selectedPositions = new Set();
       const ArrayPlayerList = [...roomPlayList];
       while (selectedPositions.size < ArrayPlayerList.length) {
-        //const randId = Math.floor(Math.random() * characterPositions.length);
+        // const randId = Math.floor(Math.random() * characterPositions.length);
         const randId = random(0, characterPositions.length);
         selectedPositions.add(characterPositions[randId]);
       }
@@ -82,7 +86,7 @@ class Phase {
         if (value.characterData.handCardsCount > value.characterData.hp) {
           const needDestroyCardsCount = value.characterData.handCardsCount - value.characterData.hp;
           for (let i = 0; i < needDestroyCardsCount; i++) {
-            //const randId = Math.floor(Math.random() * value.characterData.handCards.length);
+            // const randId = Math.floor(Math.random() * value.characterData.handCards.length);
             const randId = random(0, value.characterData.handCards.length);
             const randCard = value.characterData.handCards[randId];
             value.removeHandCard(randCard._type);
@@ -93,8 +97,8 @@ class Phase {
 
       // 플레이어의 디버프를 체크 한 후 해당 디버프 적용
       roomPlayList.forEach((value, key) => {
-        if (value.characterData.debuffs === CARD_TYPE.CONTAINMENT_UNIT) {
-          //const randomId = Math.random() * 100;
+        //const randomId = Math.random() * 100;
+        if (value.characterData.debuffs.includes(CARD_TYPE.CONTAINMENT_UNIT)) {
           const randomId = random(0, 100);
           // 감옥
           if (randomId < 75) {
@@ -103,8 +107,18 @@ class Phase {
             value.setCharacterStateType(CHARACTER_STATE_TYPE.NONE_CHARACTER_STATE);
             value.removeDebuff(CARD_TYPE.CONTAINMENT_UNIT);
           }
-        } else if (value.characterData.debuffs === CARD_TYPE.SATELLITE_TARGET) {
-          //const randomId = Math.random() * 100;
+        }
+      });
+
+      // 플레이어 id의 순서를 만들어 내기 위한 작성
+      let idArray = [];
+      roomPlayList.forEach((value) => {
+        idArray.push(value.id);
+      });
+
+      let playerIdNumber;
+      roomPlayList.forEach((value, key) => {
+        if (value.characterData.debuffs.includes(CARD_TYPE.SATELLITE_TARGET)) {
           const randomId = random(0, 100);
           // 위성 폭탄
           if (randomId < 3) {
@@ -114,14 +128,24 @@ class Phase {
             value.removeDebuff(CARD_TYPE.SATELLITE_TARGET);
           } else {
             value.removeDebuff(CARD_TYPE.SATELLITE_TARGET);
-            // if (i !== ArrayPlayerList.length - 1) {
-            //   ArrayPlayerList[i + 1].addDebuff(CARD_TYPE.SATELLITE_TARGET);
-            // } else {
-            //   ArrayPlayerList[0].addDebuff(CARD_TYPE.SATELLITE_TARGET);
-            // }
+            playerIdNumber = idArray.indexOf(value.id);
           }
         }
       });
+
+      console.log(idArray);
+      console.log(playerIdNumber);
+      // id 순서가 최대가 아닐 때
+      if (playerIdNumber < idArray.length - 1) {
+        const nextPlayerIdNumber = idArray[playerIdNumber + 1];
+        const nextPlayer = playerList.getPlayer(nextPlayerIdNumber);
+        nextPlayer.addDebuff(CARD_TYPE.SATELLITE_TARGET);
+        // id 순서가 제일 끝자리일 때
+      } else {
+        const firstPlayerIdNumber = idArray[0];
+        const firstPlayer = playerList.getPlayer(firstPlayerIdNumber);
+        firstPlayer.addDebuff(CARD_TYPE.SATELLITE_TARGET);
+      }
 
       // 카드를 2장씩 드로우
       roomPlayList.forEach((value, key) => {
@@ -153,8 +177,10 @@ class Phase {
         ? Date.now() + Config.PHASE.END
         : Date.now() + Config.PHASE.AFTER;
 
-    userUpdateNotification(room);
     phaseUpdateNotification(roomPlayList, nextPhase, this.nextPhaseAt, changedPositions);
+    userUpdateNotification(room);
+
+    setTimeout(() => room.changePhase(), this.nextPhaseAt - Date.now());
 
     return true;
   }
