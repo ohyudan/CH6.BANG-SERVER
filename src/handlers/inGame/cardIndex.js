@@ -1,4 +1,4 @@
-import { bigBbangNotification } from '../../utils/notification/card/bigBbang.notification.js';
+import bigBbangNotification from '../../utils/notification/card/bigBbang.notification.js';
 import shieldNotification from '../../utils/notification/card/shield.notification.js';
 import { CARD_TYPE } from '../../constants/card.enum.js';
 import bbang from '../../utils/card/bbang.js';
@@ -9,6 +9,10 @@ import call119Notification from '../../utils/notification/card/call119.notificat
 import lotto from '../../utils/card/lotto.js';
 import guerrillaNotification from '../../utils/notification/card/guerrilla.notification.js';
 import deathMatchNotification from '../../utils/notification/card/deathMatch.notification.js';
+import debuff from '../../utils/card/debuff.js';
+import absorbNotification from '../../utils/notification/card/absorb.notification.js';
+import maturitySaving from '../../utils/card/maturitySaving.js';
+import hallucination from '../../utils/card/hallucination.js';
 
 const cardTypeAction = {
   [CARD_TYPE.BBANG]: { action: bbang },
@@ -22,10 +26,10 @@ const cardTypeAction = {
   [CARD_TYPE.CALL_119]: { action: call119Notification },
   [CARD_TYPE.DEATH_MATCH]: { action: deathMatchNotification },
   [CARD_TYPE.GUERRILLA]: { action: guerrillaNotification },
-  [CARD_TYPE.ABSORB]: {},
-  [CARD_TYPE.HALLUCINATION]: {},
+  [CARD_TYPE.ABSORB]: { action: absorbNotification },
+  [CARD_TYPE.HALLUCINATION]: {action: hallucination},
   [CARD_TYPE.FLEA_MARKET]: {},
-  [CARD_TYPE.MATURED_SAVINGS]: {},
+  [CARD_TYPE.MATURED_SAVINGS]: {action: maturitySaving},
   [CARD_TYPE.WIN_LOTTERY]: { action: lotto },
   [CARD_TYPE.SNIPER_GUN]: { action: weapon },
   [CARD_TYPE.HAND_GUN]: { action: weapon },
@@ -35,8 +39,8 @@ const cardTypeAction = {
   [CARD_TYPE.RADAR]: { action: equip },
   [CARD_TYPE.AUTO_SHIELD]: { action: equip },
   [CARD_TYPE.STEALTH_SUIT]: { action: equip },
-  [CARD_TYPE.CONTAINMENT_UNIT]: {},
-  [CARD_TYPE.SATELLITE_TARGET]: {},
-  [CARD_TYPE.BOMB]: {},
+  [CARD_TYPE.CONTAINMENT_UNIT]: { action: debuff },
+  [CARD_TYPE.SATELLITE_TARGET]: { action: debuff },
+  [CARD_TYPE.BOMB]: { action: debuff },
 };
 export default cardTypeAction;
