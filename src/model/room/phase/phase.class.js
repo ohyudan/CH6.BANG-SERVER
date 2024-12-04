@@ -68,8 +68,8 @@ class Phase {
       const selectedPositions = new Set();
       const ArrayPlayerList = [...roomPlayList];
       while (selectedPositions.size < ArrayPlayerList.length) {
-        // const randId = Math.floor(Math.random() * characterPositions.length);
-        const randId = random(0, characterPositions.length);
+        //const randId = Math.floor(Math.random() * characterPositions.length);
+        const randId = random(0, characterPositions.length - 1);
         selectedPositions.add(characterPositions[randId]);
       }
 
@@ -87,7 +87,7 @@ class Phase {
           const needDestroyCardsCount = value.characterData.handCardsCount - value.characterData.hp;
           for (let i = 0; i < needDestroyCardsCount; i++) {
             // const randId = Math.floor(Math.random() * value.characterData.handCards.length);
-            const randId = random(0, value.characterData.handCards.length);
+            const randId = random(0, value.characterData.handCards.length - 1);
             const randCard = value.characterData.handCards[randId];
             value.removeHandCard(randCard._type);
           }
