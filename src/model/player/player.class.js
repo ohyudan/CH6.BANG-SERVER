@@ -104,9 +104,18 @@ class Player extends Observable {
     this.characterData.debuffs.push(debuff);
   }
 
-  // 캐릭터의 디버프 제거 (phaseBranch에서 추가함)
-  removeDebuff(debuff) {
-    this.characterData.debuffs = this.characterData.debuffs.filter((buff) => buff !== debuff);
+  // 캐릭터의 디버프 제거 (phaseBranch에서 추가함) -> 삭제하면서 덱으로 반환 기능 추가
+  removeDebuff(cardType) {
+    const debuffIndex = this.characterData.debuffs.findIndex((debuff) => debuff === cardType);
+    const debuff = this.characterData.debuffs[debuffIndex];
+    if (debuff) {
+      const card = new CardData(cardType);
+      this.notifyObservers('removeHandCard', card);
+
+      this.characterData.debuffs.splice(debuffIndex, 1);
+      return true;
+    }
+    return false;
   }
 
   // 캐릭터의 손패(카드) 추가
@@ -158,7 +167,8 @@ class Player extends Observable {
   // 캐릭터의 장비 제거
   removeEquip(cardType) {
     const equipIndex = this.characterData.equips.findIndex((equip) => equip === cardType);
-    if (equipIndex) {
+    const equip = this.characterData.equips[equipIndex];
+    if (equip) {
       const card = new CardData(cardType);
       this.notifyObservers('removeHandCard', card);
 

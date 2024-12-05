@@ -26,7 +26,7 @@ const call119Notification = ({ socket, cardType, targetUserId }) => {
     console.log(`${socket.id}번 사용자의 119카드가 제거 되었습니다.`);
 
     // 타겟이 자신인 경우, 체력 1 회복
-    if (socket.id === targetUserId) {
+    if (socket.id === targetUserId.low) {
       console.log(`${socket.id} 자신의 체력 1회복`);
       useCardPlayer.increaseHp();
     } else {
