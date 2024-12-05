@@ -23,7 +23,7 @@ const guerrillaNotification = ({ socket, cardType, targetUserId }) => {
   };
   try {
     useCardPlayer.removeHandCard(CARD_TYPE.GUERRILLA); // 카드 삭제가 안되서 try catch 맨위로 올림
-
+    useCardPlayer.decreaseHandCardsCount();
     // GUERRILLA 카드 사용 처리 (모든 플레이어에게 사용된 카드 알림 전송)
     inGameUsers.forEach((player) => {
       if (socket.id !== player.id) {

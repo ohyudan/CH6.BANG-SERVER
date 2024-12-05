@@ -41,6 +41,8 @@ const bigBbangNotification = async ({ socket, cardType, targetUserId }) => {
       } else {
         player.setCharacterStateType(CHARACTER_STATE_TYPE.BIG_BBANG_SHOOTER);
         player.setStateTargetUserId(0);
+        useCardPlayer.removeHandCard(CARD_TYPE.BIG_BBANG);
+        useCardPlayer.decreaseHandCardsCount();
         userMakeData.push(player.makeRawObject());
       }
     });
@@ -63,7 +65,6 @@ const bigBbangNotification = async ({ socket, cardType, targetUserId }) => {
     failCode = createFailCode(0);
 
     bigBnangShooterNotification({ socket, player: useCardPlayer });
-    useCardPlayer.removeHandCard(CARD_TYPE.BIG_BBANG);
   } catch (err) {
     success = false;
     failCode = createFailCode(1);

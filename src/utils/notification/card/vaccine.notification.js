@@ -23,6 +23,7 @@ const vaccineNotification = ({ socket, cardType, targetUserId }) => {
   try {
     // 카드 삭제를 먼저 수행하여 사용된 카드를 핸드에서 제거
     useCardPlayer.removeHandCard(CARD_TYPE.VACCINE);
+    useCardPlayer.decreaseHandCardsCount();
 
     roomInJoinPlayerList.forEach((player) => {
       const gamePacket = { useCardNotification: S2CUseCardNotification };
