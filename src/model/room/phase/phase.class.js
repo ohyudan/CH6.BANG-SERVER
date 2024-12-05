@@ -9,7 +9,6 @@ import Config from '../../../config/config.js';
 import random from 'lodash/random.js';
 import userUpdateNotification from '../../../utils/notification/user/userUpdate.notification.js';
 import playerList from '../../player/playerList.class.js';
-import positionUpdateNotification from '../../../utils/notification/user/positionUpdate.notification.js';
 
 class Phase {
   constructor() {
@@ -174,8 +173,7 @@ class Phase {
 
     phaseUpdateNotification(roomPlayList, nextPhase, this.nextPhaseAt, changedPositions);
     userUpdateNotification(room);
-    positionUpdateNotification(room);
-    
+
     setTimeout(() => room.changePhase(), this.nextPhaseAt - Date.now());
 
     return true;

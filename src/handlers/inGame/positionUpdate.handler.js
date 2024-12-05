@@ -11,7 +11,7 @@ const positionUpdateHandler = ({ socket, payload }) => {
   const room = roomList.getRoom(user.currentRoomId);
 
   user.updatePosition(x, y);
-  positionUpdateNotification(room);
+  // positionUpdateNotification(room);
 
   return;
 };

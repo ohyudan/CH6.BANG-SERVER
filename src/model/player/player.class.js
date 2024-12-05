@@ -3,6 +3,7 @@ import roomList from '../room/roomList.class.js';
 import Position from './position.class.js';
 import { Observable } from '../observer/observer.js';
 import CardData from '../card/cardData.class.js';
+import PreviousPosition from './previousPosition.class.js';
 
 class Player extends Observable {
   constructor(id, nickname, socket) {
@@ -15,6 +16,7 @@ class Player extends Observable {
     this.characterData = new CharacterData(); // CharacterData 객체 생성
 
     this.position = new Position(); // Position 객체 생성
+    this.previousPosition = new PreviousPosition();
   }
   get id() {
     return this._id;
@@ -280,6 +282,13 @@ class Player extends Observable {
 
   notifyObservers(event, data) {
     return this.observers.map((observer) => observer.update(event, data))[0];
+  }
+
+  hasPositionChanged() {
+    return (
+      this.previousPosition.x !== this.position.x ||
+      this.previousPosition.y !== this.position.y
+    );
   }
 }
 export default Player;
