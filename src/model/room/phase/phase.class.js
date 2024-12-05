@@ -70,6 +70,8 @@ class Phase {
       const posArr = [...selectedPositions];
       roomPlayList.forEach((value) => {
         let position = { id: value.id, x: posArr[i].x, y: posArr[i].y };
+        value.position.x = posArr[i].x;
+        value.position.y = posArr[i].y;
         changedPositions.push(position);
         i++
       });
