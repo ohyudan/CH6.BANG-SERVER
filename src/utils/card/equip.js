@@ -15,7 +15,6 @@ const equip = ({ socket, cardType, targetUserId }) => {
     return { success: false, failCode: createFailCode(11) };
   }
 
-
   // 사용한 방어구를 equips 배열에 추가 -> 이미 장착한 상태인지 구별
   const findEquip = user.characterData.equips.includes(cardType);
   if (!findEquip) {
@@ -28,7 +27,7 @@ const equip = ({ socket, cardType, targetUserId }) => {
     user.removeHandCard(cardType);
   }
 
-  user.characterData.handCardsCount--;
+  user.decreaseHandCardsCount();
   const inGameUsers = Array.from(room.getAllPlayers().values());
 
   const S2CUseCardNotification = {

@@ -17,7 +17,7 @@ const weapon = ({ socket, cardType, targetUserId }) => {
   // 사용한 카드를 손에서 제거, 덱으로 보내는 건 x
   const { card, index } = user.characterData.getCardsearch(cardType);
   user.characterData.handCards.splice(index, 1);
-  user.characterData.handCardsCount--;
+  user.decreaseHandCardsCount();
 
   // 이미 장착된 상태라면 기존 장착 카드를 덱으로 보내야함
   if (user.characterData.weapon !== 0) {
