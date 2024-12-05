@@ -41,6 +41,7 @@ const bbang = ({ socket, cardType, targetUserId }) => {
       } else {
         player.setCharacterStateType(CHARACTER_STATE_TYPE.NONE_CHARACTER_STATE);
         player.removeHandCard(CARD_TYPE.BBANG);
+        player.characterData.handCardsCount--;
       }
       userMakeData.push(player.makeRawObject());
     });
@@ -58,6 +59,10 @@ const bbang = ({ socket, cardType, targetUserId }) => {
       );
       values.socket.write(result);
     });
+    return {
+      success: true,
+      failCode: createFailCode(0),
+    };
     // 현재 유저가 NONE 상태라면 타겟 유저 데이터가 존재해야 정상
     // if (user.characterData.stateInfo.state === CHARACTER_STATE_TYPE.NONE_CHARACTER_STATE) {
     //   return {
