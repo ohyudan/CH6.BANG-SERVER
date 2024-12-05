@@ -1,3 +1,4 @@
+import { CARD_TYPE } from '../../constants/card.enum.js';
 import HANDLER_IDS from '../../constants/handlerIds.js';
 import { CHARACTER_STATE_TYPE } from '../../constants/user.enum.js';
 import CardData from '../../model/card/cardData.class.js';
@@ -12,6 +13,8 @@ const cardSelectHandler = ({ socket, payload }) => {
   // 핸드카드를 선택하면 둘다 0으로 옴 -> 맨앞이던 맨뒤던 다 0으로
   // 방어구는 1 ->  방어구타입 번호
   // 무기는 2 -> 무기타입 번호
+  // 디버프는 3 -> 디버프 번호인데 감금은 상태(감금), 디버프(감금) 같이 있음.
+  // 감금을 건드린다면 다음 상태를 none으로 바꿔줄 필요 있다.
   const user = playerList.getPlayer(socket.id);
   const room = roomList.getRoom(user.currentRoomId);
 
@@ -62,6 +65,24 @@ const cardSelectHandler = ({ socket, payload }) => {
           targetUser.removeWeapon();
         }
         break;
+      }
+      case 3: {
+        // 디버프
+        const targetCardIndex = targetUser.characterData.debuffs.findIndex((debuff) => debuff === selectCardType);
+        targetCard = targetUser.characterData.debuffs[targetCardIndex];
+        if (targetCard === CARD_TYPE.CONTAINMENT_UNIT) {
+          // 감금 카드를 흡수나 신기루로 건드리면 타겟유저의 다음 상태를 NONE으로 바꿔 감금이 해제되도록
+          targetUser.setNextCharacterStateType(CHARACTER_STATE_TYPE.NONE_CHARACTER_STATE);
+        }
+
+        if (user.characterData.stateInfo.state === CHARACTER_STATE_TYPE.ABSORBING) {
+          user.characterData.handCards.push(new CardData(targetCard));
+          user.increaseHandCardsCount();
+          targetUser.characterData.debuffs.splice(targetCardIndex, 1);
+        }
+        else if (user.characterData.stateInfo.state === CHARACTER_STATE_TYPE.HALLUCINATING) {
+          targetUser.removeDebuff(selectCardType);
+        }
       }
     }
 

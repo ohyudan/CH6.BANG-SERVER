@@ -12,7 +12,9 @@ const debuff = ({ socket, cardType, targetUserId }) => {
 
   targetUser.addDebuff(cardType)
   
-  user.removeHandCard(cardType);
+  // user.removeHandCard(cardType);
+  const {card, index} = user.characterData.getCardsearch(cardType);
+  user.characterData.handCards.splice(index, 1);
   user.characterData.handCardsCount--;
  
   const inGameUsers = Array.from(room.getAllPlayers().values());
