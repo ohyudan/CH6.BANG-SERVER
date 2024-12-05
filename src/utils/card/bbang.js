@@ -41,7 +41,7 @@ const bbang = ({ socket, cardType, targetUserId }) => {
       } else {
         player.setCharacterStateType(CHARACTER_STATE_TYPE.NONE_CHARACTER_STATE);
         player.removeHandCard(CARD_TYPE.BBANG);
-        player.characterData.handCardsCount--;
+        player.decreaseHandCardsCount();
       }
       userMakeData.push(player.makeRawObject());
     });
@@ -63,7 +63,6 @@ const bbang = ({ socket, cardType, targetUserId }) => {
       success: true,
       failCode: createFailCode(0),
     };
-  
   } // 현피 진행
   else if (user.characterData.stateInfo.state === CHARACTER_STATE_TYPE.DEATH_MATCH_TURN_STATE) {
     user.setCharacterStateType(CHARACTER_STATE_TYPE.DEATH_MATCH_STATE);
@@ -74,7 +73,7 @@ const bbang = ({ socket, cardType, targetUserId }) => {
     targetUser.setStateTargetUserId(user.id);
 
     user.removeHandCard(CARD_TYPE.BBANG);
-    user.characterData.handCardsCount--;
+    user.decreaseHandCardsCount();
 
     const S2CUseCardNotification = {
       cardType: cardType,
@@ -185,7 +184,7 @@ const bbang = ({ socket, cardType, targetUserId }) => {
       }
 
       user.removeHandCard(CARD_TYPE.BBANG);
-      user.characterData.handCardsCount--;
+      user.decreaseHandCardsCount();
       // 카드를 핸드에서 제거 끝
 
       // 뱅 발사횟수 1 증가

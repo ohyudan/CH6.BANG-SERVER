@@ -23,6 +23,7 @@ const call119Notification = ({ socket, cardType, targetUserId }) => {
     console.log(`119 카드 사용자 ID: ${socket.id}, 타겟 ID: ${targetUserId}`);
     // 카드 제거
     useCardPlayer.removeHandCard(CARD_TYPE.CALL_119);
+    useCardPlayer.decreaseHandCardsCount();
     console.log(`${socket.id}번 사용자의 119카드가 제거 되었습니다.`);
 
     // 타겟이 자신인 경우, 체력 1 회복

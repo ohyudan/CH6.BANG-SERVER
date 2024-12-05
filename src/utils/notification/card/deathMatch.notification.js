@@ -23,7 +23,7 @@ const deathMatchNotification = ({ socket, cardType, targetUserId }) => {
   targetUser.setStateTargetUserId(user.id);
 
   user.removeHandCard(CARD_TYPE.DEATH_MATCH);
-  user.characterData.handCardsCount--;
+  user.decreaseHandCardsCount();
 
   const inGameUsers = Array.from(room.getAllPlayers().values());
 

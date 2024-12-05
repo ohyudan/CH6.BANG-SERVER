@@ -40,7 +40,7 @@ const shieldNotification = async ({ socket, cardType, targetUserId }) => {
       } else {
         player.setCharacterStateType(CHARACTER_STATE_TYPE.NONE_CHARACTER_STATE);
         player.removeHandCard(CARD_TYPE.SHIELD);
-        player.characterData.handCardsCount--;
+        player.decreaseHandCardsCount();
       }
       userMakeData.push(player.makeRawObject());
     });
