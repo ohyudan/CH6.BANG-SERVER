@@ -14,8 +14,8 @@ const useCardHandler = async ({ socket, payload }) => {
       console.error('카드 타입이 없음');
 
       const S2CUseCardResponse = {
-        success: success,
-        failCode: failCode,
+        success: false,
+        failCode: createFailCode(11),
       };
       const gamePacket = {
         useCardResponse: S2CUseCardResponse,

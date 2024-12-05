@@ -14,17 +14,15 @@ const weapon = ({ socket, cardType, targetUserId }) => {
     return { success: false, failCode: createFailCode(11) };
   }
 
-  if (useWeapon.count >= 2) {
-    useWeapon.count--;
-    user.characterData.handCardsCount--;
-  } else {
-    const weaponIndex = user.characterData.handCards.findIndex((card) => card.type === cardType);
-    user.characterData.handCards.splice(weaponIndex, 1);
-    user.characterData.handCardsCount--;
+  // 사용한 카드를 손에서 제거, 덱으로 보내는 건 x
+  const { card, index } = user.characterData.getCardsearch(cardType);
+  user.characterData.handCards.splice(index, 1);
+  user.characterData.handCardsCount--;
+
+  // 이미 장착된 상태라면 기존 장착 카드를 덱으로 보내야함
+  if (user.characterData.weapon !== 0) {
+    user.removeWeapon();
   }
-
-  // 사용한 카드를 룸의 덱에 추가해야하는데.. 자료?구조
-
   user.characterData.weapon = useWeapon.type;
 
   const inGameUsers = Array.from(room.getAllPlayers().values());
@@ -32,7 +30,7 @@ const weapon = ({ socket, cardType, targetUserId }) => {
   const S2CUseCardNotification = {
     cardType: cardType,
     userId: user.id,
-    targetUserId: 0,
+    targetUserId: targetUserId.low,
   };
 
   inGameUsers.forEach((player) => {

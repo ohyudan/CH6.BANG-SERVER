@@ -5,36 +5,24 @@ import roomList from '../../model/room/roomList.class.js';
 import createFailCode from '../response/createFailCode.js';
 import { createResponse } from '../response/createResponse.js';
 
-const equip = ({ socket, cardType, targetUserId }) => {
+const debuff = ({ socket, cardType, targetUserId }) => {
   const user = playerList.getPlayer(socket.id);
   const room = roomList.getRoom(user.currentRoomId);
+  const targetUser = playerList.getPlayer(targetUserId.low)
 
-  const useEquip = user.characterData.handCards.find((card) => card.type === cardType);
-
-  if (!useEquip) {
-    return { success: false, failCode: createFailCode(11) };
-  }
-
-
-  // 사용한 방어구를 equips 배열에 추가 -> 이미 장착한 상태인지 구별
-  const findEquip = user.characterData.equips.includes(cardType);
-  if (!findEquip) {
-    user.characterData.equips.push(useEquip.type); // 장비 장착
-
-    const { card, index } = user.characterData.getCardsearch(cardType);
-    user.characterData.handCards.splice(index, 1); // 장비 카드를 손에서만 제거
-  } else {
-    // 이미 장착한 방어구면 바로 덱으로 반환
-    user.removeHandCard(cardType);
-  }
-
+  targetUser.addDebuff(cardType)
+  
+  // user.removeHandCard(cardType);
+  const {card, index} = user.characterData.getCardsearch(cardType);
+  user.characterData.handCards.splice(index, 1);
   user.characterData.handCardsCount--;
+ 
   const inGameUsers = Array.from(room.getAllPlayers().values());
 
   const S2CUseCardNotification = {
     cardType: cardType,
     userId: user.id,
-    targetUserId: targetUserId.low,
+    targetUserId: targetUser.id,
   };
 
   inGameUsers.forEach((player) => {
@@ -66,4 +54,4 @@ const equip = ({ socket, cardType, targetUserId }) => {
   return { success: true, failCode: createFailCode(0) };
 };
 
-export default equip;
+export default debuff;

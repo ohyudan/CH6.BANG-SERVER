@@ -104,9 +104,18 @@ class Player extends Observable {
     this.characterData.debuffs.push(debuff);
   }
 
-  // 캐릭터의 디버프 제거 (phaseBranch에서 추가함)
-  removeDebuff(debuff) {
-    this.characterData.debuffs = this.characterData.debuffs.filter((buff) => buff !== debuff);
+  // 캐릭터의 디버프 제거 (phaseBranch에서 추가함) -> 삭제하면서 덱으로 반환 기능 추가
+  removeDebuff(cardType) {
+    const debuffIndex = this.characterData.debuffs.findIndex((debuff) => debuff === cardType);
+    const debuff = this.characterData.debuffs[debuffIndex];
+    if (debuff) {
+      const card = new CardData(cardType);
+      this.notifyObservers('removeHandCard', card);
+
+      this.characterData.debuffs.splice(debuffIndex, 1);
+      return true;
+    }
+    return false;
   }
 
   // 캐릭터의 손패(카드) 추가
@@ -138,6 +147,32 @@ class Player extends Observable {
       this.notifyObservers('removeHandCard', card);
 
       this.characterData.handCards.splice(index, 1);
+      return true;
+    }
+    return false;
+  }
+
+  // 캐릭터의 무기 제거
+  removeWeapon() {
+    if (this.characterData.weapon !== 0) {
+      const card = new CardData(this.characterData.weapon);
+      this.notifyObservers('removeHandCard', card);
+
+      this.characterData.weapon = 0;
+      return true;
+    }
+    return false;
+  }
+
+  // 캐릭터의 장비 제거
+  removeEquip(cardType) {
+    const equipIndex = this.characterData.equips.findIndex((equip) => equip === cardType);
+    const equip = this.characterData.equips[equipIndex];
+    if (equip) {
+      const card = new CardData(cardType);
+      this.notifyObservers('removeHandCard', card);
+
+      this.characterData.equips.splice(equipIndex, 1);
       return true;
     }
     return false;
@@ -205,7 +240,7 @@ class Player extends Observable {
     const inGameUsers = Array.from(room.getAllPlayers().values());
 
     return inGameUsers.map((user) => {
-      if (user.id === this._id) {
+      if (user.id === this.id) {
         return {
           id: user.id,
           nickname: user.nickname,
@@ -233,6 +268,8 @@ class Player extends Observable {
             stateInfo: user.characterData.stateInfo,
             equips: user.characterData.equips,
             debuffs: user.characterData.debuffs,
+            // 현피 도중 데미지를 주는쪽의 카드가 사라지는 현상이 발생해서, 다른 유저의 카드도 전부 받아주는걸로 했습니다.
+            handCards: user.characterData.getAllhandCard(),
             bbangCount: user.characterData.bbangCount,
             handCardsCount: user.characterData.handCardsCount,
           },

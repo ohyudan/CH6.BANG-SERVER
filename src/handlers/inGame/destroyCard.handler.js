@@ -1,7 +1,6 @@
 import HANDLER_IDS from '../../constants/handlerIds.js';
 import playerList from '../../model/player/playerList.class.js';
 import roomList from '../../model/room/roomList.class.js';
-import userUpdateNotification from '../../utils/notification/userDataUpdate.notification.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 
 const destroyCardHandler = async ({ socket, payload }) => {

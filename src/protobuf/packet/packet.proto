@@ -236,11 +236,6 @@ message S2CWarningNotification {
     int64 expectedAt = 2; // 밀리초 타임스탬프
 }
 
-message S2CAnimationNotification {
-    int64 userId = 1;
-    AnimationType animationType = 2;
-}
-
 // 최상위 GamePacket 메시지
 message GamePacket {
     oneof payload {
