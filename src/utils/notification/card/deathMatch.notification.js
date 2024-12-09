@@ -19,13 +19,11 @@ const deathMatchNotification = ({ socket, cardType, targetUserId }) => {
   // 감옥 같은 특수 상태가 변경되지 않도록 지정해주는 역할을 해야함.
   user.setNextCharacterStateType(userState);
   targetUser.setNextCharacterStateType(targetUserState);
-  user.setNextStateAt(10000);
-  targetUser.setNextStateAt(10000);
   user.setStateTargetUserId(targetUser.id);
   targetUser.setStateTargetUserId(user.id);
 
   user.removeHandCard(CARD_TYPE.DEATH_MATCH);
-  user.characterData.handCardsCount--;
+  user.decreaseHandCardsCount();
 
   const inGameUsers = Array.from(room.getAllPlayers().values());
 
