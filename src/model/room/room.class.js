@@ -6,6 +6,8 @@ import loadCardInit from '../../utils/cardDeck.js';
 import random from 'lodash/random.js';
 import CardData from '../../model/card/cardData.class.js';
 import Phase from './phase/phase.class.js';
+import positionUpdateNotification from '../../utils/notification/user/positionUpdate.notification.js';
+import roomList from './roomList.class.js';
 
 class Room extends ObservableObserver {
   constructor(id, ownerId, name, maxUserNum) {
@@ -147,6 +149,39 @@ class Room extends ObservableObserver {
 
   changePhase() {
     this._phase.updatePhase(this._id);
+  }
+
+  startPositionUpdate() {
+    setTimeout(() => this.userPositionUpdate(), 200);
+  }
+
+  userPositionUpdate() {
+    // console.log('포지션업데이트 반복');
+    let positionChange = false;
+    
+    const room = roomList.getRoom(this.id);
+    if (!room) {
+      return;
+    }
+    // console.log('포지션 변경 검증');
+    const inGameUsers = Array.from(this.getAllPlayers().values());
+
+    inGameUsers.forEach((user) => {
+      if (user.hasPositionChanged()) {
+        user.previousPosition = { ...user.position };
+        positionChange = true;
+      }
+    });
+
+    if (positionChange === true) {
+      positionUpdateNotification(this);
+      // console.log('포지션 변경 확인으로 패킷 발송');
+    } else {
+      // console.log('포지션 변경 없음');
+    }
+
+    setTimeout(() => this.userPositionUpdate(), 200);
+    return;
   }
 
   update(event, data) {

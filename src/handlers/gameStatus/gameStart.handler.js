@@ -43,7 +43,7 @@ const gameStartHandler = async ({ socket }) => {
     }
 
     room.startPhase();
-
+    room.startPositionUpdate();
     const posArr = [...selectedPositions];
     inGameUsers.forEach((user, i) => {
       posArr[i].id = user.id; // 위치 ID에 유저 ID 설정

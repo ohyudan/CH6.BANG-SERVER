@@ -15,21 +15,19 @@ const equip = ({ socket, cardType, targetUserId }) => {
     return { success: false, failCode: createFailCode(11) };
   }
 
-
   // 사용한 방어구를 equips 배열에 추가 -> 이미 장착한 상태인지 구별
   const findEquip = user.characterData.equips.includes(cardType);
   if (!findEquip) {
     user.characterData.equips.push(useEquip.type); // 장비 장착
 
-    const cardIndex = user.characterData.handCards.findIndex((card) => card.type === cardType);
-    user.characterData.handCards.splice(cardIndex, 1); // 장비 카드를 손에서만 제거
+    const { card, index } = user.characterData.getCardsearch(cardType);
+    user.characterData.handCards.splice(index, 1); // 장비 카드를 손에서만 제거
   } else {
     // 이미 장착한 방어구면 바로 덱으로 반환
     user.removeHandCard(cardType);
   }
 
-  user.characterData.handCardsCount--;
-  
+  user.decreaseHandCardsCount();
   const inGameUsers = Array.from(room.getAllPlayers().values());
 
   const S2CUseCardNotification = {
