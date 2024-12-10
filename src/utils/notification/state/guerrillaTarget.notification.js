@@ -3,6 +3,7 @@ import roomList from '../../../model/room/roomList.class.js';
 import { CHARACTER_STATE_TYPE, CHARACTER_TYPE } from '../../../constants/user.enum.js';
 import HANDLER_IDS from '../../../constants/handlerIds.js';
 import CardData from '../../../model/card/cardData.class.js';
+import userUpdateNotification from '../user/userUpdate.notification.js';
 
 const guerrillaTargetNotification = async ({ socket, player, reactionType }) => {
   try {
@@ -110,23 +111,25 @@ const guerrillaTargetNotification = async ({ socket, player, reactionType }) => 
       targetUser.decreaseHandCardsCount();
     }
 
-    const userMakeData = [];
+    // const userMakeData = [];
 
-    userMakeData.push(player.makeRawObject());
-    roomInJoinPlayerList.forEach((values) => {
-      const S2CUserUpdateNotification = {
-        user: userMakeData,
-      };
+    // userMakeData.push(player.makeRawObject());
+    // roomInJoinPlayerList.forEach((values) => {
+    //   const S2CUserUpdateNotification = {
+    //     user: userMakeData,
+    //   };
 
-      const gamePacket = { userUpdateNotification: S2CUserUpdateNotification };
-      const result = createResponse(
-        HANDLER_IDS.USER_UPDATE_NOTIFICATION,
-        socket.version,
-        socket.sequence,
-        gamePacket,
-      );
-      values.socket.write(result);
-    });
+    //   const gamePacket = { userUpdateNotification: S2CUserUpdateNotification };
+    //   const result = createResponse(
+    //     HANDLER_IDS.USER_UPDATE_NOTIFICATION,
+    //     socket.version,
+    //     socket.sequence,
+    //     gamePacket,
+    //   );
+    //   values.socket.write(result);
+    // });
+
+    userUpdateNotification(room);
   } catch (err) {
     console.error(err);
   }
