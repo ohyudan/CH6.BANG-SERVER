@@ -103,6 +103,10 @@ class Room extends ObservableObserver {
     return this._playerList;
   }
 
+  getPlayer(playerId) {
+    return this._playerList.get(playerId);
+  }
+
   /**
    *  게임 시작 가능 여부 확인 함수.
    * @param {number} number

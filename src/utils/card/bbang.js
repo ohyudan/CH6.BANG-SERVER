@@ -112,10 +112,10 @@ const bbang = ({ socket, cardType, targetUserId }) => {
       failCode: createFailCode(0),
     };
   } else {
-    // 타겟 유저가 존재할 때 -> 현재 유저의 상태가 NONE이고 상대가 NONE이면 발사 진행
+    // 타겟 유저가 존재할 때 -> 현재 유저의 상태가 NONE이고 상대가 NONE또는 감금이면 발사 진행
     if (
       user.characterData.stateInfo.state === CHARACTER_STATE_TYPE.NONE_CHARACTER_STATE &&
-      targetUser.characterData.stateInfo.state === CHARACTER_STATE_TYPE.NONE_CHARACTER_STATE
+      (targetUser.characterData.stateInfo.state === CHARACTER_STATE_TYPE.NONE_CHARACTER_STATE || targetUser.characterData.stateInfo.state === CHARACTER_STATE_TYPE.CONTAINED)
     ) {
       // 유저의 무기별 발사 횟수 검증
       // 유저가 레드or자동소총 발수 제약없음 / 아니면 핸드건은 2발 제한 나머진 1발
@@ -297,7 +297,7 @@ const bbang = ({ socket, cardType, targetUserId }) => {
       // 아래 2줄은 필수 아닌거 확인완료
       // user.setCharacterStateType(CHARACTER_STATE_TYPE.BBANG_SHOOTER);
       // user.setStateTargetUserId(targetUser.id);
-
+      targetUser.setNextCharacterStateType(targetUser.characterData.stateInfo.state);
       targetUser.setCharacterStateType(CHARACTER_STATE_TYPE.BBANG_TARGET);
       targetUser.setStateTargetUserId(user.id);
 

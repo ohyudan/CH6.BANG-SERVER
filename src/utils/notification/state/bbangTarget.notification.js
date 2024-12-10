@@ -12,7 +12,8 @@ import CardData from '../../../model/card/cardData.class.js';
 const bbangTargetNotification = async ({ socket, player, reactionType }) => {
   try {
     const room = roomList.getRoom(player.currentRoomId);
-    const targetUser = playerList.getPlayer(player.characterData.stateInfo.stateTargetUserId);
+    const targetUser = room.getPlayer(player.characterData.stateInfo.stateTargetUserId);
+    // const targetUser = playerList.getPlayer(user.characterData.stateInfo.stateTargetUserId);
     const inGameUsers = Array.from(room.getAllPlayers().values());
 
     // 공격자의 무기가 D이글인지 아닌지로 받을 데미지 변동
@@ -22,7 +23,8 @@ const bbangTargetNotification = async ({ socket, player, reactionType }) => {
     player.decreaseHp();
     if (player.characterData.hp < 0) player.setHp(0);
 
-    player.setCharacterStateType(CHARACTER_STATE_TYPE.NONE_CHARACTER_STATE);
+    player.setCharacterStateType(player.characterData.stateInfo.nextState);
+    player.setNextCharacterStateType(CHARACTER_STATE_TYPE.NONE_CHARACTER_STATE);
     player.setStateTargetUserId(0);
 
     const getDamage = playerHp - player.characterData.hp; // 받은 데미지 -> 말랑 데미지 계산에 사용
@@ -34,9 +36,7 @@ const bbangTargetNotification = async ({ socket, player, reactionType }) => {
 
     // 피격자가 사망했으면
     if (player.characterData.hp <= 0) {
-      // if () 사망한 유저에 따라 다른 유저들 승리조건 탐색?
-
-      // 사망한 유저와 mask유저가 동일하면 계산x
+      // 마스크 유저가 존재하고 피격자가 마스크 유저가 아니라면
       if (player !== maskUser && maskUser) {
         // 사망한 유저의 카드를 mask 캐릭터에게 전달
 
@@ -65,19 +65,16 @@ const bbangTargetNotification = async ({ socket, player, reactionType }) => {
           });
           player.characterData.equips.splice(0);
         }
-      }
-
-      // 사망한 유저에 따라 게임 엔드 처리?
-
-      // 마스크맨 없으면 죽은 사람 카드 룸 덱으로 반환
-      if (!maskUser) {
+      } else {
+        // 나머지 처리
         // 손에 있는 카드 처리
-        if (player.characterData.handCards.length > 0) {
-          player.characterData.handCards.forEach((card) => {
-            player.removeHandCard(card);
-          });
-          player.characterData.handCardsCount = 0;
+        for (let i = 0; i < player.characterData.handCards.length; i++) {
+          // player.removeHandCard(player.characterData.handCards[0].type);
+          const card = player.characterData.handCards[i];
+          player.notifyObservers('removeHandCard', card);
         }
+        player.characterData.handCards.splice(0);
+        player.characterData.handCardsCount = 0;
 
         // 장착한 무기 처리
         if (player.characterData.weapon !== 0) {
@@ -85,13 +82,14 @@ const bbangTargetNotification = async ({ socket, player, reactionType }) => {
         }
 
         // 장착한 장비 처리
-        if (player.characterData.equips.length > 0) {
-          player.characterData.equips.forEach((equip) => {
-            const card = new CardData(equip);
-            player.notifyObservers('removeHandCard', card);
-          });
-          player.characterData.equips.splice(0);
+        // if (player.characterData.equips.length > 0) {
+        for (let i = 0; i < player.characterData.equips.length > 0; i++) {
+          // player.removeEquip(player.characterData.equips[0]);
+          const cardType = player.characterData.equips[i];
+          const card = new CardData(cardType);
+          player.notifyObservers('removeHandCard', card);
         }
+        player.characterData.equips.splice(0);
       }
     }
 
@@ -114,13 +112,13 @@ const bbangTargetNotification = async ({ socket, player, reactionType }) => {
       targetUser.characterData.handCardsCount > 0
     ) {
       // 공격자의 핸드에서 1장 가져옴
-      const cardData = targetUser.characterData.handCards[0];
+      const randomIndex = Math.floor(Math.random() * targetUser.characterData.handCards.length);
+      const cardData = targetUser.characterData.handCards[randomIndex];
       player.characterData.handCards.push(cardData);
       player.increaseHandCardsCount();
-      targetUser.characterData.handCards.splice(0, 1);
+      targetUser.characterData.handCards.splice(randomIndex, 1);
       targetUser.decreaseHandCardsCount();
     }
-
     userUpdateNotification(room);
   } catch (err) {
     console.error(err);
