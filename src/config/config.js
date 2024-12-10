@@ -28,6 +28,12 @@ export const Config = {
     AFTER: 150000,
     END: 30000,
   },
+  REDIS: {
+    HOST: envFiles.REDIS.HOST,
+    PORT: envFiles.REDIS.PORT,
+    PASSWORD: envFiles.REDIS.PASSWORD,
+    NUMBER: envFiles.REDIS.NUMBER,
+  },
   MAX_SEQUENCE_DIFF: 5,
 
   SALTROUNDS: 10,
