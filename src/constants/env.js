@@ -18,7 +18,7 @@ const envFiles = {
     HOST: process.env.DB_HOST || 'localhost',
     PORT: process.env.DB_PORT || '3306',
   },
-  Redis: {
+  REDIS: {
     HOST: process.env.REDIS_HOST,
     PORT: process.env.REDIS_PORT,
     PASSWORD: process.env.REDIS_PASSWORD,

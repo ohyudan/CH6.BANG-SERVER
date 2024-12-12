@@ -4,9 +4,9 @@ import { createFailCode } from '../../utils/response/createFailCode.js';
 import GameStartNotification from '../../utils/notification/gameStatus/gameStart.notification.js';
 import playerList from '../../model/player/playerList.class.js';
 import roomList from '../../model/room/roomList.class.js';
-//import { Packets } from '../../init/loadProtos.js';
 import { getGameAssets } from '../../init/loadGameAssets.js';
 import { PHASE_TYPE, ROOM_STATE } from '../../constants/room.enum.js';
+import redis from '../../dataBase/redis/redis.queries.js';
 
 const gameStartHandler = async ({ socket }) => {
   try {
@@ -72,6 +72,8 @@ const gameStartHandler = async ({ socket }) => {
     socket.write(response);
 
     console.log(`Game started successfully for room ${ownerUser.currentRoomId}`);
+    redis.createGameSession(ownerUser.currentRoomId, room.getAllPlayers());
+    redis.allAddPlayerGameSession(room.getAllPlayers());
   } catch (err) {
     console.error('GameStartHandler Error:', err);
 
