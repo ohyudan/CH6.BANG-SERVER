@@ -8,6 +8,7 @@ import CardData from '../../model/card/cardData.class.js';
 import Phase from './phase/phase.class.js';
 import positionUpdateNotification from '../../utils/notification/user/positionUpdate.notification.js';
 import roomList from './roomList.class.js';
+import gameEndNotification from '../../utils/notification/gameStatus/gameEnd.notification.js';
 
 class Room extends ObservableObserver {
   constructor(id, ownerId, name, maxUserNum) {
@@ -57,8 +58,13 @@ class Room extends ObservableObserver {
    * @param {number} enum_nubmer
    * @returns 결과
    */
-  setState(enum_nubmer) {
-    this._state.currentState = enum_nubmer;
+  setState(enum_number) {
+    this._state.currentState = enum_number;
+
+    // 게임이 시작되는 시점(INGAME)에 게임 종료 체크 시작
+    if (enum_number === ROOM_STATE.INGAME) {
+      this.startGameEndCheck();
+    }
   }
   /**
    *
@@ -146,6 +152,24 @@ class Room extends ObservableObserver {
     return null;
   }
 
+  startGameEndCheck() {
+    setTimeout(() => this.checkGameEnd(), 1000); // 1초마다 체크
+  }
+
+  checkGameEnd() {
+    // 방이 존재하는지 확인
+    const room = roomList.getRoom(this.id);
+    if (!room || this._state.currentState !== ROOM_STATE.INGAME) {
+      return;
+    }
+
+    // gameEndNotification을 호출하여 게임 종료 여부 확인
+    gameEndNotification(this.id);
+
+    // 게임이 끝나지 않았다면 계속 체크
+    setTimeout(() => this.checkGameEnd(), 1000);
+  }
+
   startPhase() {
     this._phase.startPhase();
     setTimeout(() => this.changePhase(), this._phase.nextPhaseAt - Date.now());
@@ -162,7 +186,7 @@ class Room extends ObservableObserver {
   userPositionUpdate() {
     // console.log('포지션업데이트 반복');
     let positionChange = false;
-    
+
     const room = roomList.getRoom(this.id);
     if (!room) {
       return;

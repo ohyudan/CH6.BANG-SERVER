@@ -50,6 +50,8 @@ const gameStartHandler = async ({ socket }) => {
       user.updatePosition(posArr[i].x, posArr[i].y); // 유저 좌표 업데이트
     });
 
+    room.setState(ROOM_STATE.INGAME);
+
     // 게임 시작 알림 전송
     GameStartNotification(room, posArr);
 
