@@ -4,7 +4,7 @@ import { createResponse } from '../../response/createResponse.js';
 import roomList from '../../../model/room/roomList.class.js';
 import HANDLER_IDS from '../../../constants/handlerIds.js';
 
-export const gameEndNotification = (roomId) => {
+const gameEndNotification = (roomId) => {
   try {
     // 해당 방 찾기
     const room = roomList.getRoom(roomId);
@@ -31,7 +31,6 @@ export const gameEndNotification = (roomId) => {
       (player) => player.characterData.roleType === ROLE_TYPE.PSYCHOPATH,
     );
 
-    // 간단한 디버깅 정보만 출력
     console.log('생존자 수:', survivors.length);
     console.log('생존 역할:', {
       Target: isTarget ? '생존' : '사망',
@@ -46,7 +45,7 @@ export const gameEndNotification = (roomId) => {
     // 승리 조건에 따라 결과 생성
     if (!isTarget && !isBodyguard && !isHitman) {
       // 싸이코패스 승리
-      winners = survivors.filter(
+      winners = Array.from(roomPlayList.values()).filter(
         (player) => player.characterData.roleType === ROLE_TYPE.PSYCHOPATH,
       );
       const winnerIds = winners.map((player) => player.id);
@@ -62,7 +61,7 @@ export const gameEndNotification = (roomId) => {
       );
     } else if (!isHitman && !isPsychopath) {
       // 타겟 & 보디가드 승리
-      winners = survivors.filter(
+      winners = Array.from(roomPlayList.values()).filter(
         (player) =>
           player.characterData.roleType === ROLE_TYPE.TARGET ||
           player.characterData.roleType === ROLE_TYPE.BODYGUARD,
@@ -80,7 +79,9 @@ export const gameEndNotification = (roomId) => {
       );
     } else if (!isTarget) {
       // 히트맨 승리
-      winners = survivors.filter((player) => player.characterData.roleType === ROLE_TYPE.HITMAN);
+      winners = Array.from(roomPlayList.values()).filter(
+        (player) => player.characterData.roleType === ROLE_TYPE.HITMAN,
+      );
       const winnerIds = winners.map((player) => player.id);
       responsePayload = {
         gameEndNotification: {
