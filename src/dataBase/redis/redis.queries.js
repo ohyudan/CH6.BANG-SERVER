@@ -28,6 +28,15 @@ const redis = {
     }
   },
 
+  getGameSessionPlayers: async (socketId) => {
+    const playerKey = `${PLAYER_PREFIX}:${socketId}`;
+    const socketPlayerData = await redisClient.hgetall(playerKey);
+    const roomKey = `${GAME_SESSION_PREFIX}:${socketPlayerData.currentRoomId}`;
+    const CurrentRoom = await redisClient.smembers(roomKey);
+
+    return CurrentRoom;
+  },
+
   reomveUserGameSession: async (roomId, playerId) => {
     const keyPlayer = `${PLAYER_PREFIX}:${playerId}`;
     const keyRoom = `${GAME_SESSION_PREFIX}:${roomId}`;
@@ -40,8 +49,8 @@ const redis = {
     }
   },
   /**
-   *
-   * @param {*} playerList
+   * 수정 필요할 수 있음
+   * @param {Array} playerList
    */
   allAddPlayerGameSession: async (playerList) => {
     for (const values of playerList) {
@@ -60,7 +69,7 @@ const redis = {
           state: values[1].characterData.stateInfo.state,
           nextState: values[1].characterData.stateInfo.nextState,
           nextStateAt: values[1].characterData.stateInfo.nextStateAt,
-          sstateTargetUserId: values[1].characterData.stateInfo.sstateTargetUserId,
+          stateTargetUserId: values[1].characterData.stateInfo.stateTargetUserId,
         }),
         equips: values[1].characterData.equips,
         debuffs: values[1].characterData.debuffs,
@@ -71,12 +80,16 @@ const redis = {
       await redisClient.expire(key, 3600);
     }
   },
-
-  updataPlayerField: async (playerId, field, vlaue) => {
+  /**
+   *
+   * @param {number} playerId
+   * @param {string} field
+   * @param {Number || Array} vlaue
+   */
+  updataPlayerField: async (playerId, field, value) => {
     const key = `${PLAYER_PREFIX}:${playerId}`;
-
     try {
-      const stringValue = typeof value === 'object' ? JSON.stringify(vlaue) : vlaue;
+      const stringValue = typeof value === 'object' ? JSON.stringify(value) : value;
       await redisClient.hset(key, field, stringValue);
       await redisClient.expire(key, 3600);
     } catch (error) {
@@ -84,14 +97,52 @@ const redis = {
     }
   },
 
-  getUser: async (playerId) => {
+  getPlayerField: async (playerId, field) => {
+    const key = `${PLAYER_PREFIX}:${playerId}`;
+
     try {
-      const data = await redisClient.hget(`${PLAYER_PREFIX}:${playerId}`, field);
+      const data = await redisClient.hget(key, field);
       if (!data) return null;
-      console.log(data);
+
       return data;
     } catch (error) {
       console.error(error);
+    }
+  },
+
+  getPlayer: async (playerId) => {
+    try {
+      const data = await redisClient.hget(`${PLAYER_PREFIX}:${playerId}`, field);
+      if (!data) return null;
+
+      return data;
+    } catch (error) {
+      console.error(error);
+    }
+  },
+
+  allGetRoomPlayer: async (socketId) => {
+    try {
+      const CurrentRoom = await redis.getGameSessionPlayers(socketId);
+
+      const result = [];
+      for (const playerValue of CurrentRoom) {
+        const valueKey = `${PLAYER_PREFIX}:${playerValue}`;
+        const playerData = await redisClient.hgetall(valueKey);
+        const parsedData = {
+          ...playerData,
+
+          handCards: JSON.parse(playerData.handCards),
+
+          stateInfo: JSON.parse(playerData.stateInfo),
+
+          character: JSON.parse(playerData.character),
+        };
+        result.push(parsedData);
+      }
+      return result;
+    } catch (error) {
+      console.log(error);
     }
   },
 };
