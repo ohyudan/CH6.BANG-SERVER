@@ -23,6 +23,44 @@ const bigBbangNotification = async ({ socket, cardType, targetUserId }) => {
     targetUserId: useCardPlayer.id,
   };
 
+  // 이미 상호작용 중인 사람이 있으면 실행되지 않고 
+  // 룸의 playList에 카드를 사용한 사람의 id와 사용한 카드(게릴라, 무차별)의 데이터를 저장한다.
+  // 게릴라, 무차별 난사의 마지막 한 사람까지 상호작용이 끝났다면 playList에 저장된 데이터를 사용해 시전한다.
+  let cannotUse = false;
+
+  roomInJoinPlayerList.forEach((player) => {
+    // NONE 또는 CONTAINED가 아닌 상태가 있는 경우 cannotUse = true
+    if (
+      player.characterData.stateInfo.state !== CHARACTER_STATE_TYPE.NONE_CHARACTER_STATE &&
+      player.characterData.stateInfo.state !== CHARACTER_STATE_TYPE.CONTAINED
+    ) {
+      cannotUse = true;
+    }
+  });
+
+  if (cannotUse) {
+    room.addCardPlayList(useCardPlayer.id, cardType);
+    useCardPlayer.removeHandCard(CARD_TYPE.BIG_BBANG);
+    useCardPlayer.decreaseHandCardsCount();
+
+    roomInJoinPlayerList.forEach((player) => {
+      const gamePacket = { useCardNotification: S2CUseCardNotification };
+
+      const result = createResponse(
+        HANDLER_IDS.USE_CARD_NOTIFICATION,
+        player.socket.version,
+        player.socket.sequence,
+        gamePacket,
+      );
+      player.socket.write(result);
+    })
+
+    success = true;
+    failCode = createFailCode(0);
+
+    return { success, failCode };
+  }
+
   try {
     roomInJoinPlayerList.forEach((player) => {
       if (!(socket.id === player.id)) {

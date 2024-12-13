@@ -50,8 +50,8 @@ class Phase {
     if (nextPhase === PHASE_TYPE.END) {
       // 현재 플레이어 캐릭터의 위치
       roomPlayList.forEach((value, key) => {
-        let position = { id: value.id, x: value.getX(), y: value.getY() };
-        changedPositions.push(position);
+          let position = { id: value.id, x: value.getX(), y: value.getY() };
+          changedPositions.push(position);
       });
     } else {
       // 1. 위치 재조정 , 체크 완료
@@ -76,11 +76,17 @@ class Phase {
       let i = 0;
       const posArr = [...selectedPositions];
       roomPlayList.forEach((value) => {
-        let position = { id: value.id, x: posArr[i].x, y: posArr[i].y };
-        value.position.x = posArr[i].x;
-        value.position.y = posArr[i].y;
-        changedPositions.push(position);
-        i++;
+        if (value.characterData.hp > 0) {
+          let position = { id: value.id, x: posArr[i].x, y: posArr[i].y };
+          value.position.x = posArr[i].x;
+          value.position.y = posArr[i].y;
+          changedPositions.push(position);
+          i++;
+        } else {
+          let position = { id: value.id, x: value.getX(), y: value.getY() };
+          changedPositions.push(position);
+        }
+
       });
 
       // 낮 시작시 자신의 핸드가 자신의 체력 이상이면 랜덤으로 체력 수치만큼 카드를 버리도록 조정
@@ -152,9 +158,11 @@ class Phase {
 
       // 카드를 2장씩 드로우
       roomPlayList.forEach((value, key) => {
-        value.characterData.handCards.push(room.cardDraw(value));
-        value.characterData.handCards.push(room.cardDraw(value));
-        value.increaseHandCardsCountParam(2);
+        if (value.characterData.hp > 0) {
+          value.characterData.handCards.push(room.cardDraw(value));
+          value.characterData.handCards.push(room.cardDraw(value));
+          value.increaseHandCardsCountParam(2);
+        }
       });
 
       // 빵야 횟수 초기화

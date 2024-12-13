@@ -9,6 +9,9 @@ import Phase from './phase/phase.class.js';
 import positionUpdateNotification from '../../utils/notification/user/positionUpdate.notification.js';
 import roomList from './roomList.class.js';
 import gameEndNotification from '../../utils/notification/gameStatus/gameEnd.notification.js';
+import { CHARACTER_STATE_TYPE } from '../../constants/user.enum.js';
+import { CARD_TYPE } from '../../constants/card.enum.js';
+import userUpdateNotification from '../../utils/notification/user/userUpdate.notification.js';
 
 class Room extends ObservableObserver {
   constructor(id, ownerId, name, maxUserNum) {
@@ -21,6 +24,7 @@ class Room extends ObservableObserver {
     this._playerList = new Map();
     this._deck = loadCardInit();
     this._phase = new Phase();
+    this._cardPlayList = new Array();
 
     let ownerPlayer = playerList.getPlayer(ownerId);
     this.addPlayer(ownerPlayer);
@@ -88,6 +92,68 @@ class Room extends ObservableObserver {
     player.addObserver(this);
     return true;
   }
+
+  addCardPlayList(playerId, cardType) {
+    this._cardPlayList.push({ playerId: playerId, cardType: cardType });
+    return true;
+  }
+
+  useCardPlayList() {
+    const data = this._cardPlayList[0];
+    if (data === undefined) {
+      return false;
+    }
+    const player = this.getPlayer(data.playerId);
+    const playerId = data.playerId;
+    const cardType = data.cardType;
+
+    let cannotUse = false;
+
+    this._playerList.forEach((player) => {
+      // NONE 또는 CONTAINED가 아닌 상태가 있는 경우 cannotUse = true
+      if (
+        player.characterData.stateInfo.state !== CHARACTER_STATE_TYPE.NONE_CHARACTER_STATE &&
+        player.characterData.stateInfo.state !== CHARACTER_STATE_TYPE.CONTAINED
+      ) {
+        cannotUse = true;
+      }
+    });
+
+    if (cannotUse) {
+      console.log('게릴라 무차별이 사용 불가능한 상태');
+      return false;
+    } else {
+      this._cardPlayList.splice(0, 1);
+      // 사용자를 제외한 나머지에게 카드타입에 해당하는 스테이트를 부여
+      let targetStateType = null;
+      switch (cardType) {
+        case CARD_TYPE.BIG_BBANG: {
+          targetStateType = CHARACTER_STATE_TYPE.BIG_BBANG_TARGET;
+          break;
+        }
+        case CARD_TYPE.GUERRILLA: {
+          targetStateType = CHARACTER_STATE_TYPE.GUERRILLA_TARGET;
+          break;
+        }
+      }
+
+      this._playerList.forEach((player) => {
+        if (player.id !== playerId) {
+          player.setNextCharacterStateType(player.characterData.stateInfo.state);
+          player.setCharacterStateType(targetStateType);
+          player.setStateTargetUserId(playerId);
+        }
+      });
+
+      userUpdateNotification(this);
+    }
+
+    // 게릴라, 무차별 난사만 처리하는 용도로 사용할 생각
+    // 플레이어들의 스테이트 타입이 다 NONE또는 감금인 상태일 때 작동
+    // 카드 사용자는 shooter로 나머지 중에서 체력이 1 이상인 사람들은 target으로
+    // 변경된 상태를 알려줌
+  }
+
   /**
    *
    * @param {Player}

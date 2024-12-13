@@ -76,7 +76,10 @@ const useCardHandler = async ({ socket, payload }) => {
 
         socket.write(userUpdateNotification);
       }
+
+      room.useCardPlayList();
     }
+    
   } catch (err) {
     console.error(err);
   }
