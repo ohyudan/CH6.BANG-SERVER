@@ -154,12 +154,6 @@ class Room extends ObservableObserver {
     // 변경된 상태를 알려줌
   }
 
-  subCardPlayList() {
-    const firstDataKey = this._cardPlayList.keys().next().value;
-    if (firstDataKey !== undefined) {
-      this._cardPlayList.delete(firstDataKey);
-    }
-  }
   /**
    *
    * @param {Player}
