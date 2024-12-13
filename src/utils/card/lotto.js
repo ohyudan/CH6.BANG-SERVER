@@ -12,9 +12,9 @@ const lotto = ({ socket, cardType, targetuserId }) => {
   const room = roomList.getRoom(user.currentRoomId);
   //const targetUser = playerList.getPlayer(targetUserId.low);
   //3장 드로우및 핸드수 증가.
-  const card = room.cardDraw(3);
+  
   for (let i = 0; i < 3; i++) {
-    user.addHandCard(card[i]);
+    user.addHandCard();
     user.increaseHandCardsCount();
   }
 
