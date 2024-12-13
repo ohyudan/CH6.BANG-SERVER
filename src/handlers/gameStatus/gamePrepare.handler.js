@@ -67,7 +67,8 @@ export const gamePrepareHandler = async ({ socket, payload }) => {
           (character) => character.type === user.characterData.roleType,
         );
         if (matchedCharacter) {
-          user.increaseHp(); // TARGET 역할의 경우 hp 추가
+          user.characterData.hp++; // TARGET 역할의 경우 hp 추가
+          //fix : redis으로 인한 수정
         }
       }
     });

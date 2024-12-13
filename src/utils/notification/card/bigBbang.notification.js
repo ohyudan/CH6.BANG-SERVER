@@ -6,6 +6,7 @@ import { CARD_TYPE } from '../../../constants/card.enum.js';
 import HANDLER_IDS from '../../../constants/handlerIds.js';
 import { CHARACTER_STATE_TYPE } from '../../../constants/user.enum.js';
 import bigBnangShooterNotification from '../state/bigBbangShooter.notification.js';
+import redis from '../../../dataBase/redis/redis.queries.js';
 
 const bigBbangNotification = async ({ socket, cardType, targetUserId }) => {
   const useCardPlayer = playerList.getPlayer(socket.id);
@@ -16,7 +17,7 @@ const bigBbangNotification = async ({ socket, cardType, targetUserId }) => {
   let success = null;
   //const backupPlayerData = room.getAllPlayers(); // 얕은 복사 의미 없음 추후 더 고려해서 작성
 
-  const userMakeData = [];
+  //const userMakeData = [];
   const S2CUseCardNotification = {
     cardType: CARD_TYPE.BIG_BBANG,
     userId: socket.id,
@@ -24,29 +25,58 @@ const bigBbangNotification = async ({ socket, cardType, targetUserId }) => {
   };
 
   try {
-    roomInJoinPlayerList.forEach((player) => {
-      if (!(socket.id === player.id)) {
+    // roomInJoinPlayerList.forEach((player) => {
+    //   if (!(socket.id === player.id)) {
+    //     const gamePacket = { useCardNotification: S2CUseCardNotification };
+
+    //     const result = createResponse(
+    //       HANDLER_IDS.USE_CARD_NOTIFICATION,
+    //       player.socket.version,
+    //       player.socket.sequence,
+    //       gamePacket,
+    //     );
+    //     player.socket.write(result);
+    //     player.setCharacterStateType(CHARACTER_STATE_TYPE.BIG_BBANG_TARGET);
+    //     player.setStateTargetUserId(useCardPlayer.id);
+    //     userMakeData.push(player.makeRawObject());
+    //   } else {
+    //     player.setCharacterStateType(CHARACTER_STATE_TYPE.BIG_BBANG_SHOOTER);
+    //     player.setStateTargetUserId(0);
+    //     useCardPlayer.removeHandCard(CARD_TYPE.BIG_BBANG);
+    //     useCardPlayer.decreaseHandCardsCount();
+    //     userMakeData.push(player.makeRawObject());
+    //   }
+    // });
+
+    //const playerList = await redis.getGameSessionPlayers(socket.id);
+    const playerALLData = await redis.allGetRoomPlayer(socket.id);
+    for (const player of playerALLData) {
+      if (!(socket.id == parseInt(player.id))) {
         const gamePacket = { useCardNotification: S2CUseCardNotification };
 
         const result = createResponse(
           HANDLER_IDS.USE_CARD_NOTIFICATION,
-          player.socket.version,
-          player.socket.sequence,
+          socket.version,
+          socket.sequence,
           gamePacket,
         );
-        player.socket.write(result);
-        player.setCharacterStateType(CHARACTER_STATE_TYPE.BIG_BBANG_TARGET);
-        player.setStateTargetUserId(useCardPlayer.id);
-        userMakeData.push(player.makeRawObject());
-      } else {
-        player.setCharacterStateType(CHARACTER_STATE_TYPE.BIG_BBANG_SHOOTER);
-        player.setStateTargetUserId(0);
-        useCardPlayer.removeHandCard(CARD_TYPE.BIG_BBANG);
-        useCardPlayer.decreaseHandCardsCount();
-        userMakeData.push(player.makeRawObject());
-      }
-    });
+        //player.socket.write(result);--> 못씀
 
+        const playerData = await redis.getPlayerField(player.id, 'stateInfo');
+        const parse = JSON.parse(playerData);
+        parse.state = CHARACTER_STATE_TYPE.BBANG_TARGET;
+        await redis.updataPlayerField(this._id, 'stateInfo', parse);
+
+        //await player.setCharacterStateType(CHARACTER_STATE_TYPE.BIG_BBANG_TARGET);
+        //player.setStateTargetUserId(useCardPlayer.id);
+      } else {
+        // await player.setCharacterStateType(CHARACTER_STATE_TYPE.BIG_BBANG_SHOOTER);
+        // player.setStateTargetUserId(0);
+        // useCardPlayer.removeHandCard(CARD_TYPE.BIG_BBANG);
+        // useCardPlayer.decreaseHandCardsCount();
+      }
+    }
+    const userMakeData = await redis.allGetRoomPlayer(socket.id);
     roomInJoinPlayerList.forEach((values) => {
       const S2CUserUpdateNotification = {
         user: userMakeData,

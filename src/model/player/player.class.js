@@ -4,6 +4,7 @@ import Position from './position.class.js';
 import { Observable } from '../observer/observer.js';
 import CardData from '../card/cardData.class.js';
 import PreviousPosition from './previousPosition.class.js';
+import redis from '../../dataBase/redis/redis.queries.js';
 
 class Player extends Observable {
   constructor(id, nickname, socket) {
@@ -62,13 +63,19 @@ class Player extends Observable {
   }
 
   // 캐릭터의 체력 증가
-  increaseHp() {
-    this.characterData.hp += 1;
+  async increaseHp() {
+    const hpdata = await redis.getPlayerField(this._id, 'character');
+    const parse = JSON.parse(hpdata);
+    ++parse.hp;
+    await redis.updataPlayerField(this._id, 'character', parse);
   }
 
   // 캐릭터의 체력 감소
-  decreaseHp() {
-    this.characterData.hp -= 1;
+  async decreaseHp() {
+    const hpdata = await redis.getPlayerField(this._id, 'character');
+    const parse = JSON.parse(hpdata);
+    --parse.hp;
+    await redis.updataPlayerField(this._id, 'character', parse);
   }
 
   // 캐릭터가 사용하는 무기 설정
@@ -77,8 +84,13 @@ class Player extends Observable {
   }
 
   // 현재 캐릭터 상태 설정
-  setCharacterStateType(characterStateType) {
-    this.characterData.stateInfo.state = characterStateType;
+  async setCharacterStateType(characterStateType) {
+    // 못씀
+    //this.characterData.stateInfo.state = characterStateType;
+    const playerdata = await redis.getPlayerField(this._id, 'stateInfo');
+    const parse = JSON.parse(playerdata);
+    parse.state = characterStateType;
+    await redis.updataPlayerField(this._id, 'stateInfo', parse);
   }
 
   // 캐릭터의 다음 상태 설정
@@ -113,7 +125,6 @@ class Player extends Observable {
     if (debuff) {
       const card = new CardData(cardType);
       this.notifyObservers('removeHandCard', card);
-
       this.characterData.debuffs.splice(debuffIndex, 1);
       return true;
     }
@@ -286,8 +297,7 @@ class Player extends Observable {
 
   hasPositionChanged() {
     return (
-      this.previousPosition.x !== this.position.x ||
-      this.previousPosition.y !== this.position.y
+      this.previousPosition.x !== this.position.x || this.previousPosition.y !== this.position.y
     );
   }
 }

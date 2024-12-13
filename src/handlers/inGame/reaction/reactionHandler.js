@@ -9,7 +9,7 @@ import HANDLER_IDS from '../../../constants/handlerIds.js';
 const reactionHandler = async ({ socket, payload }) => {
   const { reactionType } = payload;
   const player = playerList.getPlayer(socket.id);
-  const state_Type = player.characterData.stateInfo.state;
+  const state_Type = player.getCharacterStateType(); //player.characterData.stateInfo.state;
 
   // 해당 상태로 판단
   const reactionActionFunction = reactionAction[state_Type].action;
