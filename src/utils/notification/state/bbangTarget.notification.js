@@ -65,6 +65,14 @@ const bbangTargetNotification = async ({ socket, player, reactionType }) => {
           });
           player.characterData.equips.splice(0);
         }
+
+        // 가진 디버프 버리기
+        for (let i = 0; i < player.characterData.debuffs.length > 0; i++) {
+          const cardType = player.characterData.debuffs[i];
+          const card = new CardData(cardType);
+          player.notifyObservers('removeHandCard', card);
+        }
+        player.characterData.debuffs.splice(0);
       } else {
         // 나머지 처리
         // 손에 있는 카드 처리
@@ -82,14 +90,20 @@ const bbangTargetNotification = async ({ socket, player, reactionType }) => {
         }
 
         // 장착한 장비 처리
-        // if (player.characterData.equips.length > 0) {
         for (let i = 0; i < player.characterData.equips.length > 0; i++) {
-          // player.removeEquip(player.characterData.equips[0]);
           const cardType = player.characterData.equips[i];
           const card = new CardData(cardType);
           player.notifyObservers('removeHandCard', card);
         }
         player.characterData.equips.splice(0);
+
+        // 가진 디버프 버리기
+        for (let i = 0; i < player.characterData.debuffs.length > 0; i++) {
+          const cardType = player.characterData.debuffs[i];
+          const card = new CardData(cardType);
+          player.notifyObservers('removeHandCard', card);
+        }
+        player.characterData.debuffs.splice(0);
       }
     }
 
@@ -120,6 +134,8 @@ const bbangTargetNotification = async ({ socket, player, reactionType }) => {
       targetUser.decreaseHandCardsCount();
     }
     userUpdateNotification(room);
+
+    room.useCardPlayList();
   } catch (err) {
     console.error(err);
   }

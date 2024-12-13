@@ -16,10 +16,6 @@ import hallucination from '../../utils/card/hallucination.js';
 
 const cardTypeAction = {
   [CARD_TYPE.BBANG]: { action: bbang },
-  [CARD_TYPE.BIG_BBANG]: { Action: bigBbangNotification },
-  [CARD_TYPE.SHIELD]: {},
-  [CARD_TYPE.VACCINE]: { Action: vaccineNotification },
-  [CARD_TYPE.CALL_119]: { Action: call119Notification },
   [CARD_TYPE.BIG_BBANG]: { action: bigBbangNotification },
   [CARD_TYPE.SHIELD]: { action: shieldNotification },
   [CARD_TYPE.VACCINE]: { action: vaccineNotification },

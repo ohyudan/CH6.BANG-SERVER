@@ -56,6 +56,14 @@ const guerrillaTargetNotification = async ({ socket, player, reactionType }) => 
           });
           player.characterData.equips.splice(0);
         }
+
+        // 가진 디버프 버리기
+        for (let i = 0; i < player.characterData.debuffs.length > 0; i++) {
+          const cardType = player.characterData.debuffs[i];
+          const card = new CardData(cardType);
+          player.notifyObservers('removeHandCard', card);
+        }
+        player.characterData.debuffs.splice(0);
       } else {
         // 나머지 처리
         // 손에 있는 카드 처리
@@ -81,6 +89,14 @@ const guerrillaTargetNotification = async ({ socket, player, reactionType }) => 
           player.notifyObservers('removeHandCard', card);
         }
         player.characterData.equips.splice(0);
+
+        // 가진 디버프 버리기
+        for (let i = 0; i < player.characterData.debuffs.length > 0; i++) {
+          const cardType = player.characterData.debuffs[i];
+          const card = new CardData(cardType);
+          player.notifyObservers('removeHandCard', card);
+        }
+        player.characterData.debuffs.splice(0);
       }
     }
 
@@ -130,6 +146,8 @@ const guerrillaTargetNotification = async ({ socket, player, reactionType }) => 
     // });
 
     userUpdateNotification(room);
+
+    room.useCardPlayList();
   } catch (err) {
     console.error(err);
   }

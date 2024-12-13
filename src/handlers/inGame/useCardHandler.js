@@ -3,10 +3,15 @@ import { CARD_TYPE } from '../../constants/card.enum.js';
 import { createResponse } from '../../utils/response/createResponse.js';
 import cardTypeAction from './cardIndex.js';
 import createFailCode from '../../utils/response/createFailCode.js';
+import playerList from '../../model/player/playerList.class.js';
+import roomList from '../../model/room/roomList.class.js';
 
 // 쉴드 미처리  사망 미처리
 const useCardHandler = async ({ socket, payload }) => {
   const { cardType, targetUserId } = payload;
+
+  const player = playerList.getPlayer(socket.id);
+  const room = roomList.getRoom(player.currentRoomId);
 
   const cardActionFunction = cardTypeAction[cardType].action;
   try {
@@ -52,7 +57,11 @@ const useCardHandler = async ({ socket, payload }) => {
         gamePacket,
       );
       socket.write(result);
+
+      console.log('usecard에서 사용');
+      room.useCardPlayList();
     }
+    
   } catch (err) {
     console.error(err);
   }
