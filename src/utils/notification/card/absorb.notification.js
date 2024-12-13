@@ -4,7 +4,7 @@ import roomList from '../../../model/room/roomList.class.js';
 import playerList from '../../../model/player/playerList.class.js';
 import { CARD_TYPE } from '../../../constants/card.enum.js';
 import HANDLER_IDS from '../../../constants/handlerIds.js';
-import { CHARACTER_STATE_TYPE } from '../../../constants/user.enum.js';
+import { CHARACTER_STATE_TYPE, CHARACTER_TYPE } from '../../../constants/user.enum.js';
 import userUpdateNotification from '../user/userUpdate.notification.js';
 
 const absorbNotification = async ({ socket, cardType, targetUserId }) => {
@@ -12,7 +12,7 @@ const absorbNotification = async ({ socket, cardType, targetUserId }) => {
   const room = roomList.getRoom(user.currentRoomId);
   const targetUser = playerList.getPlayer(targetUserId.low);
   const inGameUsers = Array.from(room.getAllPlayers().values());
-
+  console.log("흡수!");
   let failCode = null;
   let success = null;
 
@@ -50,6 +50,13 @@ const absorbNotification = async ({ socket, cardType, targetUserId }) => {
     targetUser.setNextCharacterStateType(targetUser.characterData.stateInfo.state);
     targetUser.setCharacterStateType(CHARACTER_STATE_TYPE.ABSORB_TARGET);
     targetUser.setStateTargetUserId(user.id);
+
+    //핑크군 대상일떄   
+    if (targetUser.characterData.characterType === CHARACTER_TYPE.PINK &&
+      targetUser.characterData.handCards.length === 1) {
+      targetUser.addHandCard();
+      targetUser.increaseHandCardsCount();
+    }
 
     const S2CUseCardNotification = {
       cardType: CARD_TYPE.ABSORB,
