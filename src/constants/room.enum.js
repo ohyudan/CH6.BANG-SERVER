@@ -11,4 +11,10 @@ const PHASE_TYPE = {
   END: 3,
 };
 
-export { ROOM_STATE, PHASE_TYPE };
+const WIN_TYPE = {
+  TARGET_AND_BODYGUARD_WIN: 0,
+  HITMAN_WIN: 1,
+  PSYCHOPATH_WIN: 2,
+};
+
+export { ROOM_STATE, PHASE_TYPE, WIN_TYPE };

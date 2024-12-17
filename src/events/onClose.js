@@ -8,6 +8,11 @@ const onClose = (socket) => async () => {
     // 1. 플레이어 찾기
     const player = playerList.getPlayer(socket.id);
 
+    if (!player) {
+      console.log(`플레이어 ID: ${socket.id}`);
+      return; // 플레이어가 없으면 더 이상 진행하지 않음
+    }
+
     console.log(`플레이어 ID: ${player.id}, 닉네임 : ${player._nickname}`);
 
     // 플레이어가 속한 방 처리

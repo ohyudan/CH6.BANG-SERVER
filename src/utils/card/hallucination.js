@@ -1,6 +1,6 @@
 import { CARD_TYPE } from '../../constants/card.enum.js';
 import HANDLER_IDS from '../../constants/handlerIds.js';
-import { CHARACTER_STATE_TYPE } from '../../constants/user.enum.js';
+import { CHARACTER_STATE_TYPE, CHARACTER_TYPE } from '../../constants/user.enum.js';
 import playerList from '../../model/player/playerList.class.js';
 import roomList from '../../model/room/roomList.class.js';
 import createFailCode from '../response/createFailCode.js';
@@ -53,6 +53,13 @@ const hallucination = ({ socket, cardType, targetUserId }) => {
     //카드제거
     user.removeHandCard(CARD_TYPE.HALLUCINATION);
     user.decreaseHandCardsCount();
+
+    //핑크군 대상일떄
+    if (targetUser.characterData.characterType === CHARACTER_TYPE.PINK &&
+      targetUser.characterData.handCards.length === 1) {
+      targetUser.addHandCard();
+      targetUser.increaseHandCardsCount();
+    }
 
     const inGameUsers = Array.from(room.getAllPlayers().values());
 
